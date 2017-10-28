@@ -20,5 +20,7 @@ void BSP_Test(void){
 
 	//LEDTest();
 	
-	LCD_144_test();
+	//LCD_144_test();
+	
+	LEDArrayTest();
 }

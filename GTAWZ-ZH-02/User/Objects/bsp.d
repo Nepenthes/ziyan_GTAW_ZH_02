@@ -35,3 +35,5 @@
 .\objects\bsp.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\bsp.o: ..\Module\LCD(1.44inches)\GUI_1.44.h
 .\objects\bsp.o: ..\User\delay.h
+.\objects\bsp.o: ..\Module\LED_ARRAY\LED_Array.h
+.\objects\bsp.o: ..\User\IO_Map.h
