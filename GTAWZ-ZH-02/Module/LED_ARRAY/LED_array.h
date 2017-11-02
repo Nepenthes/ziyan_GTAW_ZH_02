@@ -47,7 +47,7 @@
 #define SCLK1 PEout(7)// 
 #define DS1   PEout(8)// 
 
-#define EN2   PDout(6)// 
+#define EN2   PDout(7)// 
 #define LCLK2 PDout(5)// 	
 #define SCLK2 PDout(4)// 
 #define DS2   PDout(10)// 
@@ -59,7 +59,7 @@
 
 void LED_Init(void);//初始化
 void RELAY_Init(void);//继电器输出
-void NC595_Init(void);//
+void LEDArray_Init(void);//
 void SH_595(u8 Date_in);
 void OUT_595(void);
 void DIO1_Init(void);

@@ -7,6 +7,9 @@
 #include "stm32f10x.h"
 #include "osObjects.h"                      // RTOS object definitions
 #include "GUI_1.44.h"
+#include "MoudleDats.h"
+#include "stdio.h"
+#include "Driver_USART.h"
 
 #include "delay.h"
 
@@ -137,6 +140,7 @@ u16 LCD_BGR2RGB(u16 c);
 void LCD_SetParam(void);
 
 void LCD144Test_Thread(const void *argument);
+void LCD144_Thread(const void *argument);
 
 void LCD_144_test(void);
 						  		 

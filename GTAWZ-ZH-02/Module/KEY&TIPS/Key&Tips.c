@@ -6,7 +6,7 @@
 extern ARM_DRIVER_USART Driver_USART1;								//设备驱动库串口一设备声明
 
 osThreadId tid_keyTest_Thread;										//按键监测主线程ID
-osThreadDef(keyTest_Thread,osPriorityAboveNormal,1,1024);	//按键监测主线程定义
+osThreadDef(keyTest_Thread,osPriorityAboveNormal,1,128);	//按键监测主线程定义
 
 static	uint8_t 	keyOverFlg 	= 	0;				//按键事件结束标志
 static	uint16_t	sKeyCount	=	0;				//连续短按	 计数值

@@ -1,6 +1,7 @@
 .\objects\usrmain.o: UsrMain.c
 .\objects\usrmain.o: includes.h
 .\objects\usrmain.o: Bsp.h
+.\objects\usrmain.o: ..\User\MoudleDats.h
 .\objects\usrmain.o: ..\Module\Test.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include\stm32f10x.h
 .\objects\usrmain.o: E:\My_GTAProject\Project_GTAWZ-ZH-02\Software\GTAWZ-ZH-02\User\RTE\RTE_Components.h
@@ -28,13 +29,16 @@
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
-.\objects\usrmain.o: ..\Module\Transmitter_USART2\WirelessTrans_USART2.h
+.\objects\usrmain.o: ..\Module\Transmitter_USART\WirelessTrans_USART.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
 .\objects\usrmain.o: ..\Module\KEY&TIPS\Key&Tips.h
 .\objects\usrmain.o: ..\Module\BEEP\beep.h
 .\objects\usrmain.o: ..\Module\LCD(1.44inches)\LCD_1.44.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\usrmain.o: ..\Module\LCD(1.44inches)\GUI_1.44.h
+.\objects\usrmain.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\usrmain.o: ..\User\delay.h
 .\objects\usrmain.o: ..\Module\LED_ARRAY\LED_Array.h
 .\objects\usrmain.o: ..\User\IO_Map.h
+.\objects\usrmain.o: ..\Module\SHT11\SHT11.h
+.\objects\usrmain.o: ..\User\SysSupport.h

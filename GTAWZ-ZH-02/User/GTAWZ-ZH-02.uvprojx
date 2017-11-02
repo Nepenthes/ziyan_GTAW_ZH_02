@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\User;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART2;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY</IncludePath>
+              <IncludePath>..\User;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\SHT11</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -395,6 +395,11 @@
               <FileType>1</FileType>
               <FilePath>.\delay.c</FilePath>
             </File>
+            <File>
+              <FileName>SysSupport.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\SysSupport.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -416,9 +421,9 @@
           <GroupName>通讯构件</GroupName>
           <Files>
             <File>
-              <FileName>WirelessTrans_USART2.c</FileName>
+              <FileName>WirelessTrans_USART.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Module\Transmitter_USART2\WirelessTrans_USART2.c</FilePath>
+              <FilePath>..\Module\Transmitter_USART\WirelessTrans_USART.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -444,6 +449,13 @@
         </Group>
         <Group>
           <GroupName>传感器构件</GroupName>
+          <Files>
+            <File>
+              <FileName>SHT11.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\SHT11\SHT11.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>执行器构件</GroupName>

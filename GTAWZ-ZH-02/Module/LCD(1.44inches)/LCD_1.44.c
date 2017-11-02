@@ -1,12 +1,22 @@
 #include "LCD_1.44.h"
   
+extern ARM_DRIVER_USART Driver_USART1;
+
+extern const uint8_t MOUDLE_TYPE[20];
+  
+#if(MOUDLE_ID == 9)
+extern float SHT11_hum; 
+extern float SHT11_temp;
+#endif
+  
 //管理LCD重要参数
 //默认为竖屏
 _lcd_dev lcddev;
 
 osThreadId tid_LCD144Test_Thread;
 
-osThreadDef(LCD144Test_Thread,osPriorityNormal,1,1024);
+osThreadDef(LCD144Test_Thread,osPriorityNormal,1,512);
+osThreadDef(LCD144_Thread,osPriorityNormal,1,512);
 
 //画笔颜色,背景颜色
 u16 POINT_COLOR = 0x0000,BACK_COLOR = 0xFFFF;  
@@ -470,14 +480,15 @@ void LCD144Test_Thread(const void *argument){
 	{
 		LCD_Clear(BLACK); //清屏
 
-		POINT_COLOR=WHITE; 
+		POINT_COLOR=GRAY; 
 
 		Show_Str(32,5,BLUE,WHITE,"系统监控",16,0);
+
 		Show_Str(5,25,RED,YELLOW,"温度     ℃",24,1);
-		LCD_ShowNum2412(5+48,25,RED,YELLOW,":32",24,1);
+		LCD_ShowNum2412(5+48,25,RED,YELLOW,":24",24,1);
 
 		Show_Str(5,50,YELLOW,YELLOW,"湿度     ％",24,1);
-		LCD_ShowNum2412(5+48,50,YELLOW,YELLOW,":20",24,1);
+		LCD_ShowNum2412(5+48,50,YELLOW,YELLOW,":32",24,1);
 
 		Show_Str(5,75,WHITE,YELLOW,"电压      Ｖ",24,1);
 		LCD_ShowNum2412(5+48,75,WHITE,YELLOW,":3.2",24,1);
@@ -485,12 +496,59 @@ void LCD144Test_Thread(const void *argument){
 		Show_Str(5,100,GREEN,YELLOW,"电流      Ａ",24,1);
 		LCD_ShowNum2412(5+48,100,GREEN,YELLOW,":0.2",24,1);
 		
-		delay_us(1500000);
+		delay_ms(1500);
+	}
+}
+
+void LCD144_Thread(const void *argument){
+	
+	const char MD_ID = MOUDLE_ID;
+	char	M_ID[2];
+	char M_ADDR[5] = "0x";
+	
+	M_ID[0] = MD_ID/10+'0';
+	M_ID[1] = MD_ID%10+'0';
+	
+	M_ADDR[2] = MOUDLE_TYPE[MOUDLE_ID - 1] / 16 +'0';
+	M_ADDR[3] = MOUDLE_TYPE[MOUDLE_ID - 1] % 16 +'0';
+
+	while(1)
+	{
+#if(MOUDLE_ID == 9)
+		char hum[6],temp[6];
+		
+		sprintf(&hum[1],"%.2f", SHT11_hum);
+		sprintf(temp,"%.2f", SHT11_temp);	
+
+		LCD_Clear(BLACK); //清屏 
+
+		Show_Str(5,3,WHITE,BLACK,"Moudle_ID:",12,1);
+		Show_Str(65,3,RED,BLACK,(u8*)&M_ID,12,1);
+		Show_Str(82,3,WHITE,BLACK,"ATTR:",12,1);	
+		if(MD_ID < 10)Show_Str(112,3,BRED,BLACK,"UP",12,1);
+		else Show_Str(112,3,BRED,BLACK,"DN",12,1);
+		Show_Str(5,13,WHITE,BLACK,"Moudle_Type:",12,1);
+		Show_Str(75,13,BLUE,BLACK,(u8*)M_ADDR,12,1);
+
+		Show_Str(5,25,LGRAYBLUE,GREEN,"温度",24,1);
+		LCD_ShowNum2412(25,50,GREEN,YELLOW,(u8*)temp,24,1);
+		Show_Str(100,50,GREEN,YELLOW,"℃",24,1);
+
+		Show_Str(5,75,LGRAYBLUE,YELLOW,"湿度",24,1);
+		LCD_ShowNum2412(25,100,GREEN,YELLOW,(u8*)&hum[1],24,1);
+		Show_Str(100,100,GREEN,YELLOW,"％",24,1);
+	
+#elif(MOUDLE_ID == 10)
+
+#elif(MOUDLE_ID == 11)
+
+#endif
+		delay_ms(1500);
 	}
 }
 
 void LCD_144_test(void){
 
-	tid_LCD144Test_Thread = osThreadCreate(osThread(LCD144Test_Thread),NULL);
+	tid_LCD144Test_Thread = osThreadCreate(osThread(LCD144_Thread),NULL);
 }
 

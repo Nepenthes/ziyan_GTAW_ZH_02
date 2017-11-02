@@ -687,5 +687,4 @@ void Gui_Drawbmp16(u16 x,u16 y,const unsigned char *p) //显示40*40 QQ图片
 		LCD_WR_DATA_16Bit(picH<<8|picL);  						
 	}	
 	LCD_SetWindows(0,0,lcddev.width-1,lcddev.height-1);//恢复显示窗口为全屏	
-
 }
