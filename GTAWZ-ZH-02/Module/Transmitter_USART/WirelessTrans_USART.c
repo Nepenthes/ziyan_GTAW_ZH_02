@@ -175,7 +175,14 @@ void myUSART1_callback(uint32_t event)
 
 void myUSART2_callback(uint32_t event){
 
-	;
+//	uint32_t mask = ARM_USART_EVENT_RX_TIMEOUT;
+//	char rxcount;
+//	
+//	if(event & mask){
+//	
+//		rxcount = Driver_USART2.GetRxCountNx();
+//		Driver_USART1.Send(&rxcount,1);
+//	}
 }
 
 void USART1Test_Thread(const void *argument){
@@ -187,7 +194,7 @@ void USART1Test_Thread(const void *argument){
 		osDelay(10);													//必需延时，防乱序
 		Driver_USART1.Receive(cmd,strlen(TestCMD[0]));
 		//if(strstr(cmd,TestCMD[0])){								//子串比较
-		if(!strcmp(TestCMD[0],cmd)){							//全等比较
+		if(!strcmp(TestCMD[0],cmd)){								//全等比较
 				
 			osMutexWait(uart1_mutex_id,osWaitForever);
 			Driver_USART1.Send((char*)(TestREP[0]),strlen((char*)(TestREP[0])));
@@ -224,11 +231,11 @@ void USART2Test_Thread(const void *argument){
 					
 					FLG_CLO = dats_rx[0];
 					
-					Driver_USART1.Send(dats_rx,dats[6]);		
+					Driver_USART1.Send(dats_rx,dats[6]);				
 				}			
 			memset(FRAME_RX,0,30*sizeof(uint8_t));
 		}	
-		osDelay(500);	
+		osDelay(20);	
 #endif
 		
 #if(MOUDLE_ID == 9)	

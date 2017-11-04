@@ -6,9 +6,12 @@
 #include "stm32f10x.h"
 #include "osObjects.h"                      // RTOS object definitions
 #include "beep.h"
+#include "string.h"
 
 #include <IO_Map.h>
 #include "delay.h"
+
+#include "USART_STM32F10x.h"
 
 //#define RLY1 PBout(7)// PB7
 //#define RLY2 PBout(8)// PB8
@@ -82,17 +85,18 @@ void LEDArrayTest_Thread(const void *argument);
 
 /*--  调入了一幅图像：这是您新建的图像  --*/
 /*--  宽度x高度=128x1  --*/
-//const 
-//	unsigned char gImage_dat1[] = { 
-//0xF0,0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
-//	
-//};
 
 // 4   4*8 
 void ROW_OFF(void);
-void DISPLAY_R(void);
-void DISPLAY_G(void);
-void DISPLAY_RG(void);
+void DISPLAY_RG(unsigned char gImage_dat[8][16]);
+void DISPLAY_R(unsigned char gImage_dat[8][16]);
+void DISPLAY_G(unsigned char gImage_dat[8][16]);
+void DISPLAY_ASC(unsigned char gImage_dat[8][16],char color);
+
+void DiSP_HANZI(char *str,char color,char speed);
+void DiSP_ASC(char *str,char color,char speed);
+
+void DISP_SHIFT(const unsigned char gImage_dat_dest[][16],uint8_t datlen,uint8_t method,uint8_t speed,char color);
 
 #endif
 

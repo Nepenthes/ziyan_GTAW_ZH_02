@@ -1,5 +1,5 @@
-.\objects\syssupport.o: SysSupport.c
-.\objects\syssupport.o: SysSupport.h
+.\objects\syssupport.o: User\SysSupport.c
+.\objects\syssupport.o: User\SysSupport.h
 .\objects\syssupport.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\syssupport.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include\stm32f10x.h
 .\objects\syssupport.o: E:\My_GTAProject\Project_GTAWZ-ZH-02\Software\GTAWZ-ZH-02\User\RTE\RTE_Components.h
@@ -21,6 +21,6 @@
 .\objects\syssupport.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\syssupport.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_usart.h
 .\objects\syssupport.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\misc.h
-.\objects\syssupport.o: osObjects.h
+.\objects\syssupport.o: User\osObjects.h
 .\objects\syssupport.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\syssupport.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h

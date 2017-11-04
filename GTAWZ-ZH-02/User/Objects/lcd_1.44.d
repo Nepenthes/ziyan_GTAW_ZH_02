@@ -21,13 +21,13 @@
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_usart.h
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\misc.h
-.\objects\lcd_1.44.o: ..\User\osObjects.h
+.\objects\lcd_1.44.o: .\User\osObjects.h
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\lcd_1.44.o: ..\Module\LCD(1.44inches)\GUI_1.44.h
-.\objects\lcd_1.44.o: ..\User\MoudleDats.h
+.\objects\lcd_1.44.o: .\User\MoudleDats.h
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\lcd_1.44.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h
+.\objects\lcd_1.44.o: .\User\reWrite\Driver_USART.h
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h
 .\objects\lcd_1.44.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
-.\objects\lcd_1.44.o: ..\User\delay.h
+.\objects\lcd_1.44.o: .\User\delay.h

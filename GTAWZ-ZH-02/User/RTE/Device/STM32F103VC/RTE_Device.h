@@ -178,7 +178,7 @@
 #define RTE_USART1_RX_DMA               0
 #define RTE_USART1_RX_DMA_NUMBER        1
 #define RTE_USART1_RX_DMA_CHANNEL       5
-#define RTE_USART1_RX_DMA_PRIORITY      0
+#define RTE_USART1_RX_DMA_PRIORITY      2
 //   <e> DMA Tx
 //     <o1> Number <1=>1
 //     <i>  Selects DMA Number (only DMA1 can be used)
@@ -370,7 +370,7 @@
 #define RTE_USART2_RX_DMA               0
 #define RTE_USART2_RX_DMA_NUMBER        1
 #define RTE_USART2_RX_DMA_CHANNEL       6
-#define RTE_USART2_RX_DMA_PRIORITY      0
+#define RTE_USART2_RX_DMA_PRIORITY      3
 
 //   <e> DMA Tx
 //     <o1> Number <1=>1

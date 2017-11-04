@@ -20,6 +20,6 @@
 .\objects\beep.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\beep.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_usart.h
 .\objects\beep.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\misc.h
-.\objects\beep.o: ..\User\osObjects.h
+.\objects\beep.o: .\User\osObjects.h
 .\objects\beep.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\beep.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h

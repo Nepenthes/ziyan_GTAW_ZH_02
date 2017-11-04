@@ -1,5 +1,5 @@
-.\objects\delay.o: delay.c
-.\objects\delay.o: delay.h
+.\objects\delay.o: User\delay.c
+.\objects\delay.o: User\delay.h
 .\objects\delay.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include\stm32f10x.h
 .\objects\delay.o: E:\My_GTAProject\Project_GTAWZ-ZH-02\Software\GTAWZ-ZH-02\User\RTE\RTE_Components.h
 .\objects\delay.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Include\core_cm3.h
@@ -20,6 +20,6 @@
 .\objects\delay.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_tim.h
 .\objects\delay.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_usart.h
 .\objects\delay.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\misc.h
-.\objects\delay.o: osObjects.h
+.\objects\delay.o: User\osObjects.h
 .\objects\delay.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\delay.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h

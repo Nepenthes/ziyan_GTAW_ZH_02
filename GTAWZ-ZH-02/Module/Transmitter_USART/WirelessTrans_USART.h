@@ -8,12 +8,14 @@
 #include "Driver_USART.h"
 #include "string.h"
 
+#include "USART_STM32F10x.h"
+
 #include <MoudleDats.h>
 
 #define FRAME_DATS_SIZE	10		//除了协议帧数据外，传感器数据缓冲队列长度
 
-#define FRAME_TX_SIZE	30		//发送队列整帧长度
-#define FRAME_RX_SIZE	30		//接收队列整帧长度
+#define FRAME_TX_SIZE	24		//发送队列整帧长度
+#define FRAME_RX_SIZE	24		//接收队列整帧长度
 
 #define FRAME_HEAD	0x7E		//帧头
 #define FRAME_TAIL	0x0D		//帧尾

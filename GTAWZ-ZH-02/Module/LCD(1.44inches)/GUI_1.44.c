@@ -607,11 +607,11 @@ void Show_Str(u16 x, u16 y, u16 fc, u16 bc, u8 *str,u8 size,u8 mode)
 		        if(*str==0x0D)//»»ÐÐ·ûºÅ
 		        {         
 		            y+=size;
-					x=x0;
+						x=x0;
 		            str++; 
 		        }  
 		        else
-				{
+					{
 					if(size==12||size==16)
 					{  
 					LCD_ShowChar(x,y,fc,bc,*str,size,mode);
