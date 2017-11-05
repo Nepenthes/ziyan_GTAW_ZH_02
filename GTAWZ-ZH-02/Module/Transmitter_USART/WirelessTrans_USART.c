@@ -214,7 +214,7 @@ void USART2Test_Thread(const void *argument){
 		char *pt;	
 		uint8_t dats_rx[10];
 	
-		Driver_USART2.Receive(FRAME_RX,FRAME_RX_SIZE);
+		Driver_USART2.Receive(FRAME_RX,50);
 		
 		pt = strstr((const char*)FRAME_RX,(const char*)FRAME_PRT1);
 	

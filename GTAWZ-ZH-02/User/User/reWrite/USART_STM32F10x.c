@@ -1964,7 +1964,8 @@ void USART_IRQHandler (const USART_RESOURCES *usart) {
   if (sr & USART_SR_IDLE & usart->reg->CR1) {
     // Dummy read to clear IDLE interrupt
     usart->reg->DR;
-	 usart->xfer->rx_cntx = usart->xfer->rx_cnt;
+	 usart->xfer->rx_cntx = usart->xfer->rx_cnt; //自定义
+	 usart->info->status.rx_busy = 0U;		//自定义只要一帧，不管收到多少，一帧结束直接清忙
     event |= ARM_USART_EVENT_RX_TIMEOUT;
   }
 
