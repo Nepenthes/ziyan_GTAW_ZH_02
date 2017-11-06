@@ -1,0 +1,29 @@
+[33mcommit 27bd81a6387829c3c01062477802bec15eb1cdfd[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Your Name <you@example.com>
+Date:   Sun Nov 5 08:41:13 2017 +0800
+
+    大早上起来想了一会儿，又debug了一会儿，搞定了，改写RTE USART外设驱动1968行，实现了变长接收这个老梗。。。ps早睡早起狠重要！！！
+
+[33mcommit bb9245d6714b1462033d5b34a502d5c321a2d779[m
+Author: Your Name <you@example.com>
+Date:   Sat Nov 4 17:10:05 2017 +0800
+
+    没什么好说的，要被变长接收搞疯了 | 。| 加了个点阵移屏
+
+[33mcommit 2a4dc3eb91799134a26327797e800ca4d807690f[m
+Author: Your Name <you@example.com>
+Date:   Thu Nov 2 19:33:14 2017 +0800
+
+    zigbee传输 上行完成 新增SHT11模块
+
+[33mcommit 3d074e7d4918eb529ba9c8cba7ec0c3df6fb4e50[m
+Author: Your Name <you@example.com>
+Date:   Sat Oct 28 13:03:40 2017 +0800
+
+    测试文件更新，增添点阵
+
+[33mcommit 9989b593164bc650b1d0898014d7e2f3eae94351[m
+Author: Your Name <you@example.com>
+Date:   Sat Oct 28 10:57:04 2017 +0800
+
+    GTAWZ-ZH-02物联网多功能组合实训系统

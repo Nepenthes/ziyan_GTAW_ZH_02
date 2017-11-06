@@ -4,9 +4,15 @@ extern ARM_DRIVER_USART Driver_USART1;
 
 extern const uint8_t MOUDLE_TYPE[20];
   
-#if(MOUDLE_ID == 9)
+#if(MOUDLE_ID == 1)
+
+#elif(MOUDLE_ID == 5)
+extern uint32_t LUXValue;
+#elif(MOUDLE_ID == 9)
 extern float SHT11_hum; 
 extern float SHT11_temp;
+#elif(MOUDLE_ID == 12)
+extern uint8_t	DispLAattr; // HA:1   color:2  slip :1  speed:4
 #endif
   
 //管理LCD重要参数
@@ -16,7 +22,7 @@ _lcd_dev lcddev;
 osThreadId tid_LCD144Test_Thread;
 
 osThreadDef(LCD144Test_Thread,osPriorityNormal,1,512);
-osThreadDef(LCD144_Thread,osPriorityNormal,1,512);
+osThreadDef(LCD144_Thread,osPriorityNormal,1,1024);
 
 //画笔颜色,背景颜色
 u16 POINT_COLOR = 0x0000,BACK_COLOR = 0xFFFF;  
@@ -399,7 +405,18 @@ void LCD_Clear(u16 Color)
 		for(j=0;j<lcddev.height;j++)
 		LCD_WR_DATA_16Bit(Color);	//写入数据 	 
 	}
-}   		  
+} 
+
+void LCD_ClearS(u16 Color,u16 x,u16 y,u16 xx,u16 yy)
+{
+	u16 i,j;      
+	LCD_SetWindows(x,y,xx-1,yy-1);	  
+	for(i=x;i<xx;i++)
+	{
+		for(j=y;j<yy;j++)
+		LCD_WR_DATA_16Bit(Color);	//写入数据 	 
+	}
+}   	
 /*************************************************
 函数名：LCD_SetWindows
 功能：设置lcd显示窗口，在此区域写点数据自动换行
@@ -423,7 +440,7 @@ void LCD_SetWindows(u16 xStar, u16 yStar,u16 xEnd,u16 yEnd)
 	LCD_WR_DATA(0x00FF&yEnd);		
 #else
 	
-		LCD_WR_REG(lcddev.setxcmd);	
+	LCD_WR_REG(lcddev.setxcmd);	
 	LCD_WR_DATA(xStar>>8);
 	LCD_WR_DATA(0x00FF&xStar);		
 	LCD_WR_DATA(xEnd>>8);
@@ -504,46 +521,125 @@ void LCD144_Thread(const void *argument){
 	
 	const char MD_ID = MOUDLE_ID;
 	char	M_ID[2];
-	char M_ADDR[5] = "0x";
+	char  M_ADDR[5] = "0x";
 	
 	M_ID[0] = MD_ID/10+'0';
 	M_ID[1] = MD_ID%10+'0';
 	
 	M_ADDR[2] = MOUDLE_TYPE[MOUDLE_ID - 1] / 16 +'0';
 	M_ADDR[3] = MOUDLE_TYPE[MOUDLE_ID - 1] % 16 +'0';
+	
+	LCD_Clear(BLACK); //清屏 
+	Show_Str(5,3,WHITE,BLACK,"Moudle_ID:",12,1);
+	Show_Str(65,3,RED,BLACK,(u8*)&M_ID,12,1);
+	Show_Str(82,3,WHITE,BLACK,"ATTR:",12,1);	
+	if(MD_ID < 10)Show_Str(112,3,BRED,BLACK,"UP",12,1);
+	else Show_Str(112,3,BRED,BLACK,"DN",12,1);
+	Show_Str(5,13,WHITE,BLACK,"Moudle_Type:",12,1);
+	Show_Str(75,13,BLUE,BLACK,(u8*)M_ADDR,12,1);
+	
+#if(MOUDLE_ID == 1)
+#elif(MOUDLE_ID == 5)
+	Show_Str(5,50,LGRAYBLUE,YELLOW,"亮度",24,1);
+#elif(MOUDLE_ID == 9)
+	Show_Str(5,25,LGRAYBLUE,GREEN,"温度",24,1);
+	Show_Str(100,50,GREEN,YELLOW,"℃",24,1);
+	Show_Str(5,75,LGRAYBLUE,YELLOW,"湿度",24,1);
+	Show_Str(100,100,GREEN,YELLOW,"％",24,1);
+#elif(MOUDLE_ID == 12)
+	Show_Str(5,30,LGRAYBLUE,GREEN,"点阵",24,1);
+	Show_Str(10,60,LIGHTBLUE,BLACK,"Disp_type :",24,1);
+	Show_Str(10,75,LIGHTBLUE,BLACK,"Disp_color:",24,1);
+	Show_Str(10,90,LIGHTBLUE,BLACK,"Disp_slip :",24,1);
+	Show_Str(10,105,LIGHTBLUE,BLACK,"Disp_speed:",24,1);
+#endif
 
 	while(1)
 	{
-#if(MOUDLE_ID == 9)
-		char hum[6],temp[6];
+#if(MOUDLE_ID == 1)
 		
-		sprintf(&hum[1],"%.2f", SHT11_hum);
-		sprintf(temp,"%.2f", SHT11_temp);	
+#elif(MOUDLE_ID == 5)
+		static uint32_t LUX_value;
+		char luxDisp[10];
+		
+		if(LUX_value != LUXValue){
+		
+			LUX_value = LUXValue;
+			LCD_ClearS(BLACK,25,80,120,105);
+			sprintf(&luxDisp[1],"%d", LUXValue);
+			LCD_ShowNum2412(25,80,GREEN,YELLOW,(u8*)&luxDisp[1],24,1);
+			Show_Str(strlen(&luxDisp[1])*16 + 25,90,GREEN,YELLOW,"Lux",24,1);
+		}
+		
+#elif(MOUDLE_ID == 9)			
+		static float SHT11hum; 
+		static float SHT11temp;
+		char 	 hum[6],temp[6];		
 
-		LCD_Clear(BLACK); //清屏 
-
-		Show_Str(5,3,WHITE,BLACK,"Moudle_ID:",12,1);
-		Show_Str(65,3,RED,BLACK,(u8*)&M_ID,12,1);
-		Show_Str(82,3,WHITE,BLACK,"ATTR:",12,1);	
-		if(MD_ID < 10)Show_Str(112,3,BRED,BLACK,"UP",12,1);
-		else Show_Str(112,3,BRED,BLACK,"DN",12,1);
-		Show_Str(5,13,WHITE,BLACK,"Moudle_Type:",12,1);
-		Show_Str(75,13,BLUE,BLACK,(u8*)M_ADDR,12,1);
-
-		Show_Str(5,25,LGRAYBLUE,GREEN,"温度",24,1);
-		LCD_ShowNum2412(25,50,GREEN,YELLOW,(u8*)temp,24,1);
-		Show_Str(100,50,GREEN,YELLOW,"℃",24,1);
-
-		Show_Str(5,75,LGRAYBLUE,YELLOW,"湿度",24,1);
-		LCD_ShowNum2412(25,100,GREEN,YELLOW,(u8*)&hum[1],24,1);
-		Show_Str(100,100,GREEN,YELLOW,"％",24,1);
-	
+		if(SHT11hum != SHT11_hum){
+			
+			SHT11hum = SHT11_hum;
+			LCD_ClearS(BLACK,0,100,100,130);
+			sprintf(&hum[1],"%.2f", SHT11hum);
+			LCD_ShowNum2412(25,100,GREEN,YELLOW,(u8*)&hum[1],24,1);
+		}
+		
+		if(SHT11temp != SHT11_temp){
+		
+			SHT11temp = SHT11_temp;
+			LCD_ClearS(BLACK,0,50,100,75);
+			sprintf(temp,"%.2f", SHT11temp);
+			LCD_ShowNum2412(25,50,GREEN,YELLOW,(u8*)temp,24,1);	
+		}		
+		
 #elif(MOUDLE_ID == 10)
-
+		
 #elif(MOUDLE_ID == 11)
+		
+#elif(MOUDLE_ID == 12)
+		static uint8_t	Disp_LAattr;
+		uint8_t HA;
+		uint8_t color;
+		uint8_t slip;
+		uint8_t speed;
+		u8 disp[5];
+		
+		if(Disp_LAattr != DispLAattr){
+			
+			Disp_LAattr = DispLAattr;
 
+			HA    = (DispLAattr & 0x80) >> 7;
+			color = (DispLAattr & 0x60) >> 5;
+			slip  = (DispLAattr & 0x10) >> 4;
+			speed = (DispLAattr & 0x0f);
+			
+			LCD_ClearS(BLACK,100,65,130,130);
+			
+			if(HA){
+				
+				Show_Str(100,60,YELLOW,BLACK,"A",24,1);
+			}else Show_Str(100,60,YELLOW,BLACK,"B",24,1);
+			
+			switch(color){
+			
+				case 0	:	Show_Str(100,75,YELLOW,BLACK,"R",24,1);break;
+				case 1	:	Show_Str(100,75,YELLOW,BLACK,"G",24,1);break;
+				case 2	:	Show_Str(100,75,YELLOW,BLACK,"RG",24,1);break;
+				default	:	Show_Str(100,75,YELLOW,BLACK,"R",24,1);break;
+			}
+			
+			if(slip){
+			
+				Show_Str(100,90,YELLOW,BLACK,"Yes",24,1);
+			}else Show_Str(100,90,YELLOW,BLACK,"No",24,1);
+			
+			disp[1] = speed / 10 + '0';
+			disp[2] = speed % 10 + '0';
+			
+			Show_Str(100,105,YELLOW,BLACK,&disp[1],24,1);
+		}
 #endif
-		delay_ms(1500);
+		delay_ms(500);
 	}
 }
 

@@ -1,5 +1,5 @@
 .\objects\usart_stm32f10x.o: User\reWrite\USART_STM32F10x.c
-.\objects\usart_stm32f10x.o: User\reWrite\USART_STM32F10x.h
+.\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\USART_STM32F10x.h
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
@@ -24,7 +24,7 @@
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\misc.h
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\GPIO_STM32F10x.h
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\DMA_STM32F10x.h
-.\objects\usart_stm32f10x.o: User\reWrite\Driver_USART.h
+.\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h
 .\objects\usart_stm32f10x.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\usart_stm32f10x.o: E:\My_GTAProject\Project_GTAWZ-ZH-02\Software\GTAWZ-ZH-02\User\RTE\Device\STM32F103VC\RTE_Device.h

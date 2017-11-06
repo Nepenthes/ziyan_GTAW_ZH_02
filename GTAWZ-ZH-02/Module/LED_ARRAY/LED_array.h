@@ -15,7 +15,8 @@
 
 //#define RLY1 PBout(7)// PB7
 //#define RLY2 PBout(8)// PB8
-#define D_NUM 10
+#define D_NUM 						10
+#define DISPLA_BUFFER_SIZE		100
 
 #define GPIO1 PEout(6)//
 #define GPIO2 PEout(5)//
@@ -59,7 +60,6 @@
 #define DI1  GPIO_ReadInputDataBit(GPIOC,GPIO_Pin_5)//PB5
 #define DI2  GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_6)//PB6
 
-
 void LED_Init(void);//初始化
 void RELAY_Init(void);//继电器输出
 void LEDArray_Init(void);//
@@ -80,14 +80,17 @@ void COLR_DATA(void);
 
 void	D_DATA(void);
 
-void LEDArrayTest(void);
-void LEDArrayTest_Thread(const void *argument);
+void LEDArrayCM(void);
+void LEDArrayCM_Thread(const void *argument);
+
+void TaskLAdisp(void const *argument);
+void LEDArryDisp(void);
 
 /*--  调入了一幅图像：这是您新建的图像  --*/
 /*--  宽度x高度=128x1  --*/
 
 // 4   4*8 
-void ROW_OFF(void);
+void ROW_OFF(void); 
 void DISPLAY_RG(unsigned char gImage_dat[8][16]);
 void DISPLAY_R(unsigned char gImage_dat[8][16]);
 void DISPLAY_G(unsigned char gImage_dat[8][16]);

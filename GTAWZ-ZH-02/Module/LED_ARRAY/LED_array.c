@@ -1,10 +1,12 @@
 #include "LED_Array.h"
 
-uint8_t FLG_CLO = 0;
+uint8_t DispLAattr; // HA:1   color:2  slip :1  speed:4	
+uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 
-osThreadId tid_LEDArrayTest_Thread;
+osTimerDef(Tim_LAdisp,TaskLAdisp);
 
-osThreadDef(LEDArrayTest_Thread,osPriorityNormal,1,256);
+osThreadId tid_LEDArrayCM_Thread;
+osThreadDef(LEDArrayCM_Thread,osPriorityNormal,1,256);
 
 extern ARM_DRIVER_USART Driver_USART1;
 
@@ -28,7 +30,7 @@ const unsigned char disp_liba[8][16] = {
 	{0x04,0x20,0x08,0x20,0x18,0x40,0x06,0x40,0x01,0x80,0x02,0x60,0x0C,0x10,0x70,0x08},/*"?",3*/
 };
 
-const unsigned char disp_libb[46][16] = {
+const unsigned char disp_libb[54][16] = {
 
 	{0x10,0x00,0x13,0xF8,0x12,0x08,0x13,0xF8,0xFE,0x08,0x13,0xF8,0x11,0x00,0x13,0xFC},
 	{0x1C,0x44,0x32,0x44,0xD2,0xA4,0x12,0x04,0x13,0xF4,0x10,0x04,0x50,0x28,0x20,0x10},/*"?",0*/
@@ -98,6 +100,42 @@ const unsigned char disp_libb[46][16] = {
 
 	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
 	{0x00,0x00,0x00,0x00,0x18,0x00,0x24,0x00,0x24,0x00,0x18,0x00,0x00,0x00,0x00,0x00},/*"?",22*/
+};
+
+const unsigned char disp_libc[28][16] = {
+
+	{0x00,0x00,0x7F,0xFC,0x40,0x04,0x40,0x04,0x5F,0xF4,0x41,0x04,0x41,0x04,0x4F,0xE4},
+	{0x41,0x04,0x41,0x44,0x41,0x24,0x5F,0xF4,0x40,0x04,0x40,0x04,0x7F,0xFC,0x40,0x04},/*"?",0*/
+
+	{0x01,0x00,0x01,0x00,0x7F,0xFC,0x01,0x00,0x3F,0xF8,0x02,0x00,0xFF,0xFE,0x04,0x40},
+	{0x09,0x20,0x31,0x18,0xCB,0x26,0x05,0xC0,0x19,0x30,0x61,0x08,0x05,0x00,0x02,0x00},/*"?",1*/
+
+	{0x02,0x00,0x01,0x00,0x3F,0xFC,0x20,0x04,0x42,0x08,0x02,0x00,0x02,0x00,0xFF,0xFE},
+	{0x04,0x20,0x08,0x20,0x18,0x40,0x06,0x40,0x01,0x80,0x02,0x60,0x0C,0x10,0x70,0x08},/*"?",2*/
+
+	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x00,0x00,0x00,0x30,0x00,0x30,0x00,0x10,0x00,0x20,0x00,0x00,0x00},/*",",3*/
+
+	{0x00,0x40,0x20,0x40,0x10,0x40,0x10,0x40,0x00,0x40,0x00,0x40,0xF0,0x7C,0x10,0x40},
+	{0x10,0x40,0x10,0x40,0x10,0x40,0x14,0x40,0x18,0x40,0x10,0x40,0x0F,0xFE,0x00,0x00},/*"?",4*/
+
+	{0x08,0x20,0x08,0x20,0x7E,0xA0,0x09,0x3E,0x0A,0x44,0xFF,0x44,0x08,0x44,0x7E,0xA4},
+	{0x24,0x28,0x48,0x28,0x8F,0x10,0x78,0x10,0x08,0x28,0x08,0x48,0x28,0x84,0x11,0x02},/*"?",5*/
+
+	{0x02,0x00,0x01,0x00,0xFF,0xFE,0x08,0x00,0x10,0x10,0x3F,0xF8,0x00,0x08,0x1F,0xF0},
+	{0x10,0x10,0x1F,0xF0,0x10,0x10,0x1F,0xF0,0x10,0x10,0x10,0x10,0x10,0x50,0x10,0x20},/*"?",6*/
+
+	{0x00,0x00,0xFF,0xFE,0x01,0x00,0x01,0x00,0x3F,0xF8,0x21,0x08,0x21,0x08,0x3F,0xF8},
+	{0x21,0x08,0x21,0x08,0x3F,0xF8,0x11,0x00,0x0A,0x00,0x06,0x00,0x19,0xC0,0xE0,0x3E},/*"?",7*/
+
+	{0x20,0x00,0x3E,0x7C,0x48,0x44,0x08,0x44,0xFF,0x44,0x14,0x44,0x22,0x7C,0x40,0x00},
+	{0x1F,0xF0,0x10,0x10,0x10,0x10,0x1F,0xF0,0x10,0x10,0x10,0x10,0x1F,0xF0,0x10,0x10},/*"?",8*/
+
+	{0x10,0x10,0xFE,0xFE,0x10,0x10,0x7C,0x7C,0x10,0x10,0xFE,0xFE,0x10,0x10,0x3F,0xF8},
+	{0x00,0x08,0x1F,0xF8,0x00,0x08,0x3F,0xF8,0x01,0x00,0x48,0x84,0x48,0x12,0x87,0xF2},/*"?",9*/
+
+	{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00},
+	{0x00,0x00,0x00,0x00,0x18,0x00,0x24,0x00,0x24,0x00,0x18,0x00,0x00,0x00,0x00,0x00},/*"?",10*/
 };
 
 const unsigned char ASCII[128][16] = {
@@ -411,24 +449,23 @@ void DIO2_Init(void)
 void RELAY_Init(void)
 {
  
- GPIO_InitTypeDef  GPIO_InitStructure;
- 	
- RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);	 //使能PB端口时钟
-	
- GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7|GPIO_Pin_8;				 //
- GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
- GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
- GPIO_Init(GPIOB, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
+	GPIO_InitTypeDef  GPIO_InitStructure;
 
- GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_6;				 //DI INPUT
- GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; 		 //推挽输出
- GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
- GPIO_Init(GPIOB, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);	 //使能PB端口时钟
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7|GPIO_Pin_8;				 //
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
+	GPIO_Init(GPIOB, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
+
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_6;				 //DI INPUT
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; 		 //推挽输出
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
+	GPIO_Init(GPIOB, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
 
 	//GPIO_Write(GPIOB,0XFF00);
- GPIO_ResetBits(GPIOB,GPIO_Pin_7);						
- GPIO_ResetBits(GPIOB,GPIO_Pin_8);		
-	
+	GPIO_ResetBits(GPIOB,GPIO_Pin_7);						
+	GPIO_ResetBits(GPIOB,GPIO_Pin_8);		
 }
 
 //LED IO初始化
@@ -644,19 +681,19 @@ void DISPLAY_ASC(unsigned char gImage_dat[8][16],char color)
 			
 			switch(color){
 			
-				case 'R':
+				case 0:
 								EN1=1;
 								EN2=0;
 								for(k=0;k<8;k++)SH_595R((gImage_dat[7-k][j + i * 8]));
 								OUT_595R();					
 								break;
-				case 'G':
+				case 1:
 								EN1=0;
 								EN2=1;
 								for(k=0;k<8;k++)SH_595G((gImage_dat[7-k][j + i * 8]));
 								OUT_595G();					
 								break;
-				case 'X':
+				case 2:
 								EN1=1;
 								EN2=1;
 								for(k=0;k<8;k++)SH_595R((gImage_dat[7-k][j + i * 8]));		
@@ -831,84 +868,140 @@ void DISP_HANZI(const unsigned char gImage_dat_dest[][16],uint8_t datlen,uint8_t
 	uint16_t loop,loopa,loopb,loop_disp,num,nnum;		//字显周期，半字显周期，6个半字显周期 + 自定义补尾
 	uint8_t gImage_dat_dest_buffer[2][16] = {0};
 	
-	if(method){
 		
-		for(num = 0;num < 4;num ++){
-		
-			memcpy(DispBuffer[2 * num],gImage_dat_dest[2 * num],16);
-			memcpy(DispBuffer[2 * num + 1],gImage_dat_dest[2 * num + 1],16);
-		}
-		nnum = 4;
-		switch(color){
+	for(num = 0;num < 4;num ++){
+	
+		memcpy(DispBuffer[2 * num],gImage_dat_dest[2 * num],16);
+		memcpy(DispBuffer[2 * num + 1],gImage_dat_dest[2 * num + 1],16);
+	}
+	nnum = 4;
+	switch(color){
 
-			case 'R':	DISPLAY_R(DispBuffer);break;
-			case 'G':	DISPLAY_G(DispBuffer);break;
-			case 'X':	DISPLAY_RG(DispBuffer);break;
-			default :	DISPLAY_R(DispBuffer);break;
-		}
+		case 0	:	DISPLAY_R(DispBuffer);break;
+		case 1	:	DISPLAY_G(DispBuffer);break;
+		case 2	:	DISPLAY_RG(DispBuffer);break;
+		default	:	DISPLAY_R(DispBuffer);break;
 	}
 	
-	for(num = nnum;num < datlen;num ++){
-	
-		memcpy(gImage_dat_dest_buffer[0],gImage_dat_dest[num * 2],16);			//补尾前半字缓存
-		memcpy(gImage_dat_dest_buffer[1],gImage_dat_dest[num * 2 + 1],16);	//补尾后半字缓存
-		for(loop = 0;loop < 16;loop ++){					//单周期移位
+	if(method){
+		
+		for(num = nnum;num < datlen;num ++){
+		
+			memcpy(gImage_dat_dest_buffer[0],gImage_dat_dest[num * 2],16);			//补尾前半字缓存
+			memcpy(gImage_dat_dest_buffer[1],gImage_dat_dest[num * 2 + 1],16);	//补尾后半字缓存
+			for(loop = 0;loop < 16;loop ++){					//单周期移位
 
-			for(loopa = 0;loopa < 8;loopa ++){			//半字填充移位
-				
-				for(loopb = 0;loopb < 6;loopb ++){		//前三字移位
-				
-					DispBuffer[loopb][2 * loopa] *= 2;
-					DispBuffer[loopb][2 * loopa] |= (DispBuffer[loopb][2 * loopa + 1] >> 7);
+				for(loopa = 0;loopa < 8;loopa ++){			//半字填充移位
 					
-					DispBuffer[loopb][2 * loopa + 1] *= 2;
-					DispBuffer[loopb][2 * loopa + 1] |= (DispBuffer[loopb + 2][2 * loopa] >> 7);
+					for(loopb = 0;loopb < 6;loopb ++){		//前三字移位
+					
+						DispBuffer[loopb][2 * loopa] *= 2;
+						DispBuffer[loopb][2 * loopa] |= (DispBuffer[loopb][2 * loopa + 1] >> 7);
+						
+						DispBuffer[loopb][2 * loopa + 1] *= 2;
+						DispBuffer[loopb][2 * loopa + 1] |= (DispBuffer[loopb + 2][2 * loopa] >> 7);
+					}	
+
+					DispBuffer[6][2 * loopa] *= 2;		//最后一字前半字上半移位
+					DispBuffer[6][2 * loopa] |= (DispBuffer[6][2 * loopa + 1] >> 7);		
+
+					DispBuffer[6][2 * loopa + 1] *= 2;	//最后一字后半字上半移位
+					DispBuffer[6][2 * loopa + 1] |= (gImage_dat_dest_buffer[0][2 * loopa] >> 7);		
+
+					gImage_dat_dest_buffer[0][2 * loopa] *= 2;	//最后一字后半字上半移位数据缓存处理
+					gImage_dat_dest_buffer[0][2 * loopa] |= gImage_dat_dest_buffer[0][2 * loopa + 1] >> 7;	
+					gImage_dat_dest_buffer[0][2 * loopa + 1] *= 2;			
+					
+					DispBuffer[7][2 * loopa] *= 2;			//最后一字后半字上半移位
+					DispBuffer[7][2 * loopa] |= (DispBuffer[7][2 * loopa + 1] >> 7);
+
+					DispBuffer[7][2 * loopa + 1] *= 2;		//最后一字后半字下半移位
+					DispBuffer[7][2 * loopa + 1] |= (gImage_dat_dest_buffer[1][2 * loopa] >> 7);
+					
+					gImage_dat_dest_buffer[1][2 * loopa] *= 2;	//最后一字后半字下半移位数据缓存处理
+					gImage_dat_dest_buffer[1][2 * loopa] |= gImage_dat_dest_buffer[1][2 * loopa + 1] >> 7;
+					gImage_dat_dest_buffer[1][2 * loopa + 1] *= 2;
 				}	
-
-				DispBuffer[6][2 * loopa] *= 2;			//最后一字前半字上半移位
-				DispBuffer[6][2 * loopa] |= (DispBuffer[6][2 * loopa + 1] >> 7);		
-
-				DispBuffer[6][2 * loopa + 1] *= 2;	//最后一字后半字上半移位
-				DispBuffer[6][2 * loopa + 1] |= (gImage_dat_dest_buffer[0][2 * loopa] >> 7);		
-
-				gImage_dat_dest_buffer[0][2 * loopa] *= 2;	//最后一字后半字上半移位数据缓存处理
-				gImage_dat_dest_buffer[0][2 * loopa] |= gImage_dat_dest_buffer[0][2 * loopa + 1] >> 7;	
-				gImage_dat_dest_buffer[0][2 * loopa + 1] *= 2;			
+				for(loop_disp = 0;loop_disp < speed;loop_disp ++){
 				
-				DispBuffer[7][2 * loopa] *= 2;			//最后一字后半字上半移位
-				DispBuffer[7][2 * loopa] |= (DispBuffer[7][2 * loopa + 1] >> 7);
+					switch(color){
 
-				DispBuffer[7][2 * loopa + 1] *= 2;	//最后一字后半字下半移位
-				DispBuffer[7][2 * loopa + 1] |= (gImage_dat_dest_buffer[1][2 * loopa] >> 7);
-				
-				gImage_dat_dest_buffer[1][2 * loopa] *= 2;	////最后一字后半字下半移位数据缓存处理
-				gImage_dat_dest_buffer[1][2 * loopa] |= gImage_dat_dest_buffer[1][2 * loopa + 1] >> 7;
-				gImage_dat_dest_buffer[1][2 * loopa + 1] *= 2;
-			}	
-			for(loop_disp = 0;loop_disp < speed;loop_disp ++){
-			
-				switch(color){
-
-					case 'R':	DISPLAY_R(DispBuffer);break;
-					case 'G':	DISPLAY_G(DispBuffer);break;
-					case 'X':	DISPLAY_RG(DispBuffer);break;
-					default :	DISPLAY_R(DispBuffer);break;
+							case 0	:	DISPLAY_R(DispBuffer);break;
+							case 1	:	DISPLAY_G(DispBuffer);break;
+							case 2	:	DISPLAY_RG(DispBuffer);break;
+							default	:	DISPLAY_R(DispBuffer);break;
+					}
 				}
 			}
 		}
 	}
 }
 
-void LEDArrayTest_Thread(const void *argument){
-
-	while(1){
+void LEDArrayCM_Thread(const void *argument){
 	
-		if(FLG_CLO == 0)DiSP_ASC("Be the chenge you want to see in the world.        ",'X',4);
-		else DISPLAY_R(DispBuffer);
+	for(;;)LEDArryDisp();
+}
+
+void LEDArryDisp(void){
+	
+	uint8_t HA    = (DispLAattr & 0x80) >> 7;
+	uint8_t color = (DispLAattr & 0x60) >> 5;
+	uint8_t slip  = (DispLAattr & 0x10) >> 4;
+	uint8_t speed = 15 - (DispLAattr & 0x0f);
+	
+	uint8_t 	DispLABufferLen = sizeof(disp_libc) / sizeof(disp_libc[0]) / 2; 
+	
+	if(HA){
+	
+		switch(DispLABuffer[0]){
+		
+			case 0 :	DispLABufferLen = (sizeof(disp_liba)) / sizeof(disp_liba[0]) / 2; 
+						DISP_HANZI(disp_liba,DispLABufferLen,slip,speed,color);
+						break;
+			
+			case 1 :	DispLABufferLen = sizeof(disp_libb) / sizeof(disp_libb[0]) / 2; 
+						DISP_HANZI(disp_libb,DispLABufferLen,slip,speed,color);
+						break;
+			
+			case 2 :	DispLABufferLen = sizeof(disp_libc) / sizeof(disp_libc[0]) / 2; 
+						DISP_HANZI(disp_libc,DispLABufferLen,slip,speed,color);
+						break;
+
+			default: break;
+		}
+	}else{
+		
+		
+			DiSP_ASC((char *)DispLABuffer,color,speed);
 	}
 }
 
-void LEDArrayTest(void){
+void TaskLAdisp(void const *argument){
+	
+	static uint8_t attr;
+	static uint8_t Buffer[DISPLA_BUFFER_SIZE];
+	
+	if(DispLAattr != attr || strcmp((const char*)DispLABuffer,(const char*)Buffer)){
+		
+		Driver_USART1.Send((char*)&DispLAattr,1);
+	
+		memset(DispBuffer,0,8*16*sizeof(uint8_t));
+		memset(Buffer,0,DISPLA_BUFFER_SIZE*sizeof(uint8_t));
+		strcpy((char *)Buffer,(const char *)DispLABuffer);
+		attr = DispLAattr;
+		osThreadTerminate(tid_LEDArrayCM_Thread);	
+		osDelay(100);
+		tid_LEDArrayCM_Thread = osThreadCreate(osThread(LEDArrayCM_Thread),NULL);
+	}
+}
 
-	tid_LEDArrayTest_Thread = osThreadCreate(osThread(LEDArrayTest_Thread),NULL);
+void LEDArrayCM(void){
+	
+	osTimerId Tim_id_LAdisp;
+
+	Tim_id_LAdisp = osTimerCreate(osTimer(Tim_LAdisp), osTimerPeriodic, &TaskLAdisp);
+
+	osTimerStart(Tim_id_LAdisp,100);
+
+	tid_LEDArrayCM_Thread = osThreadCreate(osThread(LEDArrayCM_Thread),NULL);
 }

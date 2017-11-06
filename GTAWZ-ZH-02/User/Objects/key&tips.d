@@ -23,7 +23,7 @@
 .\objects\key&tips.o: .\User\osObjects.h
 .\objects\key&tips.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\key&tips.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\key&tips.o: .\User\reWrite\Driver_USART.h
+.\objects\key&tips.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h
 .\objects\key&tips.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h
 .\objects\key&tips.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\key&tips.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h

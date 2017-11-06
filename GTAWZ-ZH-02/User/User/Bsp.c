@@ -2,16 +2,16 @@
 	
 funMoudle *moudleTestForm[] = {
 	
-	(void *)0								,(void *)0								,(void *)0								,(void *)0								,(void *)0								,
-	(void *)0								,(void *)0								,(void *)0								,&SHT11Test								,(void *)0								,
-	(void *)0								,&LEDArrayTest							,(void *)0								,(void *)0								,(void *)0								,
+	(void *)0								,(void *)0								,(void *)0								,(void *)0								,&TSL2561MS 							,
+	(void *)0								,(void *)0								,(void *)0								,&SHT11MS								,(void *)0								,
+	(void *)0								,&LEDArrayCM							,(void *)0								,(void *)0								,(void *)0								,
 	(void *)0								,(void *)0								,(void *)0								,(void *)0								,(void *)0								
 };
 
 funMoudle *moudleInitForm[] = {
 	
 	
-	(void *)0								,(void *)0								,(void *)0								,(void *)0								,(void *)0								,
+	(void *)0								,(void *)0								,(void *)0								,(void *)0								,&TSL2561_Init							,
 	(void *)0								,(void *)0								,(void *)0								,&SHT11_Init							,(void *)0								,
 	(void *)0								,&LEDArray_Init						,(void *)0								,(void *)0								,(void *)0								,
 	(void *)0								,(void *)0								,(void *)0								,(void *)0								,(void *)0								
@@ -38,8 +38,8 @@ void  BSP_Init(void){
 void BSP_Test(void){
 
 	//LEDTest		();	硬件不支持
-	USART1Test();
-	USART2Test();
+	USART1Debug();
+	USART2Trans();
 	keyTest ();
 	LCD_144_test();
 	

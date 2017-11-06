@@ -10,6 +10,7 @@
 #include "MoudleDats.h"
 #include "stdio.h"
 #include "Driver_USART.h"
+#include "string.h"
 
 #include "delay.h"
 
@@ -120,7 +121,8 @@ extern u16 BACK_COLOR, POINT_COLOR ;
 void LCD144_Init(void);
 void LCD_DisplayOn(void);
 void LCD_DisplayOff(void);
-void LCD_Clear(u16 Color);	 
+void LCD_Clear(u16 Color);	
+void LCD_ClearS(u16 Color,u16 x,u16 y,u16 xx,u16 yy);
 void LCD_SetCursor(u16 Xpos, u16 Ypos);
 void LCD_DrawPoint(u16 x,u16 y);//»­µã
 u16  LCD_ReadPoint(u16 x,u16 y); //¶Áµã

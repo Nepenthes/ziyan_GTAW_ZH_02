@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\SHT11</IncludePath>
+              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\SHT11;..\Module\TSL2561</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -464,6 +464,11 @@
               <FileName>SHT11.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Module\SHT11\SHT11.c</FilePath>
+            </File>
+            <File>
+              <FileName>TSL2561.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\TSL2561\TSL2561.c</FilePath>
             </File>
           </Files>
         </Group>

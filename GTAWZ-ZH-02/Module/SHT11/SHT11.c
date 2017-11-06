@@ -14,9 +14,9 @@ uint8 *p_value;
 
 float SHT11_hum=0.0, SHT11_temp=0.0;
 
-osThreadId tid_SHT11Test_Thread;
+osThreadId tid_SHT11MS_Thread;
 
-osThreadDef(SHT11Test_Thread,osPriorityNormal,1,512);
+osThreadDef(SHT11MS_Thread,osPriorityNormal,1,512);
 
 extern osMutexId (uart1_mutex_id);
 
@@ -26,7 +26,7 @@ extern ARM_DRIVER_USART Driver_USART1;								//设备驱动库串口一设备声明
  * LOCAL FUNCTIONS
  */
 void reset(void);
-void start(void);
+void sht11_start(void);
 void sendByte(uint8 value);
 uint8 recvByte(uint8 ack);
 
@@ -34,21 +34,19 @@ uint8 recvByte(uint8 ack);
 void SHT_WInit(void)
 {
  
- GPIO_InitTypeDef  GPIO_InitStructure;
- 	
- RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOC, ENABLE);	 //使能PB端口时钟
-	
- GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;//
- GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
- GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
- GPIO_Init(GPIOC, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
+	GPIO_InitTypeDef  GPIO_InitStructure;
 
- GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;				 //DI INPUT
- GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
- GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
- GPIO_Init(GPIOA, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOC, ENABLE);	 //使能PB端口时钟
 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;//
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
+	GPIO_Init(GPIOC, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;				 //DI INPUT
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
+	GPIO_Init(GPIOA, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
 }
 
 void SHT_RInit(void)
@@ -106,7 +104,7 @@ void convert_shtxx(float * hum, float *temp)
  *@brief    read temperature and humidity sensor data.
  *
  *@param    pData-data buffer.
- *          startIndex- .
+ *          sht11_startIndex- .
  *
  *@return   none
  */
@@ -117,7 +115,7 @@ void readTH(uint8 *pData, uint8 *pStartIndex)
 {
 	/*Reading temperature*/
 	reset();
-	start();
+	sht11_start();
 	sendByte(SHT_MEASURE_TEMP);
 	SHT_DATA_IN;
 
@@ -133,7 +131,7 @@ void readTH(uint8 *pData, uint8 *pStartIndex)
 
 	/*Reading humidity*/
 	reset();
-	start();
+	sht11_start();
 	sendByte(SHT_MEASURE_HUMI);
 	SHT_DATA_IN;
 
@@ -146,7 +144,7 @@ void readTH(uint8 *pData, uint8 *pStartIndex)
 	(void)recvByte(0x0);//crc chksum and nack to sensor, end transfer, throw away
 }
 
-void start()
+void sht11_start()
 {
   SHT_DATA_OUT;
   //SHT_SCK_OUT;
@@ -176,7 +174,7 @@ void start()
 
 void reset()
 //----------------------------------------------------------------------------------
-// communication reset: DATA-line=1 and at least 9 SCK cycles followed by transstart
+// communication reset: DATA-line=1 and at least 9 SCK cycles followed by transsht11_start
 //       _____________________________________________________         ________
 // DATA:                                                      |_______|
 //          _    _    _    _    _    _    _    _    _        ___     ___
@@ -203,7 +201,7 @@ void reset()
 
   }
 
-  start();                   //transmission start
+  sht11_start();                   //transmission sht11_start
 
 }
 
@@ -220,8 +218,6 @@ void sendByte(uint8 value)
 
   for (i=0x80; i>0; i/=2)
   {
-
-
     if (i & value)
     {
       SHT_DATA(1);// = 1;
@@ -290,7 +286,7 @@ uint8 recvByte(uint8 ack)
   return val;
 }
 
-void SHT11Test_Thread(const void *argument){
+void SHT11MS_Thread(const void *argument){
 
 	result_t res;
 	u8 len;
@@ -316,7 +312,7 @@ void SHT11_Init(void){
 	;
 }
 
-void SHT11Test(void){
+void SHT11MS(void){
 
-	tid_SHT11Test_Thread = osThreadCreate(osThread(SHT11Test_Thread),NULL);
+	tid_SHT11MS_Thread = osThreadCreate(osThread(SHT11MS_Thread),NULL);
 }

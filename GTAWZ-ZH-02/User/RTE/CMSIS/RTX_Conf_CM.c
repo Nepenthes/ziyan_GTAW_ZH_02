@@ -136,7 +136,7 @@
 //   <i> Defines how long a thread will execute before a thread switch.
 //   <i> Default: 5
 #ifndef OS_ROBINTOUT
- #define OS_ROBINTOUT   1
+ #define OS_ROBINTOUT   5
 #endif
  
 // </e>

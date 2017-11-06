@@ -27,9 +27,9 @@
 .\objects\gui_1.44.o: ..\Module\LCD(1.44inches)\GUI_1.44.h
 .\objects\gui_1.44.o: .\User\MoudleDats.h
 .\objects\gui_1.44.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\gui_1.44.o: .\User\reWrite\Driver_USART.h
+.\objects\gui_1.44.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h
 .\objects\gui_1.44.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h
 .\objects\gui_1.44.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\gui_1.44.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
 .\objects\gui_1.44.o: .\User\delay.h
 .\objects\gui_1.44.o: ..\Module\LCD(1.44inches)\FONT_1.44.h
-.\objects\gui_1.44.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h

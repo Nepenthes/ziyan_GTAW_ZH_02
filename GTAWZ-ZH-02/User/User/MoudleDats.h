@@ -1,7 +1,7 @@
 #ifndef MOUDLEDATS_H
 #define MOUDLEDATS_H
 
-#define MOUDLE_ID		12
+#define MOUDLE_ID		20   //20вдФк
 
 /**********************************************************************
 1.	4x4ОиеѓМќХЬ

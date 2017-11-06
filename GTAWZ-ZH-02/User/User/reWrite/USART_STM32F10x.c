@@ -1247,20 +1247,6 @@ static uint32_t USART_GetRxCount (const USART_RESOURCES *usart) {
 }
 
 /**
-  \fn          自定义接收数据计数，手动清零
-  \brief       自定义接收数据计数，手动清零
-  \param[in]   usart     Pointer to USART resources
-  \return      number of data items received
-*/
-static uint32_t USART_GetRxCountNx (const USART_RESOURCES *usart) {
-
-	uint32_t temp = usart->xfer->rx_num;
-
-	usart->xfer->rx_cntx = 0;
-	return temp;
-}
-
-/**
   \fn          int32_t USART_Control (      uint32_t          control,
                                             uint32_t          arg,
                                       const USART_RESOURCES  *usart)
@@ -1900,7 +1886,7 @@ void USART_IRQHandler (const USART_RESOURCES *usart) {
   val   = 0U;
   event = 0U;
   data  = 0U;
-	
+
   // Read Data register not empty
   if (sr & USART_SR_RXNE & usart->reg->CR1) {
     // Check for RX overflow
@@ -1964,8 +1950,7 @@ void USART_IRQHandler (const USART_RESOURCES *usart) {
   if (sr & USART_SR_IDLE & usart->reg->CR1) {
     // Dummy read to clear IDLE interrupt
     usart->reg->DR;
-	 usart->xfer->rx_cntx = usart->xfer->rx_cnt; //自定义
-	 usart->info->status.rx_busy = 0U;		//自定义只要一帧，不管收到多少，一帧结束直接清忙
+	 usart->info->status.rx_busy = 0U;
     event |= ARM_USART_EVENT_RX_TIMEOUT;
   }
 
@@ -2157,7 +2142,6 @@ static int32_t                 USART1_Receive         (void *data, uint32_t num)
 static int32_t                 USART1_Transfer        (const void *data_out, void *data_in, uint32_t num)   { return USART_Transfer (data_out, data_in, num, &USART1_Resources); }
 static uint32_t                USART1_GetTxCount      (void)                                                { return USART_GetTxCount (&USART1_Resources); }
 static uint32_t                USART1_GetRxCount      (void)                                                { return USART_GetRxCount (&USART1_Resources); }
-static uint32_t                USART1_GetRxCountNx    (void)  																{ return USART_GetRxCountNx (&USART1_Resources);}
 static int32_t                 USART1_Control         (uint32_t control, uint32_t arg)                      { return USART_Control (control, arg, &USART1_Resources); }
 static ARM_USART_STATUS        USART1_GetStatus       (void)                                                { return USART_GetStatus (&USART1_Resources); }
 static int32_t                 USART1_SetModemControl (ARM_USART_MODEM_CONTROL control)                     { return USART_SetModemControl (control, &USART1_Resources); }
@@ -2183,7 +2167,6 @@ ARM_DRIVER_USART Driver_USART1 = {
     USART1_Transfer,
     USART1_GetTxCount,
     USART1_GetRxCount,
-	 USART1_GetRxCountNx,
     USART1_Control,
     USART1_GetStatus,
     USART1_SetModemControl,
@@ -2202,7 +2185,6 @@ static int32_t                 USART2_Receive         (void *data, uint32_t num)
 static int32_t                 USART2_Transfer        (const void *data_out, void *data_in, uint32_t num)   { return USART_Transfer (data_out, data_in, num, &USART2_Resources); }
 static uint32_t                USART2_GetTxCount      (void)                                                { return USART_GetTxCount (&USART2_Resources); }
 static uint32_t                USART2_GetRxCount      (void)                                                { return USART_GetRxCount (&USART2_Resources); }
-static uint32_t                USART2_GetRxCountNx    (void)  																{ return USART_GetRxCountNx (&USART2_Resources);}
 static int32_t                 USART2_Control         (uint32_t control, uint32_t arg)                      { return USART_Control (control, arg, &USART2_Resources); }
 static ARM_USART_STATUS        USART2_GetStatus       (void)                                                { return USART_GetStatus (&USART2_Resources); }
 static int32_t                 USART2_SetModemControl (ARM_USART_MODEM_CONTROL control)                     { return USART_SetModemControl (control, &USART2_Resources); }
@@ -2228,7 +2210,6 @@ ARM_DRIVER_USART Driver_USART2 = {
     USART2_Transfer,
     USART2_GetTxCount,
     USART2_GetRxCount,
-	 USART2_GetRxCountNx,
     USART2_Control,
     USART2_GetStatus,
     USART2_SetModemControl,
@@ -2247,7 +2228,6 @@ static int32_t                 USART3_Receive         (void *data, uint32_t num)
 static int32_t                 USART3_Transfer        (const void *data_out, void *data_in, uint32_t num)   { return USART_Transfer (data_out, data_in, num, &USART3_Resources); }
 static uint32_t                USART3_GetTxCount      (void)                                                { return USART_GetTxCount (&USART3_Resources); }
 static uint32_t                USART3_GetRxCount      (void)                                                { return USART_GetRxCount (&USART3_Resources); }
-static uint32_t                USART3_GetRxCountNx    (void)  																{ return USART_GetRxCountNx (&USART3_Resources);}
 static int32_t                 USART3_Control         (uint32_t control, uint32_t arg)                      { return USART_Control (control, arg, &USART3_Resources); }
 static ARM_USART_STATUS        USART3_GetStatus       (void)                                                { return USART_GetStatus (&USART3_Resources); }
 static int32_t                 USART3_SetModemControl (ARM_USART_MODEM_CONTROL control)                     { return USART_SetModemControl (control, &USART3_Resources); }
@@ -2273,7 +2253,6 @@ ARM_DRIVER_USART Driver_USART3 = {
     USART3_Transfer,
     USART3_GetTxCount,
     USART3_GetRxCount,
-	 USART3_GetRxCountNx,
     USART3_Control,
     USART3_GetStatus,
     USART3_SetModemControl,
@@ -2292,7 +2271,6 @@ static int32_t                 USART4_Receive         (void *data, uint32_t num)
 static int32_t                 USART4_Transfer        (const void *data_out, void *data_in, uint32_t num)   { return USART_Transfer (data_out, data_in, num, &USART4_Resources); }
 static uint32_t                USART4_GetTxCount      (void)                                                { return USART_GetTxCount (&USART4_Resources); }
 static uint32_t                USART4_GetRxCount      (void)                                                { return USART_GetRxCount (&USART4_Resources); }
-static uint32_t                USART4_GetRxCountNx    (void)  																{ return USART_GetRxCountNx (&USART4_Resources);}
 static int32_t                 USART4_Control         (uint32_t control, uint32_t arg)                      { return USART_Control (control, arg, &USART4_Resources); }
 static ARM_USART_STATUS        USART4_GetStatus       (void)                                                { return USART_GetStatus (&USART4_Resources); }
 static int32_t                 USART4_SetModemControl (ARM_USART_MODEM_CONTROL control)                     { return USART_SetModemControl (control, &USART4_Resources); }
@@ -2318,7 +2296,6 @@ ARM_DRIVER_USART Driver_USART4 = {
     USART4_Transfer,
     USART4_GetTxCount,
     USART4_GetRxCount,
-	 USART4_GetRxCountNx,
     USART4_Control,
     USART4_GetStatus,
     USART4_SetModemControl,
@@ -2337,7 +2314,6 @@ static int32_t                 USART5_Receive         (void *data, uint32_t num)
 static int32_t                 USART5_Transfer        (const void *data_out, void *data_in, uint32_t num)   { return USART_Transfer (data_out, data_in, num, &USART5_Resources); }
 static uint32_t                USART5_GetTxCount      (void)                                                { return USART_GetTxCount (&USART5_Resources); }
 static uint32_t                USART5_GetRxCount      (void)                                                { return USART_GetRxCount (&USART5_Resources); }
-static uint32_t                USART5_GetRxCountNx    (void)  																{ return USART_GetRxCountNx (&USART5_Resources);}
 static int32_t                 USART5_Control         (uint32_t control, uint32_t arg)                      { return USART_Control (control, arg, &USART5_Resources); }
 static ARM_USART_STATUS        USART5_GetStatus       (void)                                                { return USART_GetStatus (&USART5_Resources); }
 static int32_t                 USART5_SetModemControl (ARM_USART_MODEM_CONTROL control)                     { return USART_SetModemControl (control, &USART5_Resources); }
@@ -2363,7 +2339,6 @@ ARM_DRIVER_USART Driver_USART5 = {
     USART5_Transfer,
     USART5_GetTxCount,
     USART5_GetRxCount,
-	 USART5_GetRxCountNx,
     USART5_Control,
     USART5_GetStatus,
     USART5_SetModemControl,

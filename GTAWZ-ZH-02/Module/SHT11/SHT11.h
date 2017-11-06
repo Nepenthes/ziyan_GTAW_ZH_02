@@ -62,7 +62,7 @@ void readTH(uint8 *pData, uint8 *pStartIndex);
 void convert_shtxx(float * hum, float *temp);
 
 void SHT11_Init(void);
-void SHT11Test_Thread(const void *argument);
-void SHT11Test(void);
+void SHT11MS_Thread(const void *argument);
+void SHT11MS(void);
 
 #endif

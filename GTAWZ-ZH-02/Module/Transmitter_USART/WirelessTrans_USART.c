@@ -1,11 +1,16 @@
 #include <WirelessTrans_USART.h>
 
 extern osMutexId (uart1_mutex_id);
-extern uint8_t FLG_CLO;
+#if(MOUDLE_ID == 1)
 
-#if(MOUDLE_ID == 9)
+#elif(MOUDLE_ID == 5)
+extern uint32_t LUXValue;
+#elif(MOUDLE_ID == 9)
 extern float SHT11_hum; 
 extern float SHT11_temp;
+#elif(MOUDLE_ID == 12)
+extern uint8_t	DispLAattr; // HA:1   color:2  slip :1  speed:4
+extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 #endif
 
 const uint8_t MOUDLE_TYPE[20] = {
@@ -32,11 +37,11 @@ const char *TestREP[] = {
 extern ARM_DRIVER_USART Driver_USART1;
 extern ARM_DRIVER_USART Driver_USART2;
 
-osThreadId tid_USART1Test_Thread;
-osThreadId tid_USART2Test_Thread;
+osThreadId tid_USART1Debug_Thread;
+osThreadId tid_USART2Trans_Thread;
 
-osThreadDef(USART1Test_Thread,osPriorityNormal,1,128);
-osThreadDef(USART2Test_Thread,osPriorityNormal,1,128);
+osThreadDef(USART1Debug_Thread,osPriorityNormal,1,512);
+osThreadDef(USART2Trans_Thread,osPriorityNormal,1,512);
 
 uint8_t FRAME_TX[FRAME_TX_SIZE] = {0};
 uint8_t FRAME_RX[FRAME_RX_SIZE] = {0};
@@ -185,7 +190,7 @@ void myUSART2_callback(uint32_t event){
 //	}
 }
 
-void USART1Test_Thread(const void *argument){
+void USART1Debug_Thread(const void *argument){
 
 	char cmd[30] = "abc";
 	
@@ -204,9 +209,23 @@ void USART1Test_Thread(const void *argument){
 	}
 }
 
-void USART2Test_Thread(const void *argument){
+void USART2Trans_Thread(const void *argument){
 
 	uint8_t dats[20];
+	
+#if(MOUDLE_ID == 1)	
+#elif(MOUDLE_ID == 5)	
+	char temp_wan = (char)(LUXValue % 1000000 / 10000);
+	char temp_bai = (char)(LUXValue % 10000 / 100);
+	char temp_ge  = (char)(LUXValue % 100);
+#elif(MOUDLE_ID == 9)
+	char temp_zhengshu = (char)SHT11_temp;
+	char temp_xiaoshu  = (char)((SHT11_temp-(float)temp_zhengshu)*100);
+	char hum_zhengshu  = (char)SHT11_hum;
+	char hum_xiaoshu   = (char)((SHT11_hum-(float)hum_zhengshu)*100);
+#elif(MOUDLE_ID == 12)
+	uint8_t num = (sizeof(DispLABuffer) / sizeof(uint8_t));
+#endif
 	
 	for(;;){
 		
@@ -214,7 +233,7 @@ void USART2Test_Thread(const void *argument){
 		char *pt;	
 		uint8_t dats_rx[10];
 	
-		Driver_USART2.Receive(FRAME_RX,50);
+		Driver_USART2.Receive(FRAME_RX,FRAME_RX_SIZE);
 		
 		pt = strstr((const char*)FRAME_RX,(const char*)FRAME_PRT1);
 	
@@ -229,55 +248,65 @@ void USART2Test_Thread(const void *argument){
 					
 					memcpy(dats_rx,(const void*)&dats[7],dats[6]);
 					
-					FLG_CLO = dats_rx[0];
-					
 					Driver_USART1.Send(dats_rx,dats[6]);				
 				}			
 			memset(FRAME_RX,0,30*sizeof(uint8_t));
 		}	
 		osDelay(20);	
 #endif
+//-----------------------------------------------------------------------传感器，主要为发送数据		
+#if(MOUDLE_ID == 1)	
 		
-#if(MOUDLE_ID == 9)	
-		char temp_shi = (char)SHT11_temp;
-		char temp_ge  = (char)((SHT11_temp-(float)temp_shi)*100);
-		char hum_shi = (char)SHT11_hum;
-		char hum_ge  = (char)((SHT11_hum-(float)hum_shi)*100);
-		dats[0] = temp_shi;
-		dats[1] = temp_ge;
-		dats[2] = hum_shi;
-		dats[3] = hum_ge;
-		FRAME_TX_DATSLOAD(dats);
+#elif(MOUDLE_ID == 5)		
+		temp_wan = (char)(LUXValue % 1000000 / 10000);
+		temp_bai = (char)(LUXValue % 10000 / 100);
+		temp_ge  = (char)(LUXValue % 100);
 		
+		dats[0] = temp_wan;
+	   dats[1] = temp_bai;
+		dats[2] = temp_ge;
+		FRAME_TX_DATSLOAD(dats,3);	
+		
+#elif(MOUDLE_ID == 9)		
+	   temp_zhengshu = (char)SHT11_temp;
+		temp_xiaoshu  = (char)((SHT11_temp-(float)temp_zhengshu)*100);
+		hum_zhengshu  = (char)SHT11_hum;
+		hum_xiaoshu   = (char)((SHT11_hum-(float)hum_zhengshu)*100);
+		
+		dats[0] = temp_zhengshu;
+		dats[1] = temp_xiaoshu;
+		dats[2] = hum_zhengshu;
+		dats[3] = hum_xiaoshu;
+		FRAME_TX_DATSLOAD(dats,strlen((const char*)dats));
+//-----------------------------------------------------------------------执行器，主要为接收命令处理		
 #elif(MOUDLE_ID == 12)
-		
-		
+		num = (sizeof(DispLABuffer) / sizeof(uint8_t));	
+		DispLAattr 	 = dats_rx[0];
+		memset(DispLABuffer,0,num*sizeof(char));
+		memcpy(DispLABuffer,&dats_rx[1],strlen((const char*)&dats_rx[1]));
 #endif
 
 #if(MOUDLE_ID <= 10)
-		Driver_USART2.Send((void *)FRAME_TX,strlen((void *)FRAME_TX));
-		//USART_SendData(USART2,'a');
+		Driver_USART2.Send((void *)FRAME_TX,8 + FRAME_TX[6]);
 		osDelay(500);
 		memset(FRAME_TX,0,20*sizeof(char));
-		
 		osDelay(1500);	
 #endif
 	}
 }
 
-void USART1Test(void){
+void USART1Debug(void){
 	
-	tid_USART1Test_Thread = osThreadCreate(osThread(USART1Test_Thread),NULL);
+	tid_USART1Debug_Thread = osThreadCreate(osThread(USART1Debug_Thread),NULL);
 }
 
-void USART2Test(void){
+void USART2Trans(void){
 	
-	tid_USART2Test_Thread = osThreadCreate(osThread(USART2Test_Thread),NULL);
+	tid_USART2Trans_Thread = osThreadCreate(osThread(USART2Trans_Thread),NULL);
 }
 
-void FRAME_TX_DATSLOAD(uint8_t dats[]){
+void FRAME_TX_DATSLOAD(uint8_t dats[],uint8_t datsLength){
 
-	uint8_t datsLength = strlen((const char*)dats);
 	uint8_t framePt	 = 0;
 	
 	framePt += (sizeof(FRAME_PRT1) / sizeof(FRAME_PRT1[0]) - 1);
@@ -285,7 +314,7 @@ void FRAME_TX_DATSLOAD(uint8_t dats[]){
 	FRAME_TX[framePt ++] = (char)MOUDLE_TYPE[MOUDLE_ID - 1];
 	FRAME_TX[framePt ++] = CMD_DATA_TX;
 	FRAME_TX[framePt ++] = datsLength;
-	memcpy((char*)(FRAME_TX+framePt),dats,datsLength);
+	memcpy((char*)(FRAME_TX+framePt),(const void*)dats,datsLength);
 	framePt += datsLength;
 	FRAME_TX[framePt] = FRAME_TAIL;
 }

@@ -13,6 +13,7 @@
 ".\objects\lcd_1.44.o"
 ".\objects\led_array.o"
 ".\objects\sht11.o"
+".\objects\tsl2561.o"
 ".\objects\usart_stm32f10x.o"
 "D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\LIB\ARM\RTX_CM3.lib"
 ".\objects\rtx_conf_cm.o"

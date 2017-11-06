@@ -8,6 +8,8 @@
 #include "Driver_USART.h"
 #include "string.h"
 
+#include "LED_Array.h"
+
 #include "USART_STM32F10x.h"
 
 #include <MoudleDats.h>
@@ -15,7 +17,7 @@
 #define FRAME_DATS_SIZE	10		//除了协议帧数据外，传感器数据缓冲队列长度
 
 #define FRAME_TX_SIZE	24		//发送队列整帧长度
-#define FRAME_RX_SIZE	24		//接收队列整帧长度
+#define FRAME_RX_SIZE	200	//接收队列整帧长度
 
 #define FRAME_HEAD	0x7E		//帧头
 #define FRAME_TAIL	0x0D		//帧尾
@@ -61,12 +63,12 @@ void USART1Init2(void);
 void USART2Init1(void);
 void USART2Init2(void);
 
-void USART1Test_Thread(const void *argument);
-void USART2Test_Thread(const void *argument);
+void USART1Debug_Thread(const void *argument);
+void USART2Trans_Thread(const void *argument);
 
-void USART1Test(void);
-void USART2Test(void);
+void USART1Debug(void);
+void USART2Trans(void);
 
-void FRAME_TX_DATSLOAD(uint8_t dats[]);
+void FRAME_TX_DATSLOAD(uint8_t dats[],uint8_t length);
 
 #endif
