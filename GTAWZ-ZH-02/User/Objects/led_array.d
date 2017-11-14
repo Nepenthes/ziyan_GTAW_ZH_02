@@ -27,6 +27,7 @@
 .\objects\led_array.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
 .\objects\led_array.o: .\User\IO_Map.h
 .\objects\led_array.o: .\User\delay.h
+.\objects\led_array.o: .\User\MoudleDats.h
 .\objects\led_array.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\USART_STM32F10x.h
 .\objects\led_array.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\led_array.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\GPIO_STM32F10x.h

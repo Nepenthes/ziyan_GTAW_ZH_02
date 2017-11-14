@@ -7,7 +7,7 @@
 #include "osObjects.h"                      // RTOS object definitions
 
 void BEEP_Init(void);	//≥ı ºªØ
-void Beep_time(u16 time);
+void Beep_time(uint16_t time);
 		 				    
 #endif
 

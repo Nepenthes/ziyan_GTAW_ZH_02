@@ -12,18 +12,20 @@
 #include "Driver_USART.h"
 #include "string.h"
 
+#include "Bsp.h"
+
 #include "delay.h"
 
 //LCD重要参数集
 typedef struct  
 {										    
-	u16 width;			//LCD 宽度
-	u16 height;			//LCD 高度
-	u16 id;				//LCD ID
-	u8  dir;			//横屏还是竖屏控制：0，竖屏；1，横屏。	
-	u16	 wramcmd;		//开始写gram指令
-	u16  setxcmd;		//设置x坐标指令
-	u16  setycmd;		//设置y坐标指令	 
+	uint16_t width;			//LCD 宽度
+	uint16_t height;			//LCD 高度
+	uint16_t id;				//LCD ID
+	uint8_t  dir;			//横屏还是竖屏控制：0，竖屏；1，横屏。	
+	uint16_t	 wramcmd;		//开始写gram指令
+	uint16_t  setxcmd;		//设置x坐标指令
+	uint16_t  setycmd;		//设置y坐标指令	 
 }_lcd_dev; 	
 
 //LCD参数
@@ -44,8 +46,8 @@ extern _lcd_dev lcddev;	//管理LCD重要参数
 #endif
 
 //TFTLCD部分外要调用的函数		   
-extern u16  POINT_COLOR;//默认红色    
-extern u16  BACK_COLOR; //背景颜色.默认为白色
+extern uint16_t  POINT_COLOR;//默认红色    
+extern uint16_t  BACK_COLOR; //背景颜色.默认为白色
 
 ////////////////////////////////////////////////////////////////////
 //-----------------LCD端口定义---------------- 
@@ -116,29 +118,29 @@ extern u16  BACK_COLOR; //背景颜色.默认为白色
 #define LGRAYBLUE      	0XA651 //浅灰蓝色(中间层颜色)
 #define LBBLUE          0X2B12 //浅棕蓝色(选择条目的反色)
 	    															  
-extern u16 BACK_COLOR, POINT_COLOR ;  
+extern uint16_t BACK_COLOR, POINT_COLOR ;  
 
 void LCD144_Init(void);
 void LCD_DisplayOn(void);
 void LCD_DisplayOff(void);
-void LCD_Clear(u16 Color);	
-void LCD_ClearS(u16 Color,u16 x,u16 y,u16 xx,u16 yy);
-void LCD_SetCursor(u16 Xpos, u16 Ypos);
-void LCD_DrawPoint(u16 x,u16 y);//画点
-u16  LCD_ReadPoint(u16 x,u16 y); //读点
-void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2);
-void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2);		   
-void LCD_SetWindows(u16 xStar, u16 yStar,u16 xEnd,u16 yEnd);
-void LCD_DrawPoint_16Bit(u16 color);
-u16 LCD_RD_DATA(void);//读取LCD数据									    
-void LCD_WriteReg(u16 LCD_Reg, u16 LCD_RegValue);
-void LCD_WR_DATA(u8 data);
-void LCD_WR_DATA_16Bit(u16 data);
-u16 LCD_ReadReg(u8 LCD_Reg);
+void LCD_Clear(uint16_t Color);	
+void LCD_ClearS(uint16_t Color,uint16_t x,uint16_t y,uint16_t xx,uint16_t yy);
+void LCD_SetCursor(uint16_t Xpos, uint16_t Ypos);
+void LCD_DrawPoint(uint16_t x,uint16_t y);//画点
+uint16_t  LCD_ReadPoint(uint16_t x,uint16_t y); //读点
+void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
+void LCD_DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);		   
+void LCD_SetWindows(uint16_t xStar, uint16_t yStar,uint16_t xEnd,uint16_t yEnd);
+void LCD_DrawPoint_16Bit(uint16_t color);
+uint16_t LCD_RD_DATA(void);//读取LCD数据									    
+void LCD_WriteReg(uint16_t LCD_Reg, uint16_t LCD_RegValue);
+void LCD_WR_DATA(uint8_t data);
+void LCD_WR_DATA_16Bit(uint16_t data);
+uint16_t LCD_ReadReg(uint8_t LCD_Reg);
 void LCD_WriteRAM_Prepare(void);
-void LCD_WriteRAM(u16 RGB_Code);
-u16 LCD_ReadRAM(void);		   
-u16 LCD_BGR2RGB(u16 c);
+void LCD_WriteRAM(uint16_t RGB_Code);
+uint16_t LCD_ReadRAM(void);		   
+uint16_t LCD_BGR2RGB(uint16_t c);
 void LCD_SetParam(void);
 
 void LCD144Test_Thread(const void *argument);

@@ -31,6 +31,7 @@
 .\objects\bsp.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\bsp.o: ..\Module\Transmitter_USART\WirelessTrans_USART.h
 .\objects\bsp.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
+.\objects\bsp.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\math.h
 .\objects\bsp.o: ..\Module\LED_ARRAY\LED_Array.h
 .\objects\bsp.o: ..\Module\BEEP\beep.h
 .\objects\bsp.o: .\User\IO_Map.h
@@ -43,6 +44,19 @@
 .\objects\bsp.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\bsp.o: ..\Module\LCD(1.44inches)\GUI_1.44.h
 .\objects\bsp.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\bsp.o: .\User\Bsp.h
+.\objects\bsp.o: ..\Module\LED_Spray\ledSpray.h
+.\objects\bsp.o: ..\Module\LED_Grow\ledGrow.h
+.\objects\bsp.o: ..\Module\EXHUASH\exAir.h
 .\objects\bsp.o: ..\Module\SHT11\SHT11.h
 .\objects\bsp.o: .\User\SysSupport.h
 .\objects\bsp.o: ..\Module\TSL2561\TSL2561.h
+.\objects\bsp.o: ..\Module\BMP180\BMP180.h
+.\objects\bsp.o: ..\Module\BMP180\bmp180_iic.h
+.\objects\bsp.o: ..\Module\SensorSIM\SensorSim.h
+.\objects\bsp.o: ..\Module\keyBoard\keyBoard.h
+.\objects\bsp.o: ..\Module\Sensor_RT\Sensor_RT.h
+.\objects\bsp.o: ..\Module\Sensor_Rain\Sensor_Rain.h
+.\objects\bsp.o: ..\Module\RFID\rc522_function.h
+.\objects\bsp.o: ..\Module\RFID\rc522_config.h
+.\objects\bsp.o: .\User\stm32f10x_it.h

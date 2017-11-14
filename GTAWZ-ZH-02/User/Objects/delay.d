@@ -23,3 +23,4 @@
 .\objects\delay.o: User\osObjects.h
 .\objects\delay.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\delay.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\delay.o: .\User\MoudleDats.h

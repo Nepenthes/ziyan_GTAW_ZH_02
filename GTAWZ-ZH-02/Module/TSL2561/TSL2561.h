@@ -70,8 +70,8 @@
 /***********************************************************************
  * MACROS
  */
-typedef  u8 uint8;
-typedef  u16 uint16;
+typedef  uint8_t uint8;
+typedef  uint16_t uint16;
 typedef  u32 uint32;
 
 //IO·½ÏòÉèÖÃ

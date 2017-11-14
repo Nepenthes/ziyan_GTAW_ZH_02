@@ -15,7 +15,7 @@ void BEEP_Init(void)
  GPIO_SetBits(GPIOC,GPIO_Pin_5);//Êä³ö1£¬¹Ø±Õ·äÃùÆ÷Êä³ö
 }
 
-void Beep_time(u16 time)
+void Beep_time(uint16_t time)
 {
 	GPIO_WriteBit(GPIOC, GPIO_Pin_5, Bit_RESET);
 	osDelay(time);

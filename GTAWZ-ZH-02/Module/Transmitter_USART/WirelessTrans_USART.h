@@ -7,6 +7,7 @@
 #include "osObjects.h"                      // RTOS object definitions
 #include "Driver_USART.h"
 #include "string.h"
+#include "math.h"
 
 #include "LED_Array.h"
 

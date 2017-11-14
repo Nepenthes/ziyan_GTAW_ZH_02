@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\SHT11;..\Module\TSL2561</IncludePath>
+              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\LED_Spray;..\Module\LED_Grow;..\Module\SHT11;..\Module\TSL2561;..\Module\BMP180;..\Module\keyBoard;..\Module\SensorSIM;..\Module\Sensor_RT;..\Module\Sensor_Rain;..\Module\RFID;..\Module\EXHUASH</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -470,10 +470,67 @@
               <FileType>1</FileType>
               <FilePath>..\Module\TSL2561\TSL2561.c</FilePath>
             </File>
+            <File>
+              <FileName>BMP180.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\BMP180\BMP180.C</FilePath>
+            </File>
+            <File>
+              <FileName>bmp180_iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\BMP180\bmp180_iic.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sensorsim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\SensorSIM\Sensorsim.c</FilePath>
+            </File>
+            <File>
+              <FileName>keyBoard.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\keyBoard\keyBoard.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sensor_RT.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Sensor_RT\Sensor_RT.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sensor_Rain.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Sensor_Rain\Sensor_Rain.c</FilePath>
+            </File>
+            <File>
+              <FileName>rc522_function.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\RFID\rc522_function.c</FilePath>
+            </File>
+            <File>
+              <FileName>rc522_config.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\RFID\rc522_config.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>执行器构件</GroupName>
+          <Files>
+            <File>
+              <FileName>ledSpray.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LED_Spray\ledSpray.c</FilePath>
+            </File>
+            <File>
+              <FileName>ledGrow.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LED_Grow\ledGrow.c</FilePath>
+            </File>
+            <File>
+              <FileName>exAir.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\EXHUASH\exAir.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>系统外设驱动改写</GroupName>
@@ -651,6 +708,18 @@
         <targetInfos>
           <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>
         </targetInfos>
+      </file>
+      <file attr="config" category="doc" name="emWin\Tool\GUIBuilder.txt" version="1.0.0">
+        <instance index="0" removed="1">RTE\Graphics\GUIBuilder.txt</instance>
+        <component Cbundle="MDK-Pro" Cclass="Graphics" Cgroup="Tools" Csub="GUI Builder" Cvendor="Segger" Cversion="5.36.6" condition="Graphics Core"/>
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.4.1"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="source" name="emWin\Sample\Config\GUIConf.c" version="5.0.0">
+        <instance index="0" removed="1">RTE\Graphics\GUIConf.c</instance>
+        <component Cbundle="MDK-Pro" Cclass="Graphics" Cgroup="CORE" Cvendor="Segger" Cversion="5.36.6" condition="CMSIS Core with RTOS and Display"/>
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.4.1"/>
+        <targetInfos/>
       </file>
     </files>
   </RTE>

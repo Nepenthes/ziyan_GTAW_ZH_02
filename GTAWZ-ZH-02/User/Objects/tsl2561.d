@@ -25,6 +25,7 @@
 .\objects\tsl2561.o: .\User\osObjects.h
 .\objects\tsl2561.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\tsl2561.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\tsl2561.o: .\User\MoudleDats.h
 .\objects\tsl2561.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\tsl2561.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
 .\objects\tsl2561.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h

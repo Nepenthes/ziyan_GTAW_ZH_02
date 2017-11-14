@@ -13,7 +13,7 @@
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void GUI_DrawPoint(u16 x,u16 y,u16 color)
+void GUI_DrawPoint(uint16_t x,uint16_t y,uint16_t color)
 {
 	LCD_SetCursor(x,y);//设置光标位置 
 	LCD_WR_DATA_16Bit(color); 
@@ -32,12 +32,12 @@ void GUI_DrawPoint(u16 x,u16 y,u16 color)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color)
+void LCD_Fill(uint16_t sx,uint16_t sy,uint16_t ex,uint16_t ey,uint16_t color)
 {  	
 
-	u16 i,j;			
-	u16 width=ex-sx+1; 		//得到填充的宽度
-	u16 height=ey-sy+1;		//高度
+	uint16_t i,j;			
+	uint16_t width=ex-sx+1; 		//得到填充的宽度
+	uint16_t height=ey-sy+1;		//高度
 	LCD_SetWindows(sx,sy,ex-1,ey-1);//设置显示窗口
 	for(i=0;i<height;i++)
 	{
@@ -58,9 +58,9 @@ void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color)
 //返回值：  无
 //修改记录：无
 //****************************************************************** 
-void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)
+void LCD_DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
-	u16 t; 
+	uint16_t t; 
 	int xerr=0,yerr=0,delta_x,delta_y,distance; 
 	int incx,incy,uRow,uCol; 
 
@@ -103,7 +103,7 @@ void LCD_DrawLine(u16 x1, u16 y1, u16 x2, u16 y2)
 //返回值：  无
 //修改记录：无
 //******************************************************************  
-void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2)
+void LCD_DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
 	LCD_DrawLine(x1,y1,x2,y1);
 	LCD_DrawLine(x1,y1,x1,y2);
@@ -120,7 +120,7 @@ void LCD_DrawRectangle(u16 x1, u16 y1, u16 x2, u16 y2)
 //返回值：  无
 //修改记录：无
 //******************************************************************   
-void LCD_DrawFillRectangle(u16 x1, u16 y1, u16 x2, u16 y2)
+void LCD_DrawFillRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 {
 	LCD_Fill(x1,y1,x2,y2,POINT_COLOR);
 
@@ -137,7 +137,7 @@ void LCD_DrawFillRectangle(u16 x1, u16 y1, u16 x2, u16 y2)
 //返回值：  无
 //修改记录：无
 //******************************************************************  
-void _draw_circle_8(int xc, int yc, int x, int y, u16 c)
+void _draw_circle_8(int xc, int yc, int x, int y, uint16_t c)
 {
 	GUI_DrawPoint(xc + x, yc + y, c);
 
@@ -168,7 +168,7 @@ void _draw_circle_8(int xc, int yc, int x, int y, u16 c)
 //返回值：  无
 //修改记录：无
 //******************************************************************  
-void gui_circle(int xc, int yc,u16 c,int r, int fill)
+void gui_circle(int xc, int yc,uint16_t c,int r, int fill)
 {
 	int x = 0, y = r, yi, d;
 
@@ -220,11 +220,11 @@ void gui_circle(int xc, int yc,u16 c,int r, int fill)
 //返回值：  无
 //修改记录：无
 //******************************************************************  
-void LCD_ShowChar(u16 x,u16 y,u16 fc, u16 bc, u8 num,u8 size,u8 mode)
+void LCD_ShowChar(uint16_t x,uint16_t y,uint16_t fc, uint16_t bc, uint8_t num,uint8_t size,uint8_t mode)
 {  
-    u8 temp;
-    u8 pos,t;
-	u16 colortemp=POINT_COLOR;      
+    uint8_t temp;
+    uint8_t pos,t;
+	uint16_t colortemp=POINT_COLOR;      
 		   
 	num=num-' ';//得到偏移后的值
 	LCD_SetWindows(x,y,x+size/2-1,y+size-1);//设置单个文字显示窗口
@@ -276,14 +276,14 @@ void LCD_ShowChar(u16 x,u16 y,u16 fc, u16 bc, u8 num,u8 size,u8 mode)
 //返回值：  无
 //修改记录：无
 //******************************************************************  
-void LCD_ShowNum2412(u16 x,u16 y,u16 fc, u16 bc,u8 *p ,u8 size,u8 mode)
+void LCD_ShowNum2412(uint16_t x,uint16_t y,uint16_t fc, uint16_t bc,uint8_t *p ,uint8_t size,uint8_t mode)
 {  
-    u16 temp;
-    u8 pos,t;
-	u16 colortemp=POINT_COLOR;      
-	u16 x0=x;
-	u16 y0=y; 
-	u8 num=0;
+    uint16_t temp;
+    uint8_t pos,t;
+	uint16_t colortemp=POINT_COLOR;      
+	uint16_t x0=x;
+	uint16_t y0=y; 
+	uint8_t num=0;
 	
 
     while((*p<='~')&&(*p>=' '))//判断是不是非法字符!
@@ -342,7 +342,7 @@ void LCD_ShowNum2412(u16 x,u16 y,u16 fc, u16 bc,u8 *p ,u8 size,u8 mode)
 //返回值：  无
 //修改记录：无
 //******************************************************************  	  
-void LCD_ShowString(u16 x,u16 y,u8 size,u8 *p,u8 mode)
+void LCD_ShowString(uint16_t x,uint16_t y,uint8_t size,uint8_t *p,uint8_t mode)
 {         
     while((*p<='~')&&(*p>=' '))//判断是不是非法字符!
     {   
@@ -364,7 +364,7 @@ void LCD_ShowString(u16 x,u16 y,u8 size,u8 *p,u8 mode)
 //返回值：  m的n次方
 //修改记录：无
 //******************************************************************  
-u32 mypow(u8 m,u8 n)
+u32 mypow(uint8_t m,uint8_t n)
 {
 	u32 result=1;	 
 	while(n--)result*=m;    
@@ -384,10 +384,10 @@ u32 mypow(u8 m,u8 n)
 //返回值：  无
 //修改记录：无
 //******************************************************************  			 
-void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size)
+void LCD_ShowNum(uint16_t x,uint16_t y,u32 num,uint8_t len,uint8_t size)
 {         	
-	u8 t,temp;
-	u8 enshow=0;						   
+	uint8_t t,temp;
+	uint8_t enshow=0;						   
 	for(t=0;t<len;t++)
 	{
 		temp=(num/mypow(10,len-t-1))%10;
@@ -417,12 +417,12 @@ void LCD_ShowNum(u16 x,u16 y,u32 num,u8 len,u8 size)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, u8 *s,u8 mode)
+void GUI_DrawFont16(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, uint8_t *s,uint8_t mode)
 {
-	u8 i,j;
-	u16 k;
-	u16 HZnum;
-	u16 x0=x;
+	uint8_t i,j;
+	uint16_t k;
+	uint16_t HZnum;
+	uint16_t x0=x;
 	HZnum=sizeof(tfont16)/sizeof(typFNT_GB16);	//自动统计汉字数目
 	
 			
@@ -477,12 +477,12 @@ void GUI_DrawFont16(u16 x, u16 y, u16 fc, u16 bc, u8 *s,u8 mode)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, u8 *s,u8 mode)
+void GUI_DrawFont24(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, uint8_t *s,uint8_t mode)
 {
-	u8 i,j;
-	u16 k;
-	u16 HZnum;
-	u16 x0=x;
+	uint8_t i,j;
+	uint16_t k;
+	uint16_t HZnum;
+	uint16_t x0=x;
 	HZnum=sizeof(tfont24)/sizeof(typFNT_GB24);	//自动统计汉字数目
 		
 			for (k=0;k<HZnum;k++) 
@@ -534,12 +534,12 @@ void GUI_DrawFont24(u16 x, u16 y, u16 fc, u16 bc, u8 *s,u8 mode)
 //返回值：  无
 //修改记录：无
 //****************************************************************** 
-void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s,u8 mode)
+void GUI_DrawFont32(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, uint8_t *s,uint8_t mode)
 {
-	u8 i,j;
-	u16 k;
-	u16 HZnum;
-	u16 x0=x;
+	uint8_t i,j;
+	uint16_t k;
+	uint16_t HZnum;
+	uint16_t x0=x;
 	HZnum=sizeof(tfont32)/sizeof(typFNT_GB32);	//自动统计汉字数目
 	for (k=0;k<HZnum;k++) 
 			{
@@ -591,10 +591,10 @@ void GUI_DrawFont32(u16 x, u16 y, u16 fc, u16 bc, u8 *s,u8 mode)
 //返回值：  无
 //修改记录：无
 //******************************************************************    	   		   
-void Show_Str(u16 x, u16 y, u16 fc, u16 bc, u8 *str,u8 size,u8 mode)
+void Show_Str(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, uint8_t *str,uint8_t size,uint8_t mode)
 {					
-	u16 x0=x;							  	  
-  	u8 bHz=0;     //字符或者中文 
+	uint16_t x0=x;							  	  
+  	uint8_t bHz=0;     //字符或者中文 
     while(*str!=0)//数据未结束
     { 
         if(!bHz)
@@ -658,10 +658,10 @@ void Show_Str(u16 x, u16 y, u16 fc, u16 bc, u8 *str,u8 size,u8 mode)
 //返回值：  无
 //修改记录：无
 //******************************************************************   
-void Gui_StrCenter(u16 x, u16 y, u16 fc, u16 bc, u8 *str,u8 size,u8 mode)
+void Gui_StrCenter(uint16_t x, uint16_t y, uint16_t fc, uint16_t bc, uint8_t *str,uint8_t size,uint8_t mode)
 {
-	u16 len=strlen((const char *)str);
-	u16 x1=(lcddev.width-len*8)/2;
+	uint16_t len=strlen((const char *)str);
+	uint16_t x1=(lcddev.width-len*8)/2;
 	Show_Str(x+x1,y,fc,bc,str,size,mode);
 } 
  
@@ -675,7 +675,7 @@ void Gui_StrCenter(u16 x, u16 y, u16 fc, u16 bc, u8 *str,u8 size,u8 mode)
 //返回值：  无
 //修改记录：无
 //******************************************************************  
-void Gui_Drawbmp16(u16 x,u16 y,const unsigned char *p) //显示40*40 QQ图片
+void Gui_Drawbmp16(uint16_t x,uint16_t y,const unsigned char *p) //显示40*40 QQ图片
 {
   	int i; 
 	unsigned char picH,picL; 

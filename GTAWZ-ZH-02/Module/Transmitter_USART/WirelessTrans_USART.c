@@ -2,15 +2,34 @@
 
 extern osMutexId (uart1_mutex_id);
 #if(MOUDLE_ID == 1)
-
+extern uint8_t valKeyBoard;
+#elif(MOUDLE_ID == 2)
+extern uint8_t RC522IDBUF[4]; 
+#elif(MOUDLE_ID == 4)
+extern uint8_t valAnalog;
+extern uint8_t valDigital;
 #elif(MOUDLE_ID == 5)
 extern uint32_t LUXValue;
+#elif(MOUDLE_ID == 7)
+extern uint8_t isSomeone;
+#elif(MOUDLE_ID == 8)
+extern uint8_t isRain;
 #elif(MOUDLE_ID == 9)
 extern float SHT11_hum; 
 extern float SHT11_temp;
+#elif(MOUDLE_ID == 10)
+extern float result_UP;
+extern float result_UA;
 #elif(MOUDLE_ID == 12)
 extern uint8_t	DispLAattr; // HA:1   color:2  slip :1  speed:4
 extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
+#elif(MOUDLE_ID == 16)
+extern uint8_t SW_SPY;
+extern uint8_t SW_PST;
+#elif(MOUDLE_ID == 17)
+extern uint16_t PWM_exAir;
+#elif(MOUDLE_ID == 19)
+extern uint16_t PWM_ledGRW;
 #endif
 
 const uint8_t MOUDLE_TYPE[20] = {
@@ -60,10 +79,12 @@ void USART1Init1(void){
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);    
+#if(MOUDLE_ID != 10)
 	/* Configure USART1 Rx (PA.10) as input floating */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
+#endif
 	  
 	/* USART1 mode config */
 	USART_InitStructure.USART_BaudRate = 115200;
@@ -71,7 +92,11 @@ void USART1Init1(void){
 	USART_InitStructure.USART_StopBits = USART_StopBits_1;
 	USART_InitStructure.USART_Parity = USART_Parity_No ;
 	USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+#if(MOUDLE_ID != 10)
 	USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+#else
+	USART_InitStructure.USART_Mode = USART_Mode_Tx;
+#endif
 	USART_Init(USART1, &USART_InitStructure); 
 	USART_Cmd(USART1, ENABLE);
 }
@@ -91,7 +116,9 @@ void USART1Init2(void){
 
 	/* Enable Receiver and Transmitter lines */
 	Driver_USART1.Control (ARM_USART_CONTROL_TX, 1);
+#if(MOUDLE_ID != 10)
 	Driver_USART1.Control (ARM_USART_CONTROL_RX, 1);
+#endif
 
 	osMutexWait(uart1_mutex_id,osWaitForever);
 	Driver_USART1.Send("i'm usart1,Press Enter to receive a message\r\n", 45);
@@ -213,18 +240,39 @@ void USART2Trans_Thread(const void *argument){
 
 	uint8_t dats[20];
 	
-#if(MOUDLE_ID == 1)	
+#if(MOUDLE_ID == 1)
+	char keyVal_ID1 = (char)valKeyBoard;
+#elif(MOUDLE_ID == 2)
+	char RC522IDBUF_ID4[4] = {0}; 
+#elif(MOUDLE_ID == 4)
+	char valDigital_ID4 = (char)valDigital;
+	char valAnalog_ID4  = (char)valAnalog;
 #elif(MOUDLE_ID == 5)	
-	char temp_wan = (char)(LUXValue % 1000000 / 10000);
-	char temp_bai = (char)(LUXValue % 10000 / 100);
-	char temp_ge  = (char)(LUXValue % 100);
+	char temp_wan_ID5 = (char)(LUXValue % 1000000 / 10000);
+	char temp_bai_ID5 = (char)(LUXValue % 10000 / 100);
+	char temp_ge_ID5  = (char)(LUXValue % 100);
+#elif(MOUDLE_ID == 7)
+	char isSomeone_ID7 = (char)isSomeone;
+#elif(MOUDLE_ID == 8)
+	char isRain_ID8 = (char)isRain;
 #elif(MOUDLE_ID == 9)
-	char temp_zhengshu = (char)SHT11_temp;
-	char temp_xiaoshu  = (char)((SHT11_temp-(float)temp_zhengshu)*100);
-	char hum_zhengshu  = (char)SHT11_hum;
-	char hum_xiaoshu   = (char)((SHT11_hum-(float)hum_zhengshu)*100);
+	char temp_zhengshu_ID9 = (char)SHT11_temp;
+	char temp_xiaoshu_ID9  = (char)((SHT11_temp - (float)temp_zhengshu_ID9)*100);
+	char hum_zhengshu_ID9  = (char)SHT11_hum;
+	char hum_xiaoshu_ID9   = (char)((SHT11_hum - (float)hum_zhengshu_ID9)*100);
+#elif(MOUDLE_ID == 10)
+	char UP_zhengshu_ID10 = (char)result_UP;
+	char UP_xiaoshu_ID10  = (char)((result_UP - (float)UP_zhengshu_ID10)*100);
+	char UA_zhengshu_ID10 = (char)result_UA;
+	char UA_xiaoshu_ID10  = (char)((result_UA - (float)UA_zhengshu_ID10)*100);
 #elif(MOUDLE_ID == 12)
-	uint8_t num = (sizeof(DispLABuffer) / sizeof(uint8_t));
+	uint8_t num_ID12 = (sizeof(DispLABuffer) / sizeof(uint8_t));
+#elif(MOUDLE_ID == 16)
+	static char SW_ledSPY_ID16[2] = {0};
+#elif(MOUDLE_ID == 17)
+	static char PWM_exAir_ID17  = 0;
+#elif(MOUDLE_ID == 19)
+   static char PWM_ledGRW_ID19  = 0;
 #endif
 	
 	for(;;){
@@ -240,12 +288,12 @@ void USART2Trans_Thread(const void *argument){
 		if(pt){
 			
 			memset(dats,0,10*sizeof(uint8_t));
-			memset(dats_rx,0,20*sizeof(uint8_t));
 			memcpy(dats,pt,8 + pt[6]);
 			
 			if(dats[4] == MOUDLE_TYPE[MOUDLE_ID - 1] && dats[7 + dats[6]] == 0x0d)
 				if(dats[5] == 0x10){
 					
+					memset(dats_rx,0,20*sizeof(uint8_t));
 					memcpy(dats_rx,(const void*)&dats[7],dats[6]);
 					
 					Driver_USART1.Send(dats_rx,dats[6]);				
@@ -256,37 +304,98 @@ void USART2Trans_Thread(const void *argument){
 #endif
 //-----------------------------------------------------------------------传感器，主要为发送数据		
 #if(MOUDLE_ID == 1)	
+		keyVal_ID1 = (char)valKeyBoard;
 		
+		dats[0] = keyVal_ID1;
+		FRAME_TX_DATSLOAD(dats,1);
+#elif(MOUDLE_ID == 2)
+		memcpy(RC522IDBUF_ID4,RC522IDBUF,4);
+		
+		memcpy(dats,RC522IDBUF_ID4,4);
+		FRAME_TX_DATSLOAD(dats,4);
+#elif(MOUDLE_ID == 4)			
+		valDigital_ID4 = (char)valDigital;
+		valAnalog_ID4 = (char)valAnalog;
+		
+		dats[0] = valDigital_ID4;
+	   dats[1] = valAnalog_ID4;
+		FRAME_TX_DATSLOAD(dats,2);
 #elif(MOUDLE_ID == 5)		
-		temp_wan = (char)(LUXValue % 1000000 / 10000);
-		temp_bai = (char)(LUXValue % 10000 / 100);
-		temp_ge  = (char)(LUXValue % 100);
+		temp_wan_ID5 = (char)(LUXValue % 1000000 / 10000);
+		temp_bai_ID5 = (char)(LUXValue % 10000 / 100);
+		temp_ge_ID5  = (char)(LUXValue % 100);
 		
-		dats[0] = temp_wan;
-	   dats[1] = temp_bai;
-		dats[2] = temp_ge;
+		dats[0] = temp_wan_ID5;
+	   dats[1] = temp_bai_ID5;
+		dats[2] = temp_ge_ID5;
 		FRAME_TX_DATSLOAD(dats,3);	
+#elif(MOUDLE_ID == 7)
+		isSomeone_ID7 = (char)isSomeone;
 		
+		dats[0] = isSomeone_ID7;
+		FRAME_TX_DATSLOAD(dats,1);
+#elif(MOUDLE_ID == 8)
+		isRain_ID8 = (char)isRain;
+		
+		dats[0] = isRain_ID8;
+		FRAME_TX_DATSLOAD(dats,1);
 #elif(MOUDLE_ID == 9)		
-	   temp_zhengshu = (char)SHT11_temp;
-		temp_xiaoshu  = (char)((SHT11_temp-(float)temp_zhengshu)*100);
-		hum_zhengshu  = (char)SHT11_hum;
-		hum_xiaoshu   = (char)((SHT11_hum-(float)hum_zhengshu)*100);
+	   temp_zhengshu_ID9 = (char)SHT11_temp;
+		temp_xiaoshu_ID9  = (char)((SHT11_temp-(float)temp_zhengshu_ID9)*100);
+		hum_zhengshu_ID9  = (char)SHT11_hum;
+		hum_xiaoshu_ID9   = (char)((SHT11_hum-(float)hum_zhengshu_ID9)*100);
 		
-		dats[0] = temp_zhengshu;
-		dats[1] = temp_xiaoshu;
-		dats[2] = hum_zhengshu;
-		dats[3] = hum_xiaoshu;
-		FRAME_TX_DATSLOAD(dats,strlen((const char*)dats));
+		dats[0] = temp_zhengshu_ID9;
+		dats[1] = temp_xiaoshu_ID9;
+		dats[2] = hum_zhengshu_ID9;
+		dats[3] = hum_xiaoshu_ID9;
+		FRAME_TX_DATSLOAD(dats,4);
+#elif(MOUDLE_ID == 10)
+		result_UP /= 1000;
+		UP_zhengshu_ID10 = (char)result_UP;
+		UP_xiaoshu_ID10  = (char)((result_UP - (float)UP_zhengshu_ID10)*100);
+		UA_zhengshu_ID10 = (char)result_UA;
+		UA_xiaoshu_ID10  = (char)((result_UA - (float)UA_zhengshu_ID10)*100);
+			
+		dats[0] = UP_zhengshu_ID10;
+		dats[1] = UP_xiaoshu_ID10;
+		dats[2] = UA_zhengshu_ID10;
+		dats[3] = UA_xiaoshu_ID10;
+		FRAME_TX_DATSLOAD(dats,4);
 //-----------------------------------------------------------------------执行器，主要为接收命令处理		
 #elif(MOUDLE_ID == 12)
-		num = (sizeof(DispLABuffer) / sizeof(uint8_t));	
+		num_ID12 = (sizeof(DispLABuffer) / sizeof(uint8_t));	
 		DispLAattr 	 = dats_rx[0];
-		memset(DispLABuffer,0,num*sizeof(char));
+		memset(DispLABuffer,0,num_ID12*sizeof(char));
 		memcpy(DispLABuffer,&dats_rx[1],strlen((const char*)&dats_rx[1]));
+#elif(MOUDLE_ID == 16)
+		if(memcmp(SW_ledSPY_ID16,dats,2)){
+		
+			memcpy(SW_ledSPY_ID16,dats,2);
+			SW_SPY = dats[0];
+			SW_PST = dats[1];
+		}
+		dats[0] = SW_SPY;
+		dats[1] = SW_PST;
+#elif(MOUDLE_ID == 17)
+		if(dats_rx[0] != PWM_exAir_ID17){
+		
+			PWM_exAir_ID17 = dats_rx[0];
+			PWM_exAir	   = (uint16_t)dats_rx[0] * 55;
+		}	
+		dats[0] = (char)(PWM_exAir / 55);
+		FRAME_TX_DATSLOAD(dats,1);		
+#elif(MOUDLE_ID == 19)
+		if(dats_rx[0] != PWM_ledGRW_ID19){
+		
+			PWM_ledGRW_ID19 = dats_rx[0];
+			PWM_ledGRW  = (uint16_t)dats_rx[0] * 55;
+		}	
+		dats[0] = (char)(PWM_ledGRW / 55);
+		FRAME_TX_DATSLOAD(dats,1);
 #endif
 
-#if(MOUDLE_ID <= 10)
+#if(MOUDLE_ID <= 10 || MOUDLE_ID == 19)
 		Driver_USART2.Send((void *)FRAME_TX,8 + FRAME_TX[6]);
 		osDelay(500);
 		memset(FRAME_TX,0,20*sizeof(char));

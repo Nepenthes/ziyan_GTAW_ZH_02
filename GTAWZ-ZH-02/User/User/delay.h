@@ -6,6 +6,8 @@
 #include "stm32f10x.h"
 #include "osObjects.h"                      // RTOS object definitions
 
+#include <MoudleDats.h>
+
 #define delay_ms	osDelay
 
 void delay_us(u32 nus);

@@ -512,9 +512,9 @@ void LEDArray_Init(void)
 }
 
 //OE RCLK SRCLK 前端3.3V   -- 5V,    信号反向 
-void SH_595(u8 Date_in)  
+void SH_595(uint8_t Date_in)  
 {  
- u8 j;  
+ uint8_t j;  
  for (j=0;j<8;j++)  
  {  
 	SCLK=1;//上升沿发生移位
@@ -530,9 +530,9 @@ void SH_595(u8 Date_in)
  
 } 
 
-void SH_595R(u8 Date_in)  
+void SH_595R(uint8_t Date_in)  
 {  
- u8 j;  
+ uint8_t j;  
  for (j=0;j<8;j++)  
  {  
 	SCLK1=1;//上升沿发生移位
@@ -548,9 +548,9 @@ void SH_595R(u8 Date_in)
  
 } 
 
-void SH_595G(u8 Date_in)  
+void SH_595G(uint8_t Date_in)  
 {  
- u8 j;  
+ uint8_t j;  
  for (j=0;j<8;j++)  
  {  
 	SCLK2=1;//上升沿发生移位
@@ -568,54 +568,52 @@ void SH_595G(u8 Date_in)
 
 void OUT_595(void)//移位寄存器内的数据锁存到输出寄存器并显示
 {  
-  LCLK=1;
+	LCLK=1;
 	delay_us(1);	
-  LCLK=0;//上升沿将数据送到输出锁存器            
+	LCLK=0;//上升沿将数据送到输出锁存器            
 	delay_us(1);
-  LCLK=1;  
+	LCLK=1;  
 }
 
 void OUT_595R(void)//移位寄存器内的数据锁存到输出寄存器并显示
 {  
-  LCLK1=1;     
-  delay_us(1);
-  LCLK1=0;//上升沿将数据送到输出锁存器     
+	LCLK1=1;     
 	delay_us(1);
-  LCLK1=1;  
+	LCLK1=0;//上升沿将数据送到输出锁存器     
+	delay_us(1);
+	LCLK1=1;  
 }
 void OUT_595G(void)//移位寄存器内的数据锁存到输出寄存器并显示
 {  
-  LCLK2=1;
-  delay_us(1);	
-  LCLK2=0;//上升沿将数据送到输出锁存器            
-  delay_us(1);	
-  LCLK2=1;  
+	LCLK2=1;
+	delay_us(1);	
+	LCLK2=0;//上升沿将数据送到输出锁存器            
+	delay_us(1);	
+	LCLK2=1;  
 }
 
 void	D_DATA(void)
 {
 
-  	ROW_SEL(16);
-		SH_595R(0x80); 
-		SH_595R(0x40); 
-		SH_595R(0x20); 
-		SH_595R(0x10); 
-		SH_595R(0x08); 
-		SH_595R(0x04); 
-		SH_595R(0x02); 
-		SH_595R(0x01); 
-		OUT_595R();
-		//delay_ms(10);
-
-
+	ROW_SEL(16);
+	SH_595R(0x80); 
+	SH_595R(0x40); 
+	SH_595R(0x20); 
+	SH_595R(0x10); 
+	SH_595R(0x08); 
+	SH_595R(0x04); 
+	SH_595R(0x02); 
+	SH_595R(0x01); 
+	OUT_595R();
+	//delay_ms(10);
 }	
 
 
 
-unsigned char Shift_Data(u8 dat)
+unsigned char Shift_Data(uint8_t dat)
 {
-    u8 i;  
-    u8 tmp=0x00;  
+    uint8_t i;  
+    uint8_t tmp=0x00;  
   
     for(i=0;i<8;i++)  
     {  
@@ -627,9 +625,9 @@ unsigned char Shift_Data(u8 dat)
 		
 }	
 
-void SH16_595(u16 Date_in)  
+void SH16_595(uint16_t Date_in)  
 {  
- u8 j;  
+ uint8_t j;  
  for (j=0;j<16;j++)  
  {  
 	SCLK=1;//上升沿发生移位
@@ -646,7 +644,7 @@ void SH16_595(u16 Date_in)
 } 
 
 //1-16行 ，  上下8行 反了
-void ROW_SEL(u8 dat)
+void ROW_SEL(uint8_t dat)
 {
 	if((dat<=8)&&(dat>=1))
 	{
@@ -672,7 +670,7 @@ void ROW_OFF(void)
 
 void DISPLAY_ASC(unsigned char gImage_dat[8][16],char color)
 {
-	u8 i=0,j=0,k=0;
+	uint8_t i=0,j=0,k=0;
 	EN=1;
 
 	for(i=0;i<2;i++)
@@ -714,7 +712,7 @@ void DISPLAY_ASC(unsigned char gImage_dat[8][16],char color)
 
 void DISPLAY_R(unsigned char gImage_dat[8][16])
 {
-	u8 i=0,j=0;
+	uint8_t i=0,j=0;
 	EN=1;
 	EN1=1;
 	EN2=0;
@@ -746,7 +744,7 @@ void DISPLAY_R(unsigned char gImage_dat[8][16])
 
 void DISPLAY_G(unsigned char gImage_dat[8][16])
 {
-	u8 i=0,j=0;
+	uint8_t i=0,j=0;
 	
 	EN=1;
 	EN1=0;
@@ -778,7 +776,7 @@ void DISPLAY_G(unsigned char gImage_dat[8][16])
 
 void DISPLAY_RG(unsigned char gImage_dat[8][16])
 {
-	u8 i=0,j=0;
+	uint8_t i=0,j=0;
 	EN=1;
 	EN1=1;
 	EN2=1;	
@@ -786,39 +784,39 @@ void DISPLAY_RG(unsigned char gImage_dat[8][16])
 	{
 		for(j=0;j<8;j++)
 		{
-		ROW_OFF();
+			ROW_OFF();
 
-		SH_595R((gImage_dat[i+6][1+j*2]));	 
-		SH_595R((gImage_dat[i+6][0+j*2]));	
+			SH_595R((gImage_dat[i+6][1+j*2]));	 
+			SH_595R((gImage_dat[i+6][0+j*2]));	
 
-		SH_595R((gImage_dat[i+4][1+j*2]));	
-		SH_595R((gImage_dat[i+4][0+j*2]));	 	
-		
-		SH_595R((gImage_dat[i+2][1+j*2]));	
-		SH_595R((gImage_dat[i+2][0+j*2]));	
-		
-		SH_595R((gImage_dat[i+0][1+j*2]));	 
-		SH_595R((gImage_dat[i+0][0+j*2]));	
+			SH_595R((gImage_dat[i+4][1+j*2]));	
+			SH_595R((gImage_dat[i+4][0+j*2]));	 	
 
-			
-		SH_595G((gImage_dat[i+6][1+j*2]));	 
-		SH_595G((gImage_dat[i+6][0+j*2]));	
+			SH_595R((gImage_dat[i+2][1+j*2]));	
+			SH_595R((gImage_dat[i+2][0+j*2]));	
 
-		SH_595G((gImage_dat[i+4][1+j*2]));	
-		SH_595G((gImage_dat[i+4][0+j*2]));	 	
-		
-		SH_595G((gImage_dat[i+2][1+j*2]));	
-		SH_595G((gImage_dat[i+2][0+j*2]));	
-		
-		SH_595G((gImage_dat[i+0][1+j*2]));	 
-		SH_595G((gImage_dat[i+0][0+j*2]));	
+			SH_595R((gImage_dat[i+0][1+j*2]));	 
+			SH_595R((gImage_dat[i+0][0+j*2]));	
 
-		OUT_595R();	
-		OUT_595G();		
-			
-		ROW_SEL(j+1+8*i);
 
-		delay_us(20);			
+			SH_595G((gImage_dat[i+6][1+j*2]));	 
+			SH_595G((gImage_dat[i+6][0+j*2]));	
+
+			SH_595G((gImage_dat[i+4][1+j*2]));	
+			SH_595G((gImage_dat[i+4][0+j*2]));	 	
+
+			SH_595G((gImage_dat[i+2][1+j*2]));	
+			SH_595G((gImage_dat[i+2][0+j*2]));	
+
+			SH_595G((gImage_dat[i+0][1+j*2]));	 
+			SH_595G((gImage_dat[i+0][0+j*2]));	
+
+			OUT_595R();	
+			OUT_595G();		
+
+			ROW_SEL(j+1+8*i);
+
+			delay_us(20);			
 		}
 	}
 }
@@ -922,6 +920,10 @@ void DISP_HANZI(const unsigned char gImage_dat_dest[][16],uint8_t datlen,uint8_t
 					gImage_dat_dest_buffer[1][2 * loopa] |= gImage_dat_dest_buffer[1][2 * loopa + 1] >> 7;
 					gImage_dat_dest_buffer[1][2 * loopa + 1] *= 2;
 				}	
+				
+				speed = 16 - (DispLAattr & 0x0f);
+				color = (DispLAattr & 0x60) >> 5;
+				
 				for(loop_disp = 0;loop_disp < speed;loop_disp ++){
 				
 					switch(color){
@@ -947,11 +949,11 @@ void LEDArryDisp(void){
 	uint8_t HA    = (DispLAattr & 0x80) >> 7;
 	uint8_t color = (DispLAattr & 0x60) >> 5;
 	uint8_t slip  = (DispLAattr & 0x10) >> 4;
-	uint8_t speed = 15 - (DispLAattr & 0x0f);
+	uint8_t speed = 16 - (DispLAattr & 0x0f);
 	
 	uint8_t 	DispLABufferLen = sizeof(disp_libc) / sizeof(disp_libc[0]) / 2; 
 	
-	if(HA){
+	if(!HA){
 	
 		switch(DispLABuffer[0]){
 		
@@ -981,17 +983,43 @@ void TaskLAdisp(void const *argument){
 	static uint8_t attr;
 	static uint8_t Buffer[DISPLA_BUFFER_SIZE];
 	
-	if(DispLAattr != attr || strcmp((const char*)DispLABuffer,(const char*)Buffer)){
-		
-		Driver_USART1.Send((char*)&DispLAattr,1);
+//	static char debug_strA[40] = "扫视哦分好似回复";
+//	static char debug_strB[3] = {0};
+//	
+//	const char *debug_infoA = "显示内容已被更改，首字节为：0x";
+//	const char *debug_infoB = "显示属性已被更改，内容为：0x";
 	
+	if(strcmp((const char*)DispLABuffer,(const char*)Buffer)){
+			
 		memset(DispBuffer,0,8*16*sizeof(uint8_t));
 		memset(Buffer,0,DISPLA_BUFFER_SIZE*sizeof(uint8_t));
 		strcpy((char *)Buffer,(const char *)DispLABuffer);
-		attr = DispLAattr;
 		osThreadTerminate(tid_LEDArrayCM_Thread);	
-		osDelay(100);
+		
+////		if(Buffer[0] / 16 > 9)debug_strB[0] = Buffer[0] / 16 + 'A';
+////		else debug_strB[0] = Buffer[0] % 16 + '0';
+////		if(Buffer[0] % 16 > 9)debug_strB[1] = Buffer[1] / 16 + 'A';
+////		else debug_strB[0] = Buffer[1] % 16 + '0';
+////		strcpy(debug_strA,debug_infoA);
+////		strcpy(debug_strA,debug_strB);
+////		Driver_USART1.Send(debug_strA,strlen(debug_strA));
+////		memset(debug_strA,0,40*sizeof(char));
+		
 		tid_LEDArrayCM_Thread = osThreadCreate(osThread(LEDArrayCM_Thread),NULL);
+	}
+	
+	if(DispLAattr != attr){
+	
+		attr = DispLAattr;
+		
+//		if(attr / 16 > 9)debug_strB[0] = attr / 16 + 'A';
+//		else debug_strB[0] = attr / 16 + '0';
+//		if(attr % 16 > 9)debug_strB[1] = attr % 16 + 'A';
+//		else debug_strB[0] = attr % 16 + '0';
+//		strcpy(debug_strA,"lahflaks");
+		//strncpy(debug_strA,debug_strB,40);
+//		Driver_USART1.Send(debug_infoA,strlen(debug_infoA));
+		//memset(debug_strA,0,40*sizeof(char));
 	}
 }
 
@@ -1001,7 +1029,7 @@ void LEDArrayCM(void){
 
 	Tim_id_LAdisp = osTimerCreate(osTimer(Tim_LAdisp), osTimerPeriodic, &TaskLAdisp);
 
-	osTimerStart(Tim_id_LAdisp,100);
+	osTimerStart(Tim_id_LAdisp,500);
 
 	tid_LEDArrayCM_Thread = osThreadCreate(osThread(LEDArrayCM_Thread),NULL);
 }

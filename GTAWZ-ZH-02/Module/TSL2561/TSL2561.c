@@ -49,8 +49,6 @@ void TSL2561_Init(void)
 	TSL2561_Write(TIMING,0x02);
 }
 
-
-
 void tsl2561_start(void)
 {
 	SDA_OUT();     //sda
@@ -72,7 +70,6 @@ void stop(void)
 	IIC_SCL=1; 
 	IIC_SDA=1;//
 	delay_us(4);							   	
-
 }
 
 
@@ -90,7 +87,7 @@ void respons(void)
 
 void write_byte(uint8 value)
 {
-    u8 t;   
+    uint8_t t;   
 	SDA_OUT(); 	    
     IIC_SCL=0;//
     for(t=0;t<8;t++)
@@ -242,15 +239,17 @@ uint32_t calculateLux(uint16_t ch0, uint16_t ch1)
 
 void TSL2561MS_Thread(const void *argument){
 	
+#if(MOUDLE_DEBUG == 1)
 	char disp[30];
+#endif	
 	
 	for(;;){
 		
 		Read_Light();
-		
+#if(MOUDLE_DEBUG == 1)		
 		sprintf(disp,"当前光照强度为：%d Lux \r\n",LUXValue);
 		Driver_USART1.Send(disp,strlen(disp));
-		
+#endif		
 		osDelay(1000);
 	}
 }

@@ -163,7 +163,7 @@
 //   <i> Defines stack size for Timer thread.
 //   <i> Default: 200
 #ifndef OS_TIMERSTKSZ
- #define OS_TIMERSTKSZ  50     // this stack size value is in words
+ #define OS_TIMERSTKSZ  128     // this stack size value is in words
 #endif
  
 //   <o>Timer Callback Queue size <1-32>

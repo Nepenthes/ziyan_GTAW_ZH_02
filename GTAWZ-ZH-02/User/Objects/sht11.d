@@ -24,6 +24,7 @@
 .\objects\sht11.o: .\User\osObjects.h
 .\objects\sht11.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\sht11.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\sht11.o: .\User\MoudleDats.h
 .\objects\sht11.o: .\User\IO_Map.h
 .\objects\sht11.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h
 .\objects\sht11.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h

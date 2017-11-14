@@ -31,16 +31,16 @@
  * MACROS
  */
 
-typedef  u8 uint8;
-typedef  u16 uint16;
+typedef  uint8_t uint8;
+typedef  uint16_t uint16;
 typedef  u32 uint32;
 
 typedef union
 {
-	u8 sensor_dat[4];
+	uint8_t sensor_dat[4];
 	struct{
-		u16 temp;
-		u16 hum;
+		uint16_t temp;
+		uint16_t hum;
 	}hum_temp;
 }result_t;
 

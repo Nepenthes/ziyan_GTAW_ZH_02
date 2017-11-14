@@ -1,5 +1,5 @@
-#ifndef __LED_H
-#define __LED_H	 
+#ifndef __LEDARRAY_H
+#define __LEDARRAY_H	 
 
 #define osObjectsPublic                     // define objects in main module
 
@@ -13,8 +13,6 @@
 
 #include "USART_STM32F10x.h"
 
-//#define RLY1 PBout(7)// PB7
-//#define RLY2 PBout(8)// PB8
 #define D_NUM 						10
 #define DISPLA_BUFFER_SIZE		100
 
@@ -38,9 +36,6 @@
 #define GPIO15 PBout(8)//
 #define GPIO16 PBout(9)//
 
-//#define LED0 PAout(8)// PA5
-//#define LED1 PAout(12)// PA12	
-
 #define EN   PDout(11)// 
 #define LCLK PEout(1)// 	
 #define SCLK PDout(14)// 
@@ -63,19 +58,18 @@
 void LED_Init(void);//初始化
 void RELAY_Init(void);//继电器输出
 void LEDArray_Init(void);//
-void SH_595(u8 Date_in);
+void SH_595(uint8_t Date_in);
 void OUT_595(void);
 void DIO1_Init(void);
 void DIO2_Init(void);
 
-void SH_595R(u8 Date_in);
+void SH_595R(uint8_t Date_in);
 void OUT_595R(void);
 
-void SH_595G(u8 Date_in);
+void SH_595G(uint8_t Date_in);
 void OUT_595G(void);
 
-void ROW_SEL(u8 dat);
-//void COLR_DATA(unsigned char *dat);
+void ROW_SEL(uint8_t dat);
 void COLR_DATA(void);
 
 void	D_DATA(void);

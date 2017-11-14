@@ -1,7 +1,9 @@
 #ifndef MOUDLEDATS_H
 #define MOUDLEDATS_H
 
-#define MOUDLE_ID		20   //20以内
+#define MOUDLE_ID			7   //20以内
+
+#define MOUDLE_DEBUG		1
 
 /**********************************************************************
 1.	4x4矩阵键盘

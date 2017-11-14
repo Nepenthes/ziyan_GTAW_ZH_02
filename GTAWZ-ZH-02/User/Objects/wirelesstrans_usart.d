@@ -27,12 +27,13 @@
 .\objects\wirelesstrans_usart.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h
 .\objects\wirelesstrans_usart.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\wirelesstrans_usart.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
+.\objects\wirelesstrans_usart.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\math.h
 .\objects\wirelesstrans_usart.o: ..\Module\LED_ARRAY\LED_Array.h
 .\objects\wirelesstrans_usart.o: ..\Module\BEEP\beep.h
 .\objects\wirelesstrans_usart.o: .\User\IO_Map.h
 .\objects\wirelesstrans_usart.o: .\User\delay.h
+.\objects\wirelesstrans_usart.o: .\User\MoudleDats.h
 .\objects\wirelesstrans_usart.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\USART_STM32F10x.h
 .\objects\wirelesstrans_usart.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\GPIO_STM32F10x.h
 .\objects\wirelesstrans_usart.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\RTE_Driver\DMA_STM32F10x.h
 .\objects\wirelesstrans_usart.o: E:\My_GTAProject\Project_GTAWZ-ZH-02\Software\GTAWZ-ZH-02\User\RTE\Device\STM32F103VC\RTE_Device.h
-.\objects\wirelesstrans_usart.o: .\User\MoudleDats.h

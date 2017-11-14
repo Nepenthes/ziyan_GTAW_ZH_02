@@ -180,7 +180,7 @@ void reset()
 //          _    _    _    _    _    _    _    _    _        ___     ___
 // SCK : __| |__| |__| |__| |__| |__| |__| |__| |__| |______|   |___|   |______
 {
-  u8 i;
+  uint8_t i;
 
   SHT_DATA_OUT;
   //SHT_SCK_OUT;
@@ -289,8 +289,11 @@ uint8 recvByte(uint8 ack)
 void SHT11MS_Thread(const void *argument){
 
 	result_t res;
-	u8 len;
+	uint8_t len;
+
+#if(MOUDLE_DEBUG == 1)
 	char disp[30];
+#endif	
 	
 	while(1){
 	
@@ -299,10 +302,10 @@ void SHT11MS_Thread(const void *argument){
 		SHT11_hum  = res.hum_temp.hum;
 
 		convert_shtxx(&SHT11_hum, &SHT11_temp);
-	
+#if(MOUDLE_DEBUG == 1)	
 		sprintf(disp,"\n\rCurrent humidity = %.2f percent, temperature = %.2f\n\r", SHT11_hum, SHT11_temp);			
 		Driver_USART1.Send(disp,strlen(disp));
-		
+#endif		
 		osDelay(1000);
 	}
 }
