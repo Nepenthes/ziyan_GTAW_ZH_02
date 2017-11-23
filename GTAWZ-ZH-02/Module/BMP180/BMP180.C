@@ -20,7 +20,7 @@ short md;
 extern ARM_DRIVER_USART Driver_USART1;								//设备驱动库串口一设备声明
 
 osThreadId tid_BMP180MS_Thread;
-osThreadDef(BMP180MS_Thread,osPriorityNormal,1,512);
+osThreadDef(BMP180MS_Thread,osPriorityNormal,1,1024);
 
 //*********************************************************
 //读出BMP085内部数据,连续两个
@@ -166,7 +166,7 @@ void BMP180MS_Thread(const void *argument){
 	for(;;){
 	
 		bmp180Convert();
-		result_UA = BMP085_Get_Altitude((float)result_UP)/100;		
+		result_UA = (float)BMP085_Get_Altitude((float)result_UP)/100;		
 #if(MOUDLE_DEBUG == 1)	
 		sprintf(disp,"\r\nAtmosphere = %.3fKPa  temperature = %.1f℃  Altitude = %.3fm\r\n", result_UP/1000,result_UT/10,result_UA);
 		Driver_USART1.Send(disp,strlen(disp));

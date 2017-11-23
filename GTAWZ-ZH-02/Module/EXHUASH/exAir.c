@@ -1,6 +1,10 @@
 #include "exAir.h"
 
-uint16_t PWM_exAir=3000;
+const uint16_t PWM_exAir_Init=3000;
+uint16_t PWM_exAir=0;
+
+uint8_t USRKexaTX_FLG = 0;
+uint8_t USRKexaRX_FLG = 0;
 
 osThreadId tid_exAirCM_Thread;
 osThreadId tid_exAirCM_DB_Thread;
@@ -78,68 +82,64 @@ u8 KEY_Scan1_exAir(u8 mode)
  	return 0;// 无按键按下
 }
 
-
-
 void exAir_Init(void){
 
 	BEEP_Init();
 	KEY_Init_exAir();
-	Beep_time(200);
+	//Beep_time(200);
 	TIM_SetCompare4(TIM4,0);	
 }
 
 void ex_Air(void){
 	
-	u8 t=0,cnt=0,key_in;
-	u8 key_num=0;
+	u8 key_in;
+	u8 key3_flg=0;
 	
-	TIM4_PWM_Init_exAir(PWM_exAir,10);	//不分频。PWM频率=72000000/900=80Khz   ARR=900 
+	TIM4_PWM_Init_exAir(PWM_exAir_Init,10);	//不分频。PWM频率=72000000/900=80Khz   ARR=900 
 	
 	while(1)
 	{
 		key_in=KEY_Scan1_exAir(0);
-		if(key_in==3)
-		{
-		key_num++;
-		if(key_num%2==1)	
-			{
-				TIM_SetCompare4(TIM4,PWM_exAir/2);//50%		
-			}
-		else
-			{
-				TIM_SetCompare4(TIM4,0);	
-			}
-		Beep_time(100);
-		}	
-		else if(key_in==4)
-		{
-			if(key_num%2==1)	
-				{			
-					if(PWM_exAir<5500)
-						PWM_exAir=PWM_exAir+1000;//	
-					TIM_SetCompare4(TIM4,PWM_exAir/2);//50%
-					Beep_time(100);
-				}
-		}			
-		else if(key_in==5)
-		{
-			if(key_num%2==1)	
-				{			
-					if(PWM_exAir>500)
-						PWM_exAir=PWM_exAir-500;//
-					TIM_SetCompare4(TIM4,PWM_exAir/2);//50%
-					Beep_time(100);
-				}
-		}				
-		t++; 
-		delay_ms(10);
-		if(t==100)
-		{
-			t=0;
-			cnt++;
-		}	
-		TIM_SetCompare4(TIM4,PWM_exAir/2);
-	}	
+		
+		if(key_in == 3){
+		
+			key3_flg = !key3_flg; 
+			
+			if(key3_flg){
+				 
+				PWM_exAir = 3000;
+				TIM_SetCompare4(TIM4,PWM_exAir/2);
+			}else{
+			
+				PWM_exAir = 0;
+				TIM_SetCompare4(TIM4,0);
+			}	
+			USRKexaTX_FLG = 1;
+			Beep_time(80);
+		}else if(key_in == 4 && key3_flg){
+		
+			if(PWM_exAir<6000)PWM_exAir=PWM_exAir+500;		
+			TIM_SetCompare4(TIM4,PWM_exAir/2);//50%
+			Beep_time(80);
+
+			USRKexaTX_FLG = 1;
+		}else if(key_in == 5 && key3_flg){
+		
+			if(PWM_exAir>=1000)PWM_exAir=PWM_exAir-500;
+			TIM_SetCompare4(TIM4,PWM_exAir/2);//50%
+			Beep_time(80);
+			
+			USRKexaTX_FLG = 1;
+		}
+		
+		if(USRKexaRX_FLG == 1){
+			
+			USRKexaRX_FLG = 0;
+		
+			TIM_SetCompare4(TIM4,PWM_exAir/2);//50%
+			Beep_time(80);
+		}
+	}
 }
 
 void exAirCM_DB_Thread(const void *argument){
@@ -148,14 +148,14 @@ void exAirCM_DB_Thread(const void *argument){
 	char disp[30];
 #endif
 	
-	uint16_t PWM_exAir_DB = PWM_exAir / 55;
+	uint16_t PWM_exAir_DB = PWM_exAir / 60;
 	
 	for(;;){
 		
-		PWM_exAir_DB = PWM_exAir / 55;
+		PWM_exAir_DB = PWM_exAir / 60;
 		
 #if(MOUDLE_DEBUG == 1)	
-		sprintf(disp,"\n\rexchange air wind pwm is : %d%\n\r", &PWM_exAir_DB);			
+		sprintf(disp,"\n\rexchange air wind pwm is : %d%\n\r", PWM_exAir_DB);			
 		Driver_USART1.Send(disp,strlen(disp));
 #endif	
 		osDelay(1000);
@@ -164,10 +164,11 @@ void exAirCM_DB_Thread(const void *argument){
 
 void exAirCM_Thread(const void *argument){
 	
-	;
+	for(;;)ex_Air();
 }
 
 void exAir(void){
 	
 	tid_exAirCM_Thread = osThreadCreate(osThread(exAirCM_Thread),NULL);
+	tid_exAirCM_DB_Thread = osThreadCreate(osThread(exAirCM_DB_Thread),NULL);
 }

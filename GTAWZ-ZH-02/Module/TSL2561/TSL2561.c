@@ -138,7 +138,6 @@ void TSL2561_Write(uint8 command,uint8 data)
 	write_byte(data);
 	respons();
 	stop();
-
 }
 
 

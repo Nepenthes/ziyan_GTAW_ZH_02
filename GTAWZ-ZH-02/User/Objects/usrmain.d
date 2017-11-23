@@ -16,6 +16,7 @@
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\Include\stm32f10x.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_can.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_dma.h
+.\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_exti.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
 .\objects\usrmain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_rcc.h
@@ -49,6 +50,8 @@
 .\objects\usrmain.o: ..\Module\LED_Spray\ledSpray.h
 .\objects\usrmain.o: ..\Module\LED_Grow\ledGrow.h
 .\objects\usrmain.o: ..\Module\EXHUASH\exAir.h
+.\objects\usrmain.o: ..\Module\airWarming\airWarming.h
+.\objects\usrmain.o: ..\Module\sourceToggle\SourceTog.h
 .\objects\usrmain.o: ..\Module\SHT11\SHT11.h
 .\objects\usrmain.o: .\User\SysSupport.h
 .\objects\usrmain.o: ..\Module\TSL2561\TSL2561.h
@@ -61,3 +64,7 @@
 .\objects\usrmain.o: ..\Module\RFID\rc522_function.h
 .\objects\usrmain.o: ..\Module\RFID\rc522_config.h
 .\objects\usrmain.o: .\User\stm32f10x_it.h
+.\objects\usrmain.o: ..\Module\Sensor_windSpeed\windSpeed.h
+.\objects\usrmain.o: ..\Module\Sensor_contentCO2\contentCO2.h
+.\objects\usrmain.o: ..\Module\Sensor_soilHum\soilHum.h
+.\objects\usrmain.o: ..\Module\Phonetics\LDchip.h

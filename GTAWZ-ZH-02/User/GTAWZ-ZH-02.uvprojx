@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\LED_Spray;..\Module\LED_Grow;..\Module\SHT11;..\Module\TSL2561;..\Module\BMP180;..\Module\keyBoard;..\Module\SensorSIM;..\Module\Sensor_RT;..\Module\Sensor_Rain;..\Module\RFID;..\Module\EXHUASH</IncludePath>
+              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\LED_Spray;..\Module\LED_Grow;..\Module\SHT11;..\Module\TSL2561;..\Module\BMP180;..\Module\keyBoard;..\Module\SensorSIM;..\Module\Sensor_RT;..\Module\Sensor_Rain;..\Module\Sensor_contentCO2;..\Module\Sensor_windSpeed;..\Module\Sensor_soilHum;..\Module\RFID;..\Module\EXHUASH;..\Module\airWarming;..\Module\Phonetics;..\Module\sourceToggle</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -510,6 +510,36 @@
               <FileType>1</FileType>
               <FilePath>..\Module\RFID\rc522_config.c</FilePath>
             </File>
+            <File>
+              <FileName>windSpeed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Sensor_windSpeed\windSpeed.c</FilePath>
+            </File>
+            <File>
+              <FileName>contentCO2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Sensor_contentCO2\contentCO2.c</FilePath>
+            </File>
+            <File>
+              <FileName>soilHum.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Sensor_soilHum\soilHum.c</FilePath>
+            </File>
+            <File>
+              <FileName>LD3320.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Phonetics\LD3320.c</FilePath>
+            </File>
+            <File>
+              <FileName>LD3320Chip.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Phonetics\LD3320Chip.c</FilePath>
+            </File>
+            <File>
+              <FileName>LD3320Reg_RW.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\Phonetics\LD3320Reg_RW.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -529,6 +559,16 @@
               <FileName>exAir.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Module\EXHUASH\exAir.c</FilePath>
+            </File>
+            <File>
+              <FileName>airWarming.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\airWarming\airWarming.c</FilePath>
+            </File>
+            <File>
+              <FileName>SourceTog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\sourceToggle\SourceTog.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -620,6 +660,12 @@
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="DMA" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
+        <targetInfos>
+          <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="EXTI" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
         <targetInfos>
           <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>

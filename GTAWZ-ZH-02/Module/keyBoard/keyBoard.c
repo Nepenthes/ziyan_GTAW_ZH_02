@@ -1,6 +1,7 @@
 #include "keyBoard.h"
 
 uint8_t  valKeyBoard;            //ÏÔÊ¾»º´æ
+uint8_t  valKeyBoard_scan;        
 uint8_t  key; 
 
 osThreadId tid_KeyBoardMS_Thread;
@@ -111,7 +112,7 @@ void keyscan(void)
 	while((ROW1==0)|(ROW2==0)|(ROW3==0)|(ROW4==0));
 
 	
-	 valKeyBoard = key;	    //¼üÖµÈëÏÔÊ¾»º´æ
+	 valKeyBoard_scan = key;	    //¼üÖµÈëÏÔÊ¾»º´æ
 	
  }
 
@@ -138,15 +139,36 @@ void KeyBoardMS_Thread(const void *argument){
 #if(MOUDLE_DEBUG == 1)
 	char disp[30];
 #endif
+	uint8_t  val_KeyBoard;
+	uint8_t  disp_cnt,disp_flg;
 	
 	for(;;){
+		
+		if(val_KeyBoard != valKeyBoard_scan){
+		
+			val_KeyBoard = valKeyBoard_scan;
+			valKeyBoard  = valKeyBoard_scan;
+			disp_flg = 1;
+			disp_cnt = 0;
+			
+#if(MOUDLE_DEBUG == 1)	
+			sprintf(disp,"\n\rvalKeyBard: %d\n\r", valKeyBoard);			
+			Driver_USART1.Send(disp,strlen(disp));
+#endif	
+		}
 	
 		keydown();
-#if(MOUDLE_DEBUG == 1)	
-		sprintf(disp,"\n\rvalKeyBard: %d\n\r", valKeyBoard);			
-		Driver_USART1.Send(disp,strlen(disp));
-#endif	
-		osDelay(1000);
+
+		osDelay(100);
+		if(disp_flg){
+		
+			if(disp_cnt > 10){
+			
+				disp_flg = 0;
+				disp_cnt = 0;
+				valKeyBoard = 0;
+			}else disp_cnt++;
+		}
 	}
 }
 

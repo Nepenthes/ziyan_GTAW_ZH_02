@@ -296,6 +296,8 @@ void LCD_ShowNum2412(uint16_t x,uint16_t y,uint16_t fc, uint16_t bc,uint8_t *p ,
 		num=10;	
 		else if('.'==num)//ÌØÊâ×Ö·û"."
 		num=11;	
+		else if('-'==num)//ÌØÊâ×Ö·û"."
+		num=12;	
 		else  //´¿Êı×Ö   	
 		num=num-'0';   
 		x0=x;

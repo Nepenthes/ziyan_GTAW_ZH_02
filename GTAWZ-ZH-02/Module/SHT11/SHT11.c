@@ -16,7 +16,7 @@ float SHT11_hum=0.0, SHT11_temp=0.0;
 
 osThreadId tid_SHT11MS_Thread;
 
-osThreadDef(SHT11MS_Thread,osPriorityNormal,1,512);
+osThreadDef(SHT11MS_Thread,osPriorityNormal,1,1024);
 
 extern osMutexId (uart1_mutex_id);
 
@@ -62,7 +62,7 @@ void SHT_RInit(void)
  GPIO_Init(GPIOC, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
 
  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;				 //DI INPUT
- GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
+ GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
  GPIO_Init(GPIOA, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
 

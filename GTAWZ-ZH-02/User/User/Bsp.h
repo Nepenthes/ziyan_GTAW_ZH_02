@@ -15,6 +15,8 @@
 #include <ledSpray.h>
 #include <ledGrow.h>
 #include <exAir.h>
+#include <airWarming.h>
+#include <SourceTog.h>
 
 #include <SHT11.h>
 #include <TSL2561.h>
@@ -24,9 +26,14 @@
 #include <Sensor_RT.h>
 #include <Sensor_Rain.h>
 #include <rc522_function.h>
+#include <windSpeed.h>
+#include <contentCO2.h>
+#include <windSpeed.h>
+#include <soilHum.h>
+#include <LDchip.h>
 
 void	BSP_Init(void);
-void 	BSP_Test(void);
+void 	BSP_SetOFF(void);
 
 #endif 
 

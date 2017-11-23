@@ -10,11 +10,11 @@
 8.	雨水检测
 9.	温湿度
 10.大气压强
+11.风速
 
-11.继电器
 12.双色点阵
 13.4.3寸触摸LCD
-14.1.44寸LCD
+14.土壤湿度检测
 15.电动窗帘控制
 16.喷雾控制
 17.排风控制
@@ -26,19 +26,19 @@
 	
 funMoudle *moudleTestForm[] = {
 	
-	&KeyBoardMS								,&RC522									,(void *)0								,&SensorSIMMS							,&TSL2561MS 							,
-	(void *)0								,&RTMS									,&RAINMS									,&SHT11MS								,&BMP180MS  							,
-	(void *)0								,&LEDArrayCM							,(void *)0								,(void *)0								,(void *)0								,
-	&LEDSpray								,&exAir									,(void *)0								,&LEDGrow								,(void *)0								
+	&KeyBoardMS			,&RC522				,&Phonetics			,&SensorSIMMS		,&TSL2561MS 		,
+	&contentCO2MS		,&RTMS				,&RAINMS				,&SHT11MS			,&BMP180MS  		,
+	&windSpeedMS		,&LEDArrayCM		,(void *)0			,&soilHumMS			,(void *)0			,
+	&LEDSpray			,&exAir				,&airWarming		,&LEDGrow			,&SourceTogCM								
 };
 
 funMoudle *moudleInitForm[] = {
 	
 	
-	&keyBoard_Init							,&RC522_Init							,(void *)0								,&SensorSIM_Init						,&TSL2561_Init							,
-	(void *)0								,&RT_Init								,&RAIN_Init								,&SHT11_Init							,&BMP180_Init			   			,
-	(void *)0								,&LEDArray_Init						,(void *)0								,(void *)0								,(void *)0								,
-	&LEDSpray_Init							,&exAir_Init							,(void *)0								,&LEDGrow_Init							,(void *)0								
+	&keyBoard_Init		,&RC522_Init		,&Phonetics_Init	,&SensorSIM_Init	,&TSL2561_Init		,
+	&contentCO2_Init	,&RT_Init			,&RAIN_Init			,&SHT11_Init		,&BMP180_Init		,
+	&windSpeed_Init	,&LEDArray_Init	,(void *)0			,&soilHum_Init		,(void *)0			,
+	&LEDSpray_Init		,&exAir_Init		,&airWarming_Init	,&LEDGrow_Init		,&SourceTog_Init								
 };
 
 void  BSP_Init(void){
@@ -59,7 +59,7 @@ void  BSP_Init(void){
 	moudleInitForm[MOUDLE_ID-1]();
 }
 
-void BSP_Test(void){
+void BSP_SetOFF(void){
 
 	//LEDTest		();	硬件不支持
 	USART1Debug();

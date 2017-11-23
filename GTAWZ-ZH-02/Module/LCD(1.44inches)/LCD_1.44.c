@@ -9,11 +9,15 @@ extern osMutexId (uart1_mutex_id);
 extern uint8_t valKeyBoard;
 #elif(MOUDLE_ID == 2)
 extern uint8_t RC522IDBUF[4]; 
+#elif(MOUDLE_ID == 3)
+extern uint8_t phoneticsNUM;
 #elif(MOUDLE_ID == 4)
 extern uint8_t valAnalog;
 extern uint8_t valDigital;
 #elif(MOUDLE_ID == 5)
 extern uint32_t LUXValue;
+#elif(MOUDLE_ID == 6)
+extern float valcontentCO2;
 #elif(MOUDLE_ID == 7)
 extern uint8_t isSomeone;
 #elif(MOUDLE_ID == 8)
@@ -24,16 +28,35 @@ extern float SHT11_temp;
 #elif(MOUDLE_ID == 10)
 extern float result_UP;
 extern float result_UA;
+#elif(MOUDLE_ID == 11)
+extern double valwindSpeed;
 #elif(MOUDLE_ID == 12)
 extern uint8_t	DispLAattr; // HA:1   color:2  slip :1  speed:4
 extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
+#elif(MOUDLE_ID == 14)
+extern float valsoilHum;
+#elif(MOUDLE_ID == 15)
 #elif(MOUDLE_ID == 16)
 extern uint8_t SW_SPY;
 extern uint8_t SW_PST;
+extern uint8_t USRKspyTX_FLG;
+extern uint8_t USRKspyRX_FLG;
+extern uint8_t SW_STATUS[2];
 #elif(MOUDLE_ID == 17)
 extern uint16_t PWM_exAir;
+extern uint8_t USRKexaTX_FLG;
+extern uint8_t USRKexaRX_FLG;
+#elif(MOUDLE_ID == 18)
+extern float valDS18B20;
+extern uint8_t SW_airWarming;
+extern uint8_t AWM_STATUS;
 #elif(MOUDLE_ID == 19)
 extern uint16_t PWM_ledGRW;
+extern uint8_t USRKgrwTX_FLG;
+extern uint8_t USRKgrwRX_FLG;
+#elif(MOUDLE_ID == 20)
+extern float valVoltage;
+extern uint8_t SOURCE_TYPE;
 #endif
   
 //管理LCD重要参数
@@ -43,7 +66,7 @@ _lcd_dev lcddev;
 osThreadId tid_LCD144Test_Thread;
 
 osThreadDef(LCD144Test_Thread,osPriorityNormal,1,512);
-osThreadDef(LCD144_Thread,osPriorityNormal,1,1024);
+osThreadDef(LCD144_Thread,osPriorityNormal,1,2048);
 
 //画笔颜色,背景颜色
 uint16_t POINT_COLOR = 0x0000,BACK_COLOR = 0xFFFF;  
@@ -557,7 +580,7 @@ void LCD144_Thread(const void *argument){
 	Show_Str(5,3,WHITE,BLACK,"Moudle_ID:",12,1);
 	Show_Str(65,3,RED,BLACK,(uint8_t*)&M_ID,12,1);
 	Show_Str(82,3,WHITE,BLACK,"ATTR:",12,1);	
-	if(MD_ID < 10)Show_Str(112,3,BRED,BLACK,"MS",12,1);
+	if(MD_ID <= 11)Show_Str(112,3,BRED,BLACK,"MS",12,1);
 	else Show_Str(112,3,BRED,BLACK,"CM",12,1);
 	Show_Str(5,13,WHITE,BLACK,"Moudle_Type:",12,1);
 	Show_Str(75,13,BLUE,BLACK,(uint8_t*)M_ADDR,12,1);
@@ -566,11 +589,15 @@ void LCD144_Thread(const void *argument){
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"键值鑞",24,1);
 #elif(MOUDLE_ID == 2)
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"身份卡号鑞",24,1);
+#elif(MOUDLE_ID == 3)
+	Show_Str(5,50,LGRAYBLUE,YELLOW,"语音识别鑞",24,1);
 #elif(MOUDLE_ID == 4)
 	Show_Str(5,25,LGRAYBLUE,GREEN,"数字信号鑞",24,1);
 	Show_Str(5,75,LGRAYBLUE,YELLOW,"模拟信号鑞",24,1);
 #elif(MOUDLE_ID == 5)
-	Show_Str(5,50,LGRAYBLUE,YELLOW,"亮度鑞",24,1);
+	Show_Str(5,50,LGRAYBLUE,YELLOW,"光照强度鑞",24,1);
+#elif(MOUDLE_ID == 6)
+	Show_Str(5,50,LGRAYBLUE,YELLOW,"CO2含量鑞",24,1);
 #elif(MOUDLE_ID == 7)
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"人体侦测鑞",24,1);
 #elif(MOUDLE_ID == 8)
@@ -584,20 +611,29 @@ void LCD144_Thread(const void *argument){
 	Show_Str(5,25,LGRAYBLUE,GREEN,"大气压强鑞",24,1);
 	Show_Str(100,60,GREEN,YELLOW,"kPa",24,1);
 	Show_Str(5,75,LGRAYBLUE,YELLOW,"海拔高度鑞",24,1);
-	Show_Str(100,107,GREEN,YELLOW,"m",24,1);
+#elif(MOUDLE_ID == 11)
+	Show_Str(5,50,LGRAYBLUE,YELLOW,"风速检测鑞",24,1);
 #elif(MOUDLE_ID == 12)
 	Show_Str(5,30,LGRAYBLUE,GREEN,"点阵鑞",24,1);
 	Show_Str(10,60,LIGHTBLUE,BLACK,"Disp_type :",24,1);
 	Show_Str(10,75,LIGHTBLUE,BLACK,"Disp_color:",24,1);
 	Show_Str(10,90,LIGHTBLUE,BLACK,"Disp_slip :",24,1);
 	Show_Str(10,105,LIGHTBLUE,BLACK,"Disp_speed:",24,1);
+#elif(MOUDLE_ID == 14)
+	Show_Str(5,50,LGRAYBLUE,YELLOW,"土壤水分值鑞",24,1);
 #elif(MOUDLE_ID == 16)
 	Show_Str(5,25,LGRAYBLUE,GREEN,"喷雾控制鑞",24,1);
 	Show_Str(5,75,LGRAYBLUE,YELLOW,"杀虫控制鑞",24,1);
 #elif(MOUDLE_ID == 17)
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"排风量鑞",24,1);
+#elif(MOUDLE_ID == 18)
+	Show_Str(5,25,LGRAYBLUE,GREEN,"加热控制鑞",24,1);
+	Show_Str(5,75,LGRAYBLUE,YELLOW,"当前温度鑞",24,1);
 #elif(MOUDLE_ID == 19)
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"生长灯光度鑞",24,1);
+#elif(MOUDLE_ID == 20)
+	Show_Str(5,25,LGRAYBLUE,GREEN,"电源控制鑞",24,1);
+	Show_Str(5,75,LGRAYBLUE,YELLOW,"电源电压鑞",24,1);
 #endif
 
 	while(1)
@@ -611,7 +647,7 @@ void LCD144_Thread(const void *argument){
 			Key_value = valKeyBoard;
 			LCD_ClearS(BLACK,25,80,120,105);	
 			sprintf(&keyvalDisp[1],"%d",Key_value);
-			LCD_ShowNum2412(70,80,GREEN,YELLOW,(uint8_t*)&keyvalDisp[1],24,1);
+			LCD_ShowNum2412(60,80,GREEN,YELLOW,(uint8_t*)&keyvalDisp[1],24,1);
 		}
 #elif(MOUDLE_ID == 2)
 		static uint8_t RC522ID_BUF[4] = {6};
@@ -620,9 +656,27 @@ void LCD144_Thread(const void *argument){
 		if(memcmp(RC522ID_BUF,RC522IDBUF,4)){
 		
 			memcpy(RC522ID_BUF,RC522IDBUF,4);
-			LCD_ClearS(BLACK,25,80,120,105);
+			LCD_ClearS(BLACK,0,90,130,120);
 			sprintf (&idDisp[1], "%02X%02X%02X%02X", RC522IDBUF [ 0 ], RC522IDBUF [ 1 ], RC522IDBUF [ 2 ], RC522IDBUF [ 3 ] );
-			LCD_ShowNum2412(5,80,GREEN,YELLOW,(uint8_t*)&idDisp[1],24,1);
+			Show_Str(30,90,GREEN,YELLOW,(uint8_t*)&idDisp[1],24,1);
+		}
+#elif(MOUDLE_ID == 3)
+		const uint8_t *cmd_tips[7] = {"芝麻开门","芝麻关门","苹果开门","苹果关门","一二三四","二二三四","三二三四"};
+		static uint32_t Phonetics_num = 6;
+		
+		if(Phonetics_num != phoneticsNUM){
+		
+			Phonetics_num = phoneticsNUM;
+			
+			if(phoneticsNUM){
+			
+				LCD_ClearS(BLACK,25,80,120,105);
+				Show_Str(10,90,GREEN,YELLOW,(uint8_t *)cmd_tips[phoneticsNUM - 1],24,1);	
+			}else{
+			
+				LCD_ClearS(BLACK,25,80,120,105);
+				Show_Str(40,90,GREEN,YELLOW,"NO CMD",24,1);	
+			}	
 		}
 #elif(MOUDLE_ID == 4)
 		static uint8_t val_Digital = 6;
@@ -656,8 +710,20 @@ void LCD144_Thread(const void *argument){
 			LUX_value = LUXValue;
 			LCD_ClearS(BLACK,25,80,120,105);
 			sprintf(&luxDisp[1],"%d",LUXValue);
-			LCD_ShowNum2412(25,80,GREEN,YELLOW,(uint8_t*)&luxDisp[1],24,1);
-			Show_Str(strlen(&luxDisp[1])*16 + 25,90,GREEN,YELLOW,"Lux",24,1);
+			LCD_ShowNum2412(40,80,GREEN,YELLOW,(uint8_t*)&luxDisp[1],24,1);
+			Show_Str(strlen(&luxDisp[1])*16 + 40,90,GREEN,YELLOW,"Lux",24,1);
+		}
+#elif(MOUDLE_ID == 6)
+		static float CO2_val;
+		char co2Disp[10];
+		
+		if(valcontentCO2 != CO2_val){
+		
+			CO2_val = valcontentCO2;
+			LCD_ClearS(BLACK,0,75,120,125);
+			sprintf(&co2Disp[1],"%.1f",valcontentCO2);
+			LCD_ShowNum2412(15,80,GREEN,YELLOW,(uint8_t*)&co2Disp[1],24,1);
+			Show_Str(strlen(&co2Disp[1])*16+10,90,GREEN,YELLOW,"ppm",24,1);
 		}
 #elif(MOUDLE_ID == 7)
 		static uint8_t is_Someone = 6;
@@ -702,7 +768,7 @@ void LCD144_Thread(const void *argument){
 #elif(MOUDLE_ID == 10)
 		static float resultUP = 6.0;
 		static float resultUA = 6.0;
-		char 	 UP[6],UA[6];
+		char 	 UP[6],UA[8];
 		
 		if(resultUP != result_UP){
 		
@@ -715,12 +781,23 @@ void LCD144_Thread(const void *argument){
 		if(resultUA != result_UA){
 		
 			resultUA = result_UA;
-			LCD_ClearS(BLACK,0,100,100,128);
+			LCD_ClearS(BLACK,10,100,128,128);
 			sprintf(&UA[1],"%.2f", result_UA);
-			LCD_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&UA[1],24,1);
+			LCD_ShowNum2412(15,100,GREEN,YELLOW,(uint8_t*)&UA[1],24,1);
+			Show_Str(strlen(&UA[1])*15 + 10,107,GREEN,YELLOW,"m",24,1);
 		}
 #elif(MOUDLE_ID == 11)
+		static float wind_val = 6.0;
+		char windDisp[10];
 		
+		if(wind_val != valwindSpeed){
+		
+			wind_val = valwindSpeed;
+			LCD_ClearS(BLACK,20,75,120,105);
+			sprintf(&windDisp[1],"%.3f",valwindSpeed);
+			LCD_ShowNum2412(20,80,GREEN,YELLOW,(uint8_t*)&windDisp[1],24,1);
+			Show_Str(strlen(&windDisp[1])*15 + 20,90,GREEN,YELLOW,"M/s",24,1);
+		}
 #elif(MOUDLE_ID == 12)
 		static uint8_t	Disp_LAattr;
 		uint8_t HA;
@@ -763,54 +840,125 @@ void LCD144_Thread(const void *argument){
 			
 			Show_Str(100,105,YELLOW,BLACK,&disp[1],24,1);
 		}
+#elif(MOUDLE_ID == 14)
+		static float soil_val;
+		char soilDisp[10];
+		
+		if(soil_val != valsoilHum){
+		
+			soil_val = valsoilHum;
+			LCD_ClearS(BLACK,0,80,120,105);
+			sprintf(&soilDisp[1],"%.2f",valsoilHum);
+			LCD_ShowNum2412(20,80,GREEN,YELLOW,(uint8_t*)&soilDisp[1],24,1);
+			Show_Str(strlen(&soilDisp[1])*16 + 20,90,GREEN,YELLOW,"%",24,1);
+		}
 #elif(MOUDLE_ID == 16)		
 		static uint8_t swPST = 6;
 		static uint8_t swSPY = 6;
 		
-		if(swPST != SW_PST){
+		if(swSPY != SW_STATUS[0]){
 		
-			swPST = SW_PST;
+			swSPY = SW_STATUS[0];
 			LCD_ClearS(BLACK,0,50,100,75);
-			if(SW_PST)Show_Str(15,50,GREEN,YELLOW,"开启",24,1);
-			else Show_Str(15,50,GREEN,YELLOW,"关闭",24,1);
+			if(SW_STATUS[0] == 1)Show_Str(40,50,GREEN,YELLOW,"开启",24,1);
+			else Show_Str(40,50,GREEN,YELLOW,"关闭",24,1);
 		}
 		
-		if(swSPY != SW_SPY){
+		if(swPST != SW_STATUS[1]){
 		
-			swSPY = SW_SPY;
+			swPST = SW_STATUS[1];
 			LCD_ClearS(BLACK,0,100,100,128);
-			if(SW_SPY)Show_Str(15,50,GREEN,YELLOW,"开启",24,1);
-			else Show_Str(15,100,GREEN,YELLOW,"关闭",24,1);
+			if(SW_STATUS[1] == 1)Show_Str(40,100,GREEN,YELLOW,"开启",24,1);
+			else Show_Str(40,100,GREEN,YELLOW,"关闭",24,1);
 		}
 #elif(MOUDLE_ID == 17)
 		static uint16_t val_PWMexAir = 6;
 		
 		char valEXAR[5];
+		uint16_t dispcolor = GRAY;
+		if((PWM_exAir / 60))dispcolor = GREEN;
+		else dispcolor = GRAY;
 		
 		if(val_PWMexAir != PWM_exAir){
 		
 			val_PWMexAir = PWM_exAir;
 
 			LCD_ClearS(BLACK,25,75,120,105);
-			sprintf(&valEXAR[1],"%d",PWM_exAir / 55);
-			LCD_ShowNum2412(40,80,GREEN,YELLOW,(uint8_t*)&valEXAR[1],24,1);
-			Show_Str(strlen(&valEXAR[1])*16 + 40,90,GREEN,YELLOW,"%",24,1);	
+			sprintf(&valEXAR[1],"%d",PWM_exAir / 60);
+			LCD_ShowNum2412(55,80,dispcolor,YELLOW,(uint8_t*)&valEXAR[1],24,1);
+			Show_Str(strlen(&valEXAR[1])*16 + 55,90,dispcolor,YELLOW,"%",24,1);	
+		}
+#elif(MOUDLE_ID == 18)
+		static float val_DS18B20 = 6.0;
+		static uint8_t statusAWM = 1;
+		char ds18b20_Disp[10];
+		uint16 dispcolor;
+		
+		if(AWM_STATUS == 0x01)dispcolor = GREEN;
+		else dispcolor = GRAY;
+		
+		if(statusAWM != AWM_STATUS){
+		
+			statusAWM = AWM_STATUS;
+			LCD_ClearS(BLACK,0,50,128,75);
+			if(AWM_STATUS == 1)Show_Str(40,50,dispcolor,YELLOW,"开启",24,1);
+			else Show_Str(40,50,dispcolor,YELLOW,"关闭",24,1);
+		}
+		
+		if(val_DS18B20 != valDS18B20){
+		
+			val_DS18B20 = valDS18B20;
+
+			LCD_ClearS(BLACK,0,100,128,128);
+			sprintf(&ds18b20_Disp[1],"%.1f",valDS18B20);
+			LCD_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&ds18b20_Disp[1],24,1);
+			Show_Str(strlen(&ds18b20_Disp[1])*13 + 25,102,GREEN,YELLOW,"℃",24,1);	
 		}
 #elif(MOUDLE_ID == 19)			
 		static uint16_t val_PWMledGRW = 6;
 		char valGRW[5];
+		uint16_t dispcolor = GRAY;
+		
+		if((PWM_ledGRW / 60))dispcolor = GREEN;
+		else dispcolor = GRAY;
 		
 		if(val_PWMledGRW != PWM_ledGRW){
 		
 			val_PWMledGRW = PWM_ledGRW;
 
 			LCD_ClearS(BLACK,25,80,120,105);
-			sprintf(&valGRW[1],"%d",PWM_ledGRW / 55);
-			LCD_ShowNum2412(40,80,GREEN,YELLOW,(uint8_t*)&valGRW[1],24,1);
-			Show_Str(strlen(&valGRW[1])*16 + 40,90,GREEN,YELLOW,"%",24,1);	
+			sprintf(&valGRW[1],"%d",PWM_ledGRW / 60);
+			LCD_ShowNum2412(55,80,dispcolor,YELLOW,(uint8_t*)&valGRW[1],24,1);
+			Show_Str(strlen(&valGRW[1])*16 + 55,90,dispcolor,YELLOW,"%",24,1);	
+		}
+#elif(MOUDLE_ID == 20)		
+		static float val_Voltage;
+		static uint8_t sourceType;
+		char valVol_Disp[10];
+		uint16_t dispcolor = GREEN;
+		
+		if(SOURCE_TYPE == 1)dispcolor = GREEN;
+		else dispcolor = RED;
+		
+		if(SOURCE_TYPE != sourceType){
+		
+			sourceType = SOURCE_TYPE;
+			LCD_ClearS(BLACK,0,50,128,75);
+			if(SOURCE_TYPE == 1)Show_Str(30,50,dispcolor,YELLOW,"主电源",24,1);
+			else Show_Str(10,50,dispcolor,YELLOW,"备用电源",24,1);
+		}
+		
+		if(valVoltage != val_Voltage){
+		
+			val_Voltage = valVoltage;
+
+			LCD_ClearS(BLACK,0,100,128,128);
+			sprintf(&valVol_Disp[1],"%.2f",valVoltage);
+			LCD_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&valVol_Disp[1],24,1);
+			Show_Str(strlen(&valVol_Disp[1])*14 + 25,107,GREEN,YELLOW,"V",24,1);	
 		}
 #endif
-		delay_ms(500);
+		delay_ms(100);
 	}
 }
 

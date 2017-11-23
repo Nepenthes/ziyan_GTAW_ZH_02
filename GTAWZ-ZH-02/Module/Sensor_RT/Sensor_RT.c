@@ -15,7 +15,7 @@ void RT_Init(void)
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);	 //使能PB端口时钟
 
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;//
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; 		 //推挽输出
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING; 		 
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
 	GPIO_Init(GPIOB, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
 }
@@ -28,13 +28,13 @@ void RTMS_Thread(const void *argument){
 	
 	for(;;){
 		
-		isSomeone	= RT_DATA;
+		isSomeone	= !RT_DATA;
 		
 #if(MOUDLE_DEBUG == 1)	
-		sprintf(disp,"\n\rSomebody here? : %d\n\r", &isSomeone);			
+		sprintf(disp,"\n\rSomebody here? : %d\n\r", isSomeone);			
 		Driver_USART1.Send(disp,strlen(disp));
 #endif	
-		osDelay(1000);
+		osDelay(100);
 	}
 }
 

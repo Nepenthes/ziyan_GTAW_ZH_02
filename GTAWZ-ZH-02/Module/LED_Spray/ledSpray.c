@@ -2,11 +2,19 @@
 
 uint8_t SW_SPY = 0;
 uint8_t SW_PST = 0;
+uint8_t USRKspyTX_FLG = 0;
+uint8_t USRKspyRX_FLG = 0;
+uint8_t SW_STATUS[2] = {2,2};
  
 osThreadId tid_LEDSprayCM_Thread;
 osThreadId tid_LEDSprayCM_DB_Thread;
 osThreadDef(LEDSprayCM_Thread,osPriorityNormal,1,256);
 osThreadDef(LEDSprayCM_DB_Thread,osPriorityNormal,1,256);
+
+osThreadId tid_flash_SPY_Thread;
+osThreadId tid_flash_PST_Thread;
+osThreadDef(flash_SPY_Thread,osPriorityNormal,1,256);
+osThreadDef(flash_PST_Thread,osPriorityNormal,1,256);
 
 extern ARM_DRIVER_USART Driver_USART1;								//设备驱动库串口一设备声明
  
@@ -64,202 +72,135 @@ u8 KEY_Scan1_ledSPY(u8 mode)
  	return 0;// 无按键按下
 }
 
-void SH_595_ledSPY(u8 Date_in)  
-{  
- u8 j;  
- for (j=0;j<8;j++)  
- {  
-	SCLK_ledSPY=0;//上升沿发生移位
-	delay_us(1);
-	if ((Date_in&0x01)==0x01)
-		DS_ledSPY=1;
-	else
-		DS_ledSPY=0;	 			 
-	SCLK_ledSPY=1; 
-	delay_us(1);
-	Date_in=Date_in>>1;	
- }  
-} 
 
-unsigned char Shift_Data_ledSPY(u8 dat)
-{
-    u8 i;  
-    u8 tmp=0x00;  
-  
-    for(i=0;i<8;i++)  
-    {  
-        tmp=((dat>>i)&0x01)|tmp;  
-        if(i<7)  
-					tmp=tmp<<1;  
-    }  	
-		return tmp;
-}	
+void dats595_clr(uint8_t num){
 
-void CON1_R595(void)
-{
-	//发送   1  2  4   对应  P2  P3  P4
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
+	uint8_t loop;
 	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
+	EN_ledSPY = 0;	
+	
+	DS_ledSPY = 0;
+	for(loop = 0;loop < num;loop ++){
+	
+		LCLK_ledSPY = SCLK_ledSPY = 1;
+		LCLK_ledSPY = SCLK_ledSPY = 0;
+	}
+}
 
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
+void datsin595(uint8_t num,uint8_t time){
 	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
+	uint8_t loop;
 	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
+	EN_ledSPY = 0;
 	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	OUT_595();
-	delay_us(10);	
-}	
-
-void CON2_R595(void)
-{
-	//发送   1  2  4   对应  P2  P3  P4
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
+	DS_ledSPY = 1;
+	for(loop = 0;loop < num;loop ++){
 	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
-
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	OUT_595();
-	delay_us(10);	
-}	
-
-void CON3_R595(void)
-{
-	//发送   1  2  4   对应  P2  P3  P4
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
-
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0X00)); 
-	OUT_595();
-	delay_us(10);	
-}	
-
-void CON4_R595(void)
-{
-	//发送   1  2  4   对应  P2  P3  P4
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
-
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	//OUT_595();
-	delay_us(10);
-	
-	SH_595_ledSPY(Shift_Data_ledSPY(0XFF)); 
-	OUT_595();
-	delay_us(10);	
-}	
+		LCLK_ledSPY = SCLK_ledSPY = 1;
+		LCLK_ledSPY = SCLK_ledSPY = 0;
+		osDelay(time);
+	}
+}
 
 void LEDSpray_Init(void){
 
 	NC595_Init();
 	KEY_Init_ledSPY();
 	BEEP_Init();	
-//	Beep_time(150);
+	Beep_time(150);
 }
 
 void LED_Spray(void){
 
-	u8 t=0,cnt=0,key_in;
-	u8 key1_cnt=0,key2_cnt=0;
-
-	CON3_R595();//clr
+	u8 key_in;
+	u8 key3_flg=0,key4_flg=0;
+	
+	static u8 status_spy;
+	static u8 status_pst;
 	
 	while(1)
 	{
 		key_in=KEY_Scan1_ledSPY(0);
-		if(key_in==3)
-		{
-				key1_cnt++;
-			  if(key1_cnt%2==1 || SW_SPY)
-				{
-					CON1_R595();
-					Beep_time(150);
-				}
-				else
-				{
-					CON3_R595();
-					Beep_time(150);
-				}		
+/*--------------------------------------------------------------------------*/			
+		if(key_in == 3 && !key4_flg){
+		
+			key3_flg = !key3_flg; 
+			
+			dats595_clr(50);
+			if(key3_flg){
+			
+				if(SW_STATUS[0] == 2)SW_STATUS[0] = 1;	
+			}else{
+			
+				if(SW_STATUS[0] == 1)SW_STATUS[0] = 2;	
+			}	
+			USRKspyTX_FLG = 1;
+		}else if(key_in == 4 && !key3_flg){
+		
+			key4_flg = !key4_flg; 
+			
+			dats595_clr(50);
+			if(key4_flg){
+			
+				if(SW_STATUS[1] == 2)SW_STATUS[1] = 1;	
+			}else{
+			
+				if(SW_STATUS[1] == 1)SW_STATUS[1] = 2;	
+			}
+			USRKspyTX_FLG = 1;
+		}
+/*--------------------------------------------------------------------------*/	
+		if(USRKspyRX_FLG){
+			
+			dats595_clr(50);
+			USRKspyRX_FLG =0;
+			
+			if(SW_STATUS[0] != SW_SPY){
+				
+				SW_STATUS[0] = SW_SPY;
+				key3_flg = !key3_flg; 
+			}
+			if(SW_STATUS[1] != SW_PST){
+			
+				SW_STATUS[1] = SW_PST;
+				key4_flg = !key4_flg; 
+			}
 		}	
-		else if(key_in==4 || SW_PST)
-		{
-				key2_cnt++;
-			  if(key2_cnt%2==1)
-				{
-					CON2_R595();
-					Beep_time(150);
-				}
-				else
-				{
-					CON3_R595();
-					Beep_time(150);
-				}	 
-		}			
-		t++; 
-		delay_ms(10);
-		if(t==100)
-		{
-			t=0;
-			cnt++;
-		}		   
+/*--------------------------------------------------------------------------*/		
+		if(status_spy != SW_STATUS[0]){
+		
+			status_spy = SW_STATUS[0];
+			if(status_spy == 1){
+			
+				Beep_time(80);
+				osThreadTerminate(tid_flash_PST_Thread);
+				tid_flash_SPY_Thread = osThreadCreate(osThread(flash_SPY_Thread),NULL);
+
+			}else if(status_spy == 2){
+			
+				Beep_time(80);
+				osThreadTerminate(tid_flash_SPY_Thread);
+			}
+			
+			dats595_clr(50);
+		}
+		if(status_pst != SW_STATUS[1]){
+		
+			status_pst = SW_STATUS[1];
+			if(status_pst == 1){
+			
+				Beep_time(80);
+				osThreadTerminate(tid_flash_SPY_Thread);
+				tid_flash_PST_Thread = osThreadCreate(osThread(flash_PST_Thread),NULL);
+				
+			}else if(status_pst == 2){
+			
+				Beep_time(80);
+				osThreadTerminate(tid_flash_PST_Thread);
+			}
+			
+			dats595_clr(50);
+		}
 	}
 }
 
@@ -277,10 +218,96 @@ void LEDSprayCM_DB_Thread(const void *argument){
 	for(;;){
 		
 #if(MOUDLE_DEBUG == 1)	
-		sprintf(disp,"\n\rswitch_SPY : %d switch_PST: %d\n\r", &SW_SPY,&SW_PST);			
+		sprintf(disp,"\n\rswitch_SPY : %d switch_PST: %d\n\r", SW_STATUS[0],SW_STATUS[1]);			
 		Driver_USART1.Send(disp,strlen(disp));
 #endif	
 		osDelay(1000);
+	}
+}
+
+void flash_SPY_Thread(const void *argument){
+
+	uint8_t loop;
+	
+	for(;;){
+		
+		dats595_clr(50);
+		datsin595(19, 50);
+		datsin595(2, 0);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		
+		for(loop = 0;loop < 5;loop ++){
+		
+			dats595_clr(50);
+			datsin595(19, 0);
+			datsin595(2, 0);
+			datsin595(5, 0);
+			osDelay(15);
+			datsin595(5, 0);
+			osDelay(15);
+			datsin595(5, 0);
+			osDelay(15);
+			datsin595(5, 0);
+			osDelay(15);
+			datsin595(5, 0);
+			osDelay(15);
+			datsin595(5, 0);
+			osDelay(15);
+		}
+	}
+}
+
+void flash_PST_Thread(const void *argument){
+
+	uint8_t loop;
+	
+	for(;;){
+		
+		dats595_clr(50);
+		datsin595(19, 50);
+		datsin595(2, 0);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		datsin595(5, 0);
+		osDelay(10);
+		
+		for(loop = 0;loop < 15;loop ++){
+		
+			dats595_clr(50);
+			datsin595(19, 0);
+			datsin595(2, 0);
+			datsin595(5, 0);
+			osDelay(35);
+			datsin595(5, 0);
+			osDelay(35);
+			datsin595(5, 0);
+			osDelay(35);
+			datsin595(5, 0);
+			osDelay(35);
+			datsin595(5, 0);
+			osDelay(35);
+			datsin595(5, 0);
+			osDelay(35);
+		}
 	}
 }
 

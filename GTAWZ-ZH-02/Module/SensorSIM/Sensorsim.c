@@ -103,14 +103,14 @@ void SenSimMS_Thread(const void *argument){
 	
 	for(;;){
 	
-		valAnalog 	= (uint8_t)(Get_Adc_Average(10,8) / 41);
+		valAnalog 	= (uint8_t)(Get_Adc_Average(11,8) / 41);
 		valDigital	= DIO;
 		
 #if(MOUDLE_DEBUG == 1)	
-		sprintf(disp,"\n\rvalAnalog : %d,valDigital : %d\n\r", &valAnalog,&valDigital);			
+		sprintf(disp,"\n\rvalAnalog : %d,valDigital : %d\n\r", valAnalog,valDigital);			
 		Driver_USART1.Send(disp,strlen(disp));
 #endif	
-		osDelay(1000);
+		osDelay(100);
 	}
 }
 

@@ -1,6 +1,10 @@
 #include "ledGrow.h"
 
-uint16_t PWM_ledGRW=3000;//pwm
+const uint16_t PWM_ledGRW_Init=3000;//pwm
+uint16_t PWM_ledGRW;//pwm
+
+uint8_t USRKgrwTX_FLG = 0;
+uint8_t USRKgrwRX_FLG = 0;
 
 osThreadId tid_LEDGrowCM_Thread;
 osThreadId tid_LEDGrowCM_DB_Thread;
@@ -85,64 +89,54 @@ void LEDGrow_Init(void){
 
 void led_Grow(void){
 
-	u8 t=0,cnt=0,key_in;
-	u8 key_num=0;
+	u8 key_in;
+	u8 key3_flg=0;
 	
-	TIM4_PWM_Init_ledGRW(PWM_ledGRW,10);	//PWM频率=72000000/900=80Khz   ARR=900 
-	
-	Beep_time(200);
-	TIM_SetCompare3(TIM4,0);	
+	TIM4_PWM_Init_ledGRW(PWM_ledGRW_Init,10);	//不分频。PWM频率=72000000/900=80Khz   ARR=900 
 	
 	while(1)
 	{
 		key_in=KEY_Scan1_ledGRW(0);
-		if(key_in==5)
-		{
-		key_num++;
-		if(key_num%2==1)	
-			{	
-				TIM_SetCompare3(TIM4,PWM_ledGRW/2);		
-			}
-		else
-			{
-				TIM_SetCompare3(TIM4,0);	
-				PWM_ledGRW = 0;	
-			}
-		Beep_time(100);
-		}	
-		else if(key_in==3)
-		{
-			if(key_num%2==1)	
-				{			
-					if(PWM_ledGRW<5500)
-						PWM_ledGRW=PWM_ledGRW+1000;
-					
-						TIM_SetCompare3(TIM4,PWM_ledGRW/2);
-						Beep_time(100);
-				}
-		}			
-		else if(key_in==4)
-		{
-			if(key_num%2==1)	
-				{			
-					if(PWM_ledGRW>500)
-					PWM_ledGRW=PWM_ledGRW-500;
-					
-					TIM_SetCompare3(TIM4,PWM_ledGRW/2);
-					Beep_time(100);
-				}
-		}
-
-		TIM_SetCompare3(TIM4,PWM_ledGRW/2);
 		
-		t++; 
-		delay_ms(10);
-		if(t==100)
-		{
-			t=0;
-			cnt++;	
-		}		   	
-	}	 	 
+		if(key_in == 5){
+		
+			key3_flg = !key3_flg; 
+			
+			if(key3_flg){
+				
+				PWM_ledGRW = 3000;
+				TIM_SetCompare3(TIM4,PWM_ledGRW/2);
+			}else{
+			
+				PWM_ledGRW = 0;
+				TIM_SetCompare3(TIM4,0);
+			}	
+			USRKgrwTX_FLG = 1;
+			Beep_time(80);
+		}else if(key_in == 3 && key3_flg){
+		
+			if(PWM_ledGRW<6000)PWM_ledGRW=PWM_ledGRW+500;		
+			TIM_SetCompare3(TIM4,PWM_ledGRW/2);//50%
+			Beep_time(80);
+
+			USRKgrwTX_FLG = 1;
+		}else if(key_in == 4 && key3_flg){
+		
+			if(PWM_ledGRW>=1000)PWM_ledGRW=PWM_ledGRW-500;
+			TIM_SetCompare3(TIM4,PWM_ledGRW/2);//50%
+			Beep_time(80);
+			
+			USRKgrwTX_FLG = 1;
+		}
+		
+		if(USRKgrwRX_FLG == 1){
+			
+			USRKgrwRX_FLG = 0;
+		
+			TIM_SetCompare3(TIM4,PWM_ledGRW/2);//50%
+			Beep_time(80);
+		}
+	}
 }
 
 void LEDGrowCM_Thread(const void *argument){
@@ -156,14 +150,14 @@ void LEDGrowCM_DB_Thread(const void *argument){
 	char disp[30];
 #endif
 	
-	uint16_t PWM_ledGRW_DB = PWM_ledGRW / 55;
+	uint16_t PWM_ledGRW_DB = PWM_ledGRW / 60;
 	
 	for(;;){
 		
-		PWM_ledGRW_DB = PWM_ledGRW / 55;
+		PWM_ledGRW_DB = PWM_ledGRW / 60;
 		
 #if(MOUDLE_DEBUG == 1)	
-		sprintf(disp,"\n\rLED_Grow pwm is : %d%\n\r", &PWM_ledGRW_DB);			
+		sprintf(disp,"\n\rLED_Grow pwm is : %d%\n\r", PWM_ledGRW_DB);			
 		Driver_USART1.Send(disp,strlen(disp));
 #endif	
 		osDelay(1000);

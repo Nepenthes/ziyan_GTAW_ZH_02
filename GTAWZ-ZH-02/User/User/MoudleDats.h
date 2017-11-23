@@ -1,7 +1,7 @@
 #ifndef MOUDLEDATS_H
 #define MOUDLEDATS_H
 
-#define MOUDLE_ID			7   //20以内
+#define MOUDLE_ID			3   //20以内
 
 #define MOUDLE_DEBUG		1
 
@@ -17,10 +17,10 @@
 9.	温湿度
 10.大气压强
 
-11.继电器
+11.风速传感器
 12.双色点阵
 13.4.3寸触摸LCD
-14.1.44寸LCD
+14.土壤湿度检测
 15.电动窗帘控制
 16.喷雾控制
 17.排风控制

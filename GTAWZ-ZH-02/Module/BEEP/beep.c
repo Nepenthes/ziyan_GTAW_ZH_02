@@ -10,7 +10,7 @@ void BEEP_Init(void)
  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;				 //BEEP-->PC.5 端口配置
  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;	 //速度为50MHz
- GPIO_Init(GPIOC, &GPIO_InitStructure);	 //根据参数初始化GPIOA.0
+ GPIO_Init(GPIOC, &GPIO_InitStructure);	
  
  GPIO_SetBits(GPIOC,GPIO_Pin_5);//输出1，关闭蜂鸣器输出
 }

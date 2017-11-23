@@ -21,9 +21,11 @@ void KEY_Init_ledSPY(void);//IO初始化
 u8 KEY_Scan1_ledSPY(u8);  	//按键扫描函数					    
 void LED_Init(void);//初始化
 void NC595_Init(void);//
-void SH_595_ledSPY(u8 Date_in);
 void OUT_595(void);
 void LED_Spray(void);
+
+void flash_SPY_Thread(const void *argument);
+void flash_PST_Thread(const void *argument);
 
 void LEDSpray_Init(void);
 void LEDSprayCM_Thread(const void *argument);

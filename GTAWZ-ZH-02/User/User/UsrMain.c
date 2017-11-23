@@ -16,7 +16,7 @@ int main (void const *argument)
 	
 	BSP_Init();
 	
-	BSP_Test();
+	BSP_SetOFF();
 	
 	osKernelStart ();                         	// start thread execution 
 }

@@ -772,6 +772,10 @@ void RC522MS_Thread(const void *argument){
 	char disp[30];
 #endif
 	u8 ucStatusReturn;                                                                                               //返回状态
+	u8 disp_cnt,disp_flg;
+	
+	PcdReset ();
+	M500PcdConfigISOType ( 'A' );//设置工作方式
 	
 	for(;;){
 		
@@ -782,13 +786,24 @@ void RC522MS_Thread(const void *argument){
 		{
 			if ( PcdAnticoll ( RC522IDBUF ) == MI_OK )                                                                   //防冲撞（当有多张卡进入读写器操作范围时，防冲突机制会从其中选择一张进行操作）
 			{			
+				disp_flg = 1;
+				disp_cnt = 0;
 #if(MOUDLE_DEBUG == 1)	
-				sprintf (disp, "The Card ID is: %02X%02X%02X%02X", RC522IDBUF [ 0 ], RC522IDBUF [ 1 ], RC522IDBUF [ 2 ], RC522IDBUF [ 3 ] );				
+				sprintf (disp, "The Card ID is: %02X%02X%02X%02X\r\n", RC522IDBUF [ 0 ], RC522IDBUF [ 1 ], RC522IDBUF [ 2 ], RC522IDBUF [ 3 ] );				
 				Driver_USART1.Send(disp,strlen(disp));
 #endif					
 			}			
 		}	
-		osDelay(1000);
+		osDelay(200);
+		if(disp_flg){
+		
+			if(disp_cnt > 3){
+			
+				disp_flg = 0;
+				disp_cnt = 0;
+				memset(RC522IDBUF,0,4*sizeof(char));
+			}else disp_cnt++;
+		}
 	}
 }
 

@@ -14,7 +14,6 @@ void RC522_Init ( void )
 	macRC522_Reset_Disable();
 	
 	macRC522_CS_Disable();
-
 }
 
 
@@ -25,7 +24,7 @@ static void RC522_SPI_Config ( void )
   
 
 	/*!< Configure SPI_RC522_SPI pins: CS */
-	macRC522_GPIO_CS_CLK_FUN ( macRC522_GPIO_CS_CLK, ENABLE );
+  macRC522_GPIO_CS_CLK_FUN ( macRC522_GPIO_CS_CLK, ENABLE );
   GPIO_InitStructure.GPIO_Pin = macRC522_GPIO_CS_PIN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = macRC522_GPIO_CS_Mode;
