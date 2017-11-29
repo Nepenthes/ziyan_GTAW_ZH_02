@@ -2,7 +2,7 @@
   
 extern ARM_DRIVER_USART Driver_USART1;
 
-extern const uint8_t MOUDLE_TYPE[20];
+extern const uint8_t MOUDLE_TYPE[MOUDLE_NUM];
   
 extern osMutexId (uart1_mutex_id);
 #if(MOUDLE_ID == 1)
@@ -36,6 +36,9 @@ extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 #elif(MOUDLE_ID == 14)
 extern float valsoilHum;
 #elif(MOUDLE_ID == 15)
+extern uint8_t curAction;
+extern uint8_t USRKcurTX_FLG;
+extern uint8_t USRKcurRX_FLG;
 #elif(MOUDLE_ID == 16)
 extern uint8_t SW_SPY;
 extern uint8_t SW_PST;
@@ -50,13 +53,24 @@ extern uint8_t USRKexaRX_FLG;
 extern float valDS18B20;
 extern uint8_t SW_airWarming;
 extern uint8_t AWM_STATUS;
+extern uint8_t USRKawmTX_FLG;
+extern uint8_t USRKawmRX_FLG;		//保留暂时不用
 #elif(MOUDLE_ID == 19)
 extern uint16_t PWM_ledGRW;
 extern uint8_t USRKgrwTX_FLG;
-extern uint8_t USRKgrwRX_FLG;
+extern uint8_t USRKgrwRX_FLG;	
 #elif(MOUDLE_ID == 20)
 extern float valVoltage;
 extern uint8_t SOURCE_TYPE;
+extern uint8_t USRKpowTX_FLG;
+extern uint8_t USRKpowexaRX_FLG;	//保留暂时不用
+#elif(MOUDLE_ID == 21)
+#elif(MOUDLE_ID == 22)
+extern uint8_t Elec_Param[10];
+extern float 	valDianYa;
+extern float 	valDianLiu;
+extern float	valGongLv;
+extern double 	valDianLiang;
 #endif
   
 //管理LCD重要参数
@@ -580,7 +594,7 @@ void LCD144_Thread(const void *argument){
 	Show_Str(5,3,WHITE,BLACK,"Moudle_ID:",12,1);
 	Show_Str(65,3,RED,BLACK,(uint8_t*)&M_ID,12,1);
 	Show_Str(82,3,WHITE,BLACK,"ATTR:",12,1);	
-	if(MD_ID <= 11)Show_Str(112,3,BRED,BLACK,"MS",12,1);
+	if(MD_ID <= 11 || MD_ID == 22)Show_Str(112,3,BRED,BLACK,"MS",12,1);
 	else Show_Str(112,3,BRED,BLACK,"CM",12,1);
 	Show_Str(5,13,WHITE,BLACK,"Moudle_Type:",12,1);
 	Show_Str(75,13,BLUE,BLACK,(uint8_t*)M_ADDR,12,1);
@@ -621,6 +635,8 @@ void LCD144_Thread(const void *argument){
 	Show_Str(10,105,LIGHTBLUE,BLACK,"Disp_speed:",24,1);
 #elif(MOUDLE_ID == 14)
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"土壤水分值鑞",24,1);
+#elif(MOUDLE_ID == 15)
+	Show_Str(5,50,LGRAYBLUE,YELLOW,"窗帘控制鑞",24,1);
 #elif(MOUDLE_ID == 16)
 	Show_Str(5,25,LGRAYBLUE,GREEN,"喷雾控制鑞",24,1);
 	Show_Str(5,75,LGRAYBLUE,YELLOW,"杀虫控制鑞",24,1);
@@ -633,7 +649,10 @@ void LCD144_Thread(const void *argument){
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"生长灯光度鑞",24,1);
 #elif(MOUDLE_ID == 20)
 	Show_Str(5,25,LGRAYBLUE,GREEN,"电源控制鑞",24,1);
-	Show_Str(5,75,LGRAYBLUE,YELLOW,"电源电压鑞",24,1);
+	Show_Str(5,75,LGRAYBLUE,YELLOW,"主电电压鑞",24,1);
+#elif(MOUDLE_ID == 22)
+	Show_Str(5,25,LGRAYBLUE,GREEN,"当前功率鑞",24,1);
+	Show_Str(5,75,LGRAYBLUE,YELLOW,"当前电压鑞",24,1);
 #endif
 
 	while(1)
@@ -670,11 +689,11 @@ void LCD144_Thread(const void *argument){
 			
 			if(phoneticsNUM){
 			
-				LCD_ClearS(BLACK,25,80,120,105);
+				LCD_ClearS(BLACK,0,80,128,128);
 				Show_Str(10,90,GREEN,YELLOW,(uint8_t *)cmd_tips[phoneticsNUM - 1],24,1);	
 			}else{
 			
-				LCD_ClearS(BLACK,25,80,120,105);
+				LCD_ClearS(BLACK,0,80,128,128);
 				Show_Str(40,90,GREEN,YELLOW,"NO CMD",24,1);	
 			}	
 		}
@@ -852,6 +871,28 @@ void LCD144_Thread(const void *argument){
 			LCD_ShowNum2412(20,80,GREEN,YELLOW,(uint8_t*)&soilDisp[1],24,1);
 			Show_Str(strlen(&soilDisp[1])*16 + 20,90,GREEN,YELLOW,"%",24,1);
 		}
+#elif(MOUDLE_ID == 15)
+		static uint8_t cur_Action;
+		
+		if(cur_Action != curAction){
+		
+			cur_Action = curAction;
+			LCD_ClearS(BLACK,0,80,125,128);
+			switch(curAction){
+			
+				case 1:	Show_Str(20,90,GREEN,YELLOW,"正在开启",24,1);
+							break;
+				
+				case 2:	Show_Str(20,90,GREEN,YELLOW,"正在关闭",24,1);
+							break;
+				
+				case 3:	if(PEin(1))Show_Str(30,90,GREEN,YELLOW,"已开启",24,1);
+							else Show_Str(30,90,GRAY,YELLOW,"已关闭",24,1);
+							break;
+				
+				default: break;
+			}
+		}
 #elif(MOUDLE_ID == 16)		
 		static uint8_t swPST = 6;
 		static uint8_t swSPY = 6;
@@ -957,6 +998,45 @@ void LCD144_Thread(const void *argument){
 			LCD_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&valVol_Disp[1],24,1);
 			Show_Str(strlen(&valVol_Disp[1])*14 + 25,107,GREEN,YELLOW,"V",24,1);	
 		}
+#elif(MOUDLE_ID == 22)	
+		static uint8_t Disp_loop = 0;
+		char Meter_disp[20];
+		uint8_t dldisp_position = 20;
+		
+		if((valDianLiang / 1000.0) > 100.0)dldisp_position = 5;
+		else dldisp_position = 20;
+		
+		if(Disp_loop >= 3)Disp_loop = 0;
+		
+		LCD_ClearS(BLACK,0,50,128,75);
+		memset(Meter_disp,20,20*sizeof(char));
+		sprintf(&Meter_disp[1],"%.2f",valGongLv);
+		LCD_ShowNum2412(20,50,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		Show_Str(strlen(&Meter_disp[1])*14+20,59,GREEN,YELLOW,"W",24,1);
+	
+		LCD_ClearS(BLACK,0,75,128,128);
+		memset(Meter_disp,20,20*sizeof(char));
+		sprintf(&Meter_disp[1],"%.2f",valDianYa);
+		Show_Str(5,75,LGRAYBLUE,YELLOW,"当前电压鑞",24,1);
+		LCD_ShowNum2412(20,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		Show_Str(strlen(&Meter_disp[1])*14+21,107,GREEN,YELLOW,"V",24,1);
+		osDelay(2000);Disp_loop ++;
+		
+		LCD_ClearS(BLACK,0,75,128,128);
+		memset(Meter_disp,20,20*sizeof(char));
+		sprintf(&Meter_disp[1],"%.2f",valDianLiu);
+		Show_Str(5,75,LGRAYBLUE,YELLOW,"当前电流鑞",24,1);
+		LCD_ShowNum2412(20,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		Show_Str(strlen(&Meter_disp[1])*14+20,107,GREEN,YELLOW,"A",24,1);
+		osDelay(2000);Disp_loop ++;
+		
+		LCD_ClearS(BLACK,0,75,128,128);
+		memset(Meter_disp,20,20*sizeof(char));
+		sprintf(&Meter_disp[1],"%.2f",valDianLiang / 1000.0);
+		Show_Str(5,75,LGRAYBLUE,YELLOW,"总用电量鑞",24,1);
+		LCD_ShowNum2412(dldisp_position,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		Show_Str(strlen(&Meter_disp[1])*14+dldisp_position+1,107,GREEN,YELLOW,"kWh",24,1);
+		osDelay(2000);Disp_loop ++;	
 #endif
 		delay_ms(100);
 	}

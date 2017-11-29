@@ -26,19 +26,21 @@
 	
 funMoudle *moudleTestForm[] = {
 	
-	&KeyBoardMS			,&RC522				,&Phonetics			,&SensorSIMMS		,&TSL2561MS 		,
-	&contentCO2MS		,&RTMS				,&RAINMS				,&SHT11MS			,&BMP180MS  		,
-	&windSpeedMS		,&LEDArrayCM		,(void *)0			,&soilHumMS			,(void *)0			,
-	&LEDSpray			,&exAir				,&airWarming		,&LEDGrow			,&SourceTogCM								
+	&KeyBoardMS					,&RC522						,&Phonetics					,&SensorSIMMS				,&TSL2561MS 			,
+	&contentCO2MS				,&RTMS						,&RAINMS						,&SHT11MS					,&BMP180MS  			,
+	&windSpeedMS				,&LEDArrayCM				,(void *)0					,&soilHumMS					,&Curtain				,
+	&LEDSpray					,&exAir						,&airWarming				,&LEDGrow					,&SourceTogCM			,
+	(void *)0					,&USART4ElecMeter
 };
 
 funMoudle *moudleInitForm[] = {
 	
 	
-	&keyBoard_Init		,&RC522_Init		,&Phonetics_Init	,&SensorSIM_Init	,&TSL2561_Init		,
-	&contentCO2_Init	,&RT_Init			,&RAIN_Init			,&SHT11_Init		,&BMP180_Init		,
-	&windSpeed_Init	,&LEDArray_Init	,(void *)0			,&soilHum_Init		,(void *)0			,
-	&LEDSpray_Init		,&exAir_Init		,&airWarming_Init	,&LEDGrow_Init		,&SourceTog_Init								
+	&keyBoard_Init				,&RC522_Init				,&Phonetics_Init			,&SensorSIM_Init			,&TSL2561_Init			,
+	&contentCO2_Init			,&RT_Init					,&RAIN_Init					,&SHT11_Init				,&BMP180_Init			,
+	&windSpeed_Init			,&LEDArray_Init			,(void *)0					,&soilHum_Init				,&Curtain_Init			,
+	&LEDSpray_Init				,&exAir_Init				,&airWarming_Init			,&LEDGrow_Init				,&SourceTog_Init		,
+	(void *)0					,&USART4ElecMeter_Init	
 };
 
 void  BSP_Init(void){

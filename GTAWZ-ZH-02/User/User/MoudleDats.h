@@ -1,7 +1,9 @@
 #ifndef MOUDLEDATS_H
 #define MOUDLEDATS_H
 
-#define MOUDLE_ID			3   //20以内
+#define MOUDLE_NUM  		22	  //模块总数
+
+#define MOUDLE_ID			22   //选择编译模块
 
 #define MOUDLE_DEBUG		1
 

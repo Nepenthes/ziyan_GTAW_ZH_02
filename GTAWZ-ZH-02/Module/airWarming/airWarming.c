@@ -225,34 +225,41 @@ void airWarmingCM_Thread(const void *argument){
 		
 		key_in = KEY_Scan1_AWM(0);
 		
-		if(key_in == 1){
+		valDS18B20 	= DS18B20_Get_Temp();
 		
-			key_flg = !key_flg; 
-			
-			if(key_flg){
-				 
-				AWM_STATUS = 0x01;
-			}else{
-			
-				AWM_STATUS = 0x02;
-			}	
-			USRKawmTX_FLG = 1;
-			Beep_time(80);
-		}
+		if(valDS18B20 > 30.0){		//温度限制，三十度以下才开放控制权
 		
-		if(USRKawmRX_FLG == 1){
+			AWM_STATUS = 0x02;
 			
-			USRKawmRX_FLG = 0;
-		
-			key_flg = !key_flg; 
-			AWM_STATUS = SW_airWarming;
-			Beep_time(80);
+		}else{
+			
+			if(key_in == 1){
+			
+				key_flg = !key_flg; 
+				
+				if(key_flg){
+					 
+					AWM_STATUS = 0x01;
+				}else{
+				
+					AWM_STATUS = 0x02;
+				}	
+				USRKawmTX_FLG = 1;
+				Beep_time(80);
+			}
+			
+			if(USRKawmRX_FLG == 1){
+				
+				USRKawmRX_FLG = 0;
+			
+				key_flg = !key_flg; 
+				AWM_STATUS = SW_airWarming;
+				Beep_time(80);
+			}
 		}
 
 		if(AWM_STATUS == 0x01)WARMING_ON;
 		else WARMING_OFF;
-			
-		valDS18B20 	= DS18B20_Get_Temp();
 		
 #if(MOUDLE_DEBUG == 1)	
 		sprintf(disp,"\n\rairtemp valDS18B20 : %.1f\n\r", valDS18B20);			

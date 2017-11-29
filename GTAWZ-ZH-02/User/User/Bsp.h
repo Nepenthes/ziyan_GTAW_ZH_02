@@ -16,6 +16,7 @@
 #include <ledGrow.h>
 #include <exAir.h>
 #include <airWarming.h>
+#include <Curtain.h>
 #include <SourceTog.h>
 
 #include <SHT11.h>
@@ -31,6 +32,7 @@
 #include <windSpeed.h>
 #include <soilHum.h>
 #include <LDchip.h>
+#include <ElecMeter.h>
 
 void	BSP_Init(void);
 void 	BSP_SetOFF(void);

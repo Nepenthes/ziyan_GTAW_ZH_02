@@ -136,7 +136,7 @@
 //   <i> Defines how long a thread will execute before a thread switch.
 //   <i> Default: 5
 #ifndef OS_ROBINTOUT
- #define OS_ROBINTOUT   5
+ #define OS_ROBINTOUT   10
 #endif
  
 // </e>
@@ -156,7 +156,7 @@
 //   <i> Defines priority for Timer Thread
 //   <i> Default: High
 #ifndef OS_TIMERPRIO
- #define OS_TIMERPRIO   5
+ #define OS_TIMERPRIO   4
 #endif
  
 //   <o>Timer Thread stack size [bytes] <64-4096:8><#/4>
@@ -170,7 +170,7 @@
 //   <i> Number of concurrent active timer callback functions.
 //   <i> Default: 4
 #ifndef OS_TIMERCBQS
- #define OS_TIMERCBQS   4
+ #define OS_TIMERCBQS   5
 #endif
  
 // </e>
@@ -184,7 +184,7 @@
 //   <i> when they are called from the interrupt handler.
 //   <i> Default: 16 entries
 #ifndef OS_FIFOSZ
- #define OS_FIFOSZ      24
+ #define OS_FIFOSZ      12
 #endif
  
 // </h>

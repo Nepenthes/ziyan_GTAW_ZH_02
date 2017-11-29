@@ -1,0 +1,9 @@
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\Config\LCDConf_FlexColor_Template.c
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\inc\GUI.h
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\inc\GUI_ConfDefaults.h
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\Config\GUIConf.h
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\inc\GUI_Type.h
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\inc\LCD.h
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\inc\Global.h
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\inc\GUI_Version.h
+.\objects\lcdconf_flexcolor_template.o: ..\Module\LCD4.3Touch\EMWIN\inc\GUIDRV_FlexColor.h

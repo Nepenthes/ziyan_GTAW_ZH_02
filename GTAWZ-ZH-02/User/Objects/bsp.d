@@ -50,6 +50,7 @@
 .\objects\bsp.o: ..\Module\LED_Grow\ledGrow.h
 .\objects\bsp.o: ..\Module\EXHUASH\exAir.h
 .\objects\bsp.o: ..\Module\airWarming\airWarming.h
+.\objects\bsp.o: ..\Module\Curtain\Curtain.h
 .\objects\bsp.o: ..\Module\sourceToggle\SourceTog.h
 .\objects\bsp.o: ..\Module\SHT11\SHT11.h
 .\objects\bsp.o: .\User\SysSupport.h
@@ -67,3 +68,4 @@
 .\objects\bsp.o: ..\Module\Sensor_contentCO2\contentCO2.h
 .\objects\bsp.o: ..\Module\Sensor_soilHum\soilHum.h
 .\objects\bsp.o: ..\Module\Phonetics\LDchip.h
+.\objects\bsp.o: ..\Module\ElectricMeter\ElecMeter.h

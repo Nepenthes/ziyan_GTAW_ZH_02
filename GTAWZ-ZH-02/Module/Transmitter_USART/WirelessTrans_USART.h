@@ -17,7 +17,7 @@
 
 #define FRAME_DATS_SIZE	10		//除了协议帧数据外，传感器数据缓冲队列长度
 
-#define FRAME_TX_SIZE	24		//发送队列整帧长度
+#define FRAME_TX_SIZE	100	//发送队列整帧长度
 #define FRAME_RX_SIZE	100	//接收队列整帧长度
 
 #define FRAME_HEAD	0x7E		//帧头
@@ -44,16 +44,18 @@
 #define GTA_GGS06		0x19	//温湿度
 #define GTA_GGS07		0x1A	//大气压强
 
-#define GTA_GG001		0x1B	/*风速传感器*///继电器
+#define GTA_GG001		0x1B	/*风速传感器*///原继电器
 #define GTA_GID01		0x20	//双色点阵
 #define GTA_GID02		0x21	//4.3寸触摸LCD
-#define GTA_GID03		0x10	/*土壤水分*///1.44寸LCD
+#define GTA_GID03		0x10	/*土壤水分*///原1.44寸LCD
 #define GTA_PB002		0x30	//电动窗帘控制
 #define GTA_PB003		0x31	//喷雾控制
 #define GTA_PB004		0x32	//排风控制
 #define GTA_PB005		0x33	//空气加热控制
 #define GTA_PB006		0x34	//生长灯控制
 #define GTA_PBP01		0x35	//电源自动切换控制
+#define GTA_PBP02		0x36	//继电器控制
+#define GTA_PBP03		0x37	//电表
 
 void myUSART1_callback(uint32_t event);
 void myUSART2_callback(uint32_t event);

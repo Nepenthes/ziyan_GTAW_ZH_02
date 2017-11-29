@@ -34,6 +34,9 @@ extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 #elif(MOUDLE_ID == 14)
 extern float valsoilHum;
 #elif(MOUDLE_ID == 15)
+extern uint8_t curAction;
+extern uint8_t USRKcurTX_FLG;
+extern uint8_t USRKcurRX_FLG;
 #elif(MOUDLE_ID == 16)
 extern uint8_t SW_SPY;
 extern uint8_t SW_PST;
@@ -59,15 +62,19 @@ extern float valVoltage;
 extern uint8_t SOURCE_TYPE;
 extern uint8_t USRKpowTX_FLG;
 extern uint8_t USRKpowexaRX_FLG;	//保留暂时不用
+#elif(MOUDLE_ID == 21)
+#elif(MOUDLE_ID == 22)
+extern uint8_t Elec_Param[13];
 #endif
 
-const uint8_t MOUDLE_TYPE[20] = {
+const uint8_t MOUDLE_TYPE[MOUDLE_NUM] = {
 	
 	GTA_GGI01,GTA_GGI02,GTA_GGI03,GTA_GGS01,
 	GTA_GGS02,GTA_GGS03,GTA_GGS04,GTA_GGS05,
 	GTA_GGS06,GTA_GGS07,GTA_GG001,GTA_GID01,
 	GTA_GID02,GTA_GID03,GTA_PB002,GTA_PB003,
-	GTA_PB004,GTA_PB005,GTA_PB006,GTA_PBP01
+	GTA_PB004,GTA_PB005,GTA_PB006,GTA_PBP01,
+	GTA_PBP02,GTA_PBP03
 };
 
 const uint8_t FRAME_PRT1[5] = {FRAME_HEAD,GATEWAY_ADDR,NODE_ADDR,MODULE_ADDR};
@@ -313,6 +320,7 @@ void USART2Trans_Thread(const void *argument){
 	char valsoil_zhengshu_ID14 = (char)valsoilHum;
 	char valsoil_xiaoshu_ID14 = (char)((valsoilHum - (float)valsoil_zhengshu_ID14) * 100);
 #elif(MOUDLE_ID == 15)
+	char SW_curtain_ID15 = 0;
 #elif(MOUDLE_ID == 16)
 	char SW_ledSPY_ID16[2] = {0};
 #elif(MOUDLE_ID == 17)
@@ -327,6 +335,8 @@ void USART2Trans_Thread(const void *argument){
 	char valVol_zhengshu_ID20 = (char)valVoltage;
 	char valVol_xiaoshu_ID20 = (char)((valVoltage - (float)valVol_zhengshu_ID20) * 100);
 	char SWSource_ID20;
+#elif(MOUDLE_ID == 22)
+   uint8_t Elec_Param_ID22[13] = {0};
 #endif
 	
 	for(;;){
@@ -340,6 +350,8 @@ void USART2Trans_Thread(const void *argument){
 		pt = strstr((const char*)FRAME_RX,(const char*)FRAME_PRT1);
 	
 		if(pt){
+			
+			Driver_USART1.Send(FRAME_RX,FRAME_RX_SIZE);
 			
 			memset(dats,0,FRAME_RX_SIZE*sizeof(uint8_t));
 			memcpy(dats,pt,8 + pt[6]);
@@ -465,19 +477,40 @@ void USART2Trans_Thread(const void *argument){
 		FRAME_TX_DATSLOAD(dats,2);	
 		TX_RSQ = 1;	
 #elif(MOUDLE_ID == 15)
+		if(SW_curtain_ID15 != dats_rx[0]){
+		
+			USRKcurRX_FLG = 1;
+			
+			SW_curtain_ID15 = dats_rx[0];
+			curAction = dats_rx[0];
+		}
+		if(USRKcurTX_FLG){
+		
+			USRKcurTX_FLG = 0;
+			
+			SW_curtain_ID15 = dats_rx[0] = curAction;		//更新下行数据缓存，防错乱
+			
+			dats[0] = curAction;
+			FRAME_TX_DATSLOAD(dats,1);
+			TX_RSQ = 1;
+		}
 #elif(MOUDLE_ID == 16)
 		if(memcmp(SW_ledSPY_ID16,dats_rx,2)){
 			
 			USRKspyRX_FLG = 1;
 		
 			memcpy(SW_ledSPY_ID16,dats_rx,2);
+			
 			SW_SPY = SW_ledSPY_ID16[0];
 			SW_PST = SW_ledSPY_ID16[1];
 		}
 		if(USRKspyTX_FLG){
 			
 			USRKspyTX_FLG = 0;
-		
+			
+			memcpy(dats_rx,SW_STATUS,2);		//更新下行数据缓存，防错乱
+			memcpy(SW_ledSPY_ID16,dats_rx,2);
+			
 			dats[0] = SW_STATUS[0];
 			dats[1] = SW_STATUS[1];
 			FRAME_TX_DATSLOAD(dats,2);
@@ -549,7 +582,7 @@ void USART2Trans_Thread(const void *argument){
 		
 		dats[0] = valVol_zhengshu_ID20;
 		dats[1] = valVol_xiaoshu_ID20;
-		dats[3] = SOURCE_TYPE;
+		dats[2] = SOURCE_TYPE;
 		if(USRKpowTX_FLG == 1){
 			
 			USRKpowTX_FLG = 0;	
@@ -563,9 +596,16 @@ void USART2Trans_Thread(const void *argument){
 			SWSource_ID20 = dats_rx[0];
 			SOURCE_TYPE = dats_rx[0];
 		}
+#elif(MOUDLE_ID == 21)
+		
+#elif(MOUDLE_ID == 22)
+		memcpy(Elec_Param_ID22,Elec_Param,13);
+		memcpy(dats,Elec_Param_ID22,13);
+		FRAME_TX_DATSLOAD(dats,13);	
+		TX_RSQ = 1;
 #endif
 
-#if(MOUDLE_ID <= 11 || MOUDLE_ID == 14 || MOUDLE_ID == 16 || MOUDLE_ID == 17 || MOUDLE_ID == 18 || MOUDLE_ID == 19 || MOUDLE_ID == 20)
+#if(MOUDLE_ID <= 11 || MOUDLE_ID == 14 || MOUDLE_ID == 15 || MOUDLE_ID == 16 || MOUDLE_ID == 17 || MOUDLE_ID == 18 || MOUDLE_ID == 19 || MOUDLE_ID == 20 ||  MOUDLE_ID == 22)
 		if(TX_RSQ){
 		
 			Driver_USART2.Send((void *)FRAME_TX,8 + FRAME_TX[6]);
@@ -576,16 +616,6 @@ void USART2Trans_Thread(const void *argument){
 		osDelay(500);	
 #endif
 	}
-}
-
-void USART1Debug(void){
-	
-	tid_USART1Debug_Thread = osThreadCreate(osThread(USART1Debug_Thread),NULL);
-}
-
-void USART2Trans(void){
-	
-	tid_USART2Trans_Thread = osThreadCreate(osThread(USART2Trans_Thread),NULL);
 }
 
 void FRAME_TX_DATSLOAD(uint8_t dats[],uint8_t datsLength){
@@ -601,3 +631,15 @@ void FRAME_TX_DATSLOAD(uint8_t dats[],uint8_t datsLength){
 	framePt += datsLength;
 	FRAME_TX[framePt] = FRAME_TAIL;
 }
+
+void USART1Debug(void){
+	
+	tid_USART1Debug_Thread = osThreadCreate(osThread(USART1Debug_Thread),NULL);
+}
+
+void USART2Trans(void){
+	
+	tid_USART2Trans_Thread = osThreadCreate(osThread(USART2Trans_Thread),NULL);
+}
+
+

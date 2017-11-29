@@ -646,11 +646,11 @@
 
 // <e> UART4 (Universal asynchronous receiver transmitter)
 // <i> Configuration settings for Driver_USART4 in component ::CMSIS Driver:USART
-#define RTE_UART4                       0
+#define RTE_UART4                       1
 #define RTE_UART4_AF_REMAP              AFIO_UNAVAILABLE_REMAP
 
 //   <o> UART4_TX Pin <0=>Not Used <1=>PC10
-#define RTE_UART4_TX_ID                 0
+#define RTE_UART4_TX_ID                 1
 #if    (RTE_UART4_TX_ID == 0)
 #define RTE_UART4_TX                    0
 #elif  (RTE_UART4_TX_ID == 1)
@@ -662,7 +662,7 @@
 #endif
 
 //   <o> UART4_RX Pin <0=>Not Used <1=>PC11
-#define RTE_UART4_RX_ID                 0
+#define RTE_UART4_RX_ID                 1
 #if    (RTE_UART4_RX_ID == 0)
 #define RTE_UART4_RX                    0
 #elif  (RTE_UART4_RX_ID == 1)

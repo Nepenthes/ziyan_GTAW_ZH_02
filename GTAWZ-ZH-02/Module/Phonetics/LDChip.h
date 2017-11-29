@@ -72,5 +72,5 @@ extern uint8  nLD_Mode;
 
 void  LD3320_delay(unsigned long uldata);
 
-#define MIC_VOL 0x68
+#define MIC_VOL 0x55
 #endif

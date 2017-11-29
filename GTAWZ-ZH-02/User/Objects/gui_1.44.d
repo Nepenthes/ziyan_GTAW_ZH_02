@@ -50,6 +50,7 @@
 .\objects\gui_1.44.o: ..\Module\LED_Grow\ledGrow.h
 .\objects\gui_1.44.o: ..\Module\EXHUASH\exAir.h
 .\objects\gui_1.44.o: ..\Module\airWarming\airWarming.h
+.\objects\gui_1.44.o: ..\Module\Curtain\Curtain.h
 .\objects\gui_1.44.o: ..\Module\sourceToggle\SourceTog.h
 .\objects\gui_1.44.o: ..\Module\SHT11\SHT11.h
 .\objects\gui_1.44.o: .\User\SysSupport.h
@@ -67,4 +68,5 @@
 .\objects\gui_1.44.o: ..\Module\Sensor_contentCO2\contentCO2.h
 .\objects\gui_1.44.o: ..\Module\Sensor_soilHum\soilHum.h
 .\objects\gui_1.44.o: ..\Module\Phonetics\LDchip.h
+.\objects\gui_1.44.o: ..\Module\ElectricMeter\ElecMeter.h
 .\objects\gui_1.44.o: ..\Module\LCD(1.44inches)\FONT_1.44.h

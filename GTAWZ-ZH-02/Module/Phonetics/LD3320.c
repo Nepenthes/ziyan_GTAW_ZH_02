@@ -167,7 +167,7 @@ void LD3320_main(void)
 		  if(cntdn_FLG){
 		  
 				val_cnt++;
-				if(val_cnt >= 2000000){
+				if(val_cnt >= 10000000){
 				
 					cntdn_FLG = val_cnt = 0;
 					phoneticsNUM = 0;
