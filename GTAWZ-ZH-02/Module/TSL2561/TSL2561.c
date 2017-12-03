@@ -41,9 +41,9 @@ void IO_Init(void)
 void TSL2561_Init(void)
 {
    IO_Init();
-	SDA_OUT();
-	IIC_SCL=1;
-	IIC_SDA=1;
+	TSLSDA_OUT();
+	TSLIIC_SCL=1;
+	TSLIIC_SDA=1;
 	TSL2561_Write(CONTROL,0x03);
 	delay_ms(100);
 	TSL2561_Write(TIMING,0x02);
@@ -51,57 +51,57 @@ void TSL2561_Init(void)
 
 void tsl2561_start(void)
 {
-	SDA_OUT();     //sda
-	IIC_SDA=1;	  	  
-	IIC_SCL=1;
+	TSLSDA_OUT();     //sda
+	TSLIIC_SDA=1;	  	  
+	TSLIIC_SCL=1;
 	delay_us(4);
- 	IIC_SDA=0;//START:when CLK is high,DATA change form high to low 
+ 	TSLIIC_SDA=0;//START:when CLK is high,DATA change form high to low 
 	delay_us(4);
-	IIC_SCL=0;//
+	TSLIIC_SCL=0;//
 }
 
 
 void stop(void)
 {
-	SDA_OUT();//sda
-	IIC_SCL=0;
-	IIC_SDA=0;//STOP:when CLK is high DATA change form low to high
+	TSLSDA_OUT();//sda
+	TSLIIC_SCL=0;
+	TSLIIC_SDA=0;//STOP:when CLK is high DATA change form low to high
  	delay_us(4);
-	IIC_SCL=1; 
-	IIC_SDA=1;//
+	TSLIIC_SCL=1; 
+	TSLIIC_SDA=1;//
 	delay_us(4);							   	
 }
 
 
 void respons(void)
 {
-	IIC_SCL=0;
-	SDA_OUT();
-	IIC_SDA=0;
+	TSLIIC_SCL=0;
+	TSLSDA_OUT();
+	TSLIIC_SDA=0;
 	delay_us(2);
-	IIC_SCL=1;
+	TSLIIC_SCL=1;
 	delay_us(2);
-	IIC_SCL=0;
+	TSLIIC_SCL=0;
 }
 
 
 void write_byte(uint8 value)
 {
     uint8_t t;   
-	SDA_OUT(); 	    
-    IIC_SCL=0;//
+	TSLSDA_OUT(); 	    
+    TSLIIC_SCL=0;//
     for(t=0;t<8;t++)
     {              
-        //IIC_SDA=(txd&0x80)>>7;
+        //TSLIIC_SDA=(txd&0x80)>>7;
 		if((value&0x80)>>7)
-			IIC_SDA=1;
+			TSLIIC_SDA=1;
 		else
-			IIC_SDA=0;
+			TSLIIC_SDA=0;
 		value<<=1; 	  
 		delay_us(2);   //
-		IIC_SCL=1;
+		TSLIIC_SCL=1;
 		delay_us(2); 
-		IIC_SCL=0;	
+		TSLIIC_SCL=0;	
 		delay_us(2);
     }	 
 
@@ -111,19 +111,19 @@ void write_byte(uint8 value)
 uint8 read_byte(void)
 {
 	unsigned char i,receive=0;
-	SDA_IN();//SDA
+	TSLSDA_IN();//SDA
     for(i=0;i<8;i++ )
 	{
-        IIC_SCL=0; 
+        TSLIIC_SCL=0; 
         delay_us(2);
-		IIC_SCL=1;
+		TSLIIC_SCL=1;
         receive<<=1;
-        if(READ_SDA)receive++;   
+        if(TSLREAD_SDA)receive++;   
 		delay_us(1); 
     }					 
 
-	SDA_OUT();
-	IIC_SDA=1;//release DATA-line
+	TSLSDA_OUT();
+	TSLIIC_SDA=1;//release DATA-line
 	return receive;
 }
 

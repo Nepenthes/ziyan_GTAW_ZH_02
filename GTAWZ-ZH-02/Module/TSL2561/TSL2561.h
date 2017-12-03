@@ -75,13 +75,13 @@ typedef  uint16_t uint16;
 typedef  u32 uint32;
 
 //IO方向设置
-#define SDA_IN()  {GPIOB->CRL&=0XFFFFFF0F;GPIOB->CRL|=8<<4;}
-#define SDA_OUT() {GPIOB->CRL&=0XFFFFFF0F;GPIOB->CRL|=3<<4;}
+#define TSLSDA_IN()  {GPIOB->CRL&=0XFFFFFF0F;GPIOB->CRL|=8<<4;}
+#define TSLSDA_OUT() {GPIOB->CRL&=0XFFFFFF0F;GPIOB->CRL|=3<<4;}
 
 //IO操作函数	 
-#define IIC_SCL    PBout(0) //SCL
-#define IIC_SDA    PBout(1) //SDA	 
-#define READ_SDA   PBin(1)  //SDA 
+#define TSLIIC_SCL    PBout(0) //SCL
+#define TSLIIC_SDA    PBout(1) //SDA	 
+#define TSLREAD_SDA   PBin(1)  //SDA 
 
 
 void TSL2561_Init(void);

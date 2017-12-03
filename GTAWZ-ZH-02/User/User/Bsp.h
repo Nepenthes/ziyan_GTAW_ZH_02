@@ -10,6 +10,7 @@
 #include <Key&Tips.h>
 #include <beep.h>
 #include <LCD_1.44.h>
+#include <LCD4.3Main.h>
 
 #include <LED_Array.h>
 #include <ledSpray.h>

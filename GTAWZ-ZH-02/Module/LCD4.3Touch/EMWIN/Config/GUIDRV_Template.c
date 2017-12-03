@@ -1,31 +1,41 @@
 /*********************************************************************
-*          Portions COPYRIGHT 2013 STMicroelectronics                *
-*          Portions SEGGER Microcontroller GmbH & Co. KG             *
+*                SEGGER Microcontroller GmbH & Co. KG                *
 *        Solutions for real time microcontroller applications        *
 **********************************************************************
 *                                                                    *
-*        (c) 1996 - 2013  SEGGER Microcontroller GmbH & Co. KG       *
+*        (c) 1996 - 2015  SEGGER Microcontroller GmbH & Co. KG       *
 *                                                                    *
 *        Internet: www.segger.com    Support:  support@segger.com    *
 *                                                                    *
 **********************************************************************
 
-** emWin V5.22 - Graphical user interface for embedded applications **
+** emWin V5.32 - Graphical user interface for embedded applications **
 All  Intellectual Property rights  in the Software belongs to  SEGGER.
 emWin is protected by  international copyright laws.  Knowledge of the
 source code may not be used to write a similar product.  This file may
 only be used in accordance with the following terms:
 
-The  software has  been licensed  to STMicroelectronics International
-N.V. a Dutch company with a Swiss branch and its headquarters in Plan-
-les-Ouates, Geneva, 39 Chemin du Champ des Filles, Switzerland for the
-purposes of creating libraries for ARM Cortex-M-based 32-bit microcon_
-troller products commercialized by Licensee only, sublicensed and dis_
-tributed under the terms and conditions of the End User License Agree_
-ment supplied by STMicroelectronics International N.V.
+The software has been licensed to  ARM LIMITED whose registered office
+is situated at  110 Fulbourn Road,  Cambridge CB1 9NJ,  England solely
+for  the  purposes  of  creating  libraries  for  ARM7, ARM9, Cortex-M
+series,  and   Cortex-R4   processor-based  devices,  sublicensed  and
+distributed as part of the  MDK-ARM  Professional  under the terms and
+conditions  of  the   End  User  License  supplied  with  the  MDK-ARM
+Professional. 
 Full source code is available at: www.segger.com
 
 We appreciate your understanding and fairness.
+----------------------------------------------------------------------
+Licensing information
+
+Licensor:                 SEGGER Software GmbH
+Licensed to:              ARM Ltd, 110 Fulbourn Road, CB1 9NJ Cambridge, UK
+Licensed SEGGER software: emWin
+License number:           GUI-00181
+License model:            LES-SLA-20007, Agreement, effective since October 1st 2011 
+Licensed product:         MDK-ARM Professional
+Licensed platform:        ARM7/9, Cortex-M/R4
+Licensed number of seats: -
 ----------------------------------------------------------------------
 File        : GUIDRV_Template.c
 Purpose     : Template driver, could be used as starting point for new
@@ -33,30 +43,14 @@ Purpose     : Template driver, could be used as starting point for new
 ---------------------------END-OF-HEADER------------------------------
 */
 
-/**
-  ******************************************************************************
-  * @attention
-  *
-  * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
-  * You may not use this file except in compliance with the License.
-  * You may obtain a copy of the License at:
-  *
-  *        http://www.st.com/software_license_agreement_liberty_v2
-  *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
-  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  * See the License for the specific language governing permissions and
-  * limitations under the License.
-  *
-  ******************************************************************************
-  */
-
 #include <stddef.h>
 
 #include "LCD_Private.h"
 #include "GUI_Private.h"
+#include "LCD_SIM.h"
 #include "LCD_ConfDefaults.h"
+
+#include "lcd5510.h"
 
 /*********************************************************************
 *
@@ -107,6 +101,11 @@ Purpose     : Template driver, could be used as starting point for new
   #endif
 #endif
 
+//
+// Use unique context identified
+//
+#define DRIVER_CONTEXT DRIVER_CONTEXT_TEMPLATE
+
 /*********************************************************************
 *
 *       Types
@@ -119,7 +118,7 @@ typedef struct {
   int vxSize, vySize;
   int vxSizePhys;
   int BitsPerPixel;
-} DRIVER_CONTEXT_TEMPLATE;
+} DRIVER_CONTEXT;
 
 /*********************************************************************
 *
@@ -137,6 +136,9 @@ typedef struct {
 *   that no check on the parameters needs to be performed.
 */
 static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, int PixelIndex) {
+  #ifdef WIN32
+    LCDSIM_SetPixelIndex(x, y, PixelIndex, pDevice->LayerIndex);
+  #else
     //
     // Convert logical into physical coordinates (Dep. on LCDConf.h)
     //
@@ -159,11 +161,14 @@ static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, int PixelIndex) {
       //
       // TBD by customer...
       //
+		 
+		 LCD5510_Fast_DrawPoint(x,y,PixelIndex);
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)
       #undef xPhys
       #undef yPhys
     #endif
+  #endif
 }
 
 /*********************************************************************
@@ -177,6 +182,9 @@ static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, int PixelIndex) {
 */
 static unsigned int _GetPixelIndex(GUI_DEVICE * pDevice, int x, int y) {
   unsigned int PixelIndex;
+  #ifdef WIN32
+    PixelIndex = LCDSIM_GetPixelIndex(x, y, pDevice->LayerIndex);
+  #else
     //
     // Convert logical into physical coordinates (Dep. on LCDConf.h)
     //
@@ -198,12 +206,13 @@ static unsigned int _GetPixelIndex(GUI_DEVICE * pDevice, int x, int y) {
       //
       // TBD by customer...
       //
-      PixelIndex = 0;
+      PixelIndex = LCD5510_ReadPoint(x,y);
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)
       #undef xPhys
       #undef yPhys
     #endif
+  #endif
   return PixelIndex;
 }
 
@@ -226,22 +235,25 @@ static void _XorPixel(GUI_DEVICE * pDevice, int x, int y) {
 */
 static void _FillRect(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1) {
   LCD_PIXELINDEX PixelIndex;
-  int x;
+//  int x;
 
   PixelIndex = LCD__GetColorIndex();
-  if (GUI_pContext->DrawMode & LCD_DRAWMODE_XOR) {
-    for (; y0 <= y1; y0++) {
-      for (x = x0; x <= x1; x++) {
-        _XorPixel(pDevice, x, y0);
-      }
-    }
-  } else {
-    for (; y0 <= y1; y0++) {
-      for (x = x0; x <= x1; x++) {
-        _SetPixelIndex(pDevice, x, y0, PixelIndex);
-      }
-    }
-  }
+	
+  LCD5510_Fill(x0,y0,x1,y1,PixelIndex);
+	
+//  if (GUI_pContext->DrawMode & LCD_DRAWMODE_XOR) {
+//    for (; y0 <= y1; y0++) {
+//      for (x = x0; x <= x1; x++) {
+//        _XorPixel(pDevice, x, y0);
+//      }
+//    }
+//  } else {
+//    for (; y0 <= y1; y0++) {
+//      for (x = x0; x <= x1; x++) {
+//        _SetPixelIndex(pDevice, x, y0, PixelIndex);
+//      }
+//    }
+//  }
 }
 
 /*********************************************************************
@@ -264,7 +276,7 @@ static void _DrawVLine(GUI_DEVICE * pDevice, int x, int y0, int y1) {
 *
 *       Draw Bitmap 1 BPP
 */
-static void _DrawBitLine1BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_UNI_PTR * p, int Diff, int xsize, const LCD_PIXELINDEX * pTrans) {
+static void _DrawBitLine1BPP(GUI_DEVICE * pDevice, int x, int y, U8 const * p, int Diff, int xsize, const LCD_PIXELINDEX * pTrans) {
   LCD_PIXELINDEX IndexMask, Index0, Index1, Pixel;
 
   Index0 = *(pTrans + 0);
@@ -313,7 +325,7 @@ static void _DrawBitLine1BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_UN
 *
 *       Draw Bitmap 2 BPP
 */
-static void  _DrawBitLine2BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_UNI_PTR * p, int Diff, int xsize, const LCD_PIXELINDEX * pTrans) {
+static void  _DrawBitLine2BPP(GUI_DEVICE * pDevice, int x, int y, U8 const * p, int Diff, int xsize, const LCD_PIXELINDEX * pTrans) {
   LCD_PIXELINDEX Pixels, PixelIndex;
   int CurrentPixel, Shift, Index;
 
@@ -382,7 +394,7 @@ static void  _DrawBitLine2BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_U
 *
 *       Draw Bitmap 4 BPP
 */
-static void  _DrawBitLine4BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_UNI_PTR * p, int Diff, int xsize, const LCD_PIXELINDEX * pTrans) {
+static void  _DrawBitLine4BPP(GUI_DEVICE * pDevice, int x, int y, U8 const * p, int Diff, int xsize, const LCD_PIXELINDEX * pTrans) {
   LCD_PIXELINDEX Pixels, PixelIndex;
   int CurrentPixel, Shift, Index;
 
@@ -451,7 +463,7 @@ static void  _DrawBitLine4BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_U
 *
 *       Draw Bitmap 8 BPP
 */
-static void  _DrawBitLine8BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_UNI_PTR * p, int xsize, const LCD_PIXELINDEX * pTrans) {
+static void  _DrawBitLine8BPP(GUI_DEVICE * pDevice, int x, int y, U8 const * p, int xsize, const LCD_PIXELINDEX * pTrans) {
   LCD_PIXELINDEX Pixel;
 
   switch (GUI_pContext->DrawMode & (LCD_DRAWMODE_TRANS | LCD_DRAWMODE_XOR)) {
@@ -495,7 +507,7 @@ static void  _DrawBitLine8BPP(GUI_DEVICE * pDevice, int x, int y, U8 const GUI_U
 *   Drawing of 16bpp high color bitmaps.
 *   Only required for 16bpp color depth of target. Should be removed otherwise.
 */
-static void _DrawBitLine16BPP(GUI_DEVICE * pDevice, int x, int y, U16 const GUI_UNI_PTR * p, int xsize) {
+static void _DrawBitLine16BPP(GUI_DEVICE * pDevice, int x, int y, U16 const * p, int xsize) {
   for (;xsize > 0; xsize--, x++, p++) {
     _SetPixelIndex(pDevice, x, y, *p);
   }
@@ -509,7 +521,7 @@ static void _DrawBitLine16BPP(GUI_DEVICE * pDevice, int x, int y, U16 const GUI_
 *   Drawing of 32bpp true color bitmaps.
 *   Only required for 32bpp color depth of target. Should be removed otherwise.
 */
-static void _DrawBitLine32BPP(GUI_DEVICE * pDevice, int x, int y, U32 const GUI_UNI_PTR * p, int xsize) {
+static void _DrawBitLine32BPP(GUI_DEVICE * pDevice, int x, int y, U32 const * p, int xsize) {
   for (;xsize > 0; xsize--, x++, p++) {
     _SetPixelIndex(pDevice, x, y, *p);
   }
@@ -523,7 +535,7 @@ static void _DrawBitmap(GUI_DEVICE * pDevice, int x0, int y0,
                        int xSize, int ySize,
                        int BitsPerPixel, 
                        int BytesPerLine,
-                       const U8 GUI_UNI_PTR * pData, int Diff,
+                       const U8 * pData, int Diff,
                        const LCD_PIXELINDEX * pTrans) {
   int i;
 
@@ -584,11 +596,11 @@ static void _DrawBitmap(GUI_DEVICE * pDevice, int x0, int y0,
 *   0 on success, 1 on error
 */
 static int _InitOnce(GUI_DEVICE * pDevice) {
-  DRIVER_CONTEXT_TEMPLATE * pContext;
+  DRIVER_CONTEXT * pContext;
 
   if (pDevice->u.pContext == NULL) {
-    pDevice->u.pContext = GUI_ALLOC_GetFixedBlock(sizeof(DRIVER_CONTEXT_TEMPLATE));
-    pContext = (DRIVER_CONTEXT_TEMPLATE *)pDevice->u.pContext;
+    pDevice->u.pContext = GUI_ALLOC_GetFixedBlock(sizeof(DRIVER_CONTEXT));
+    pContext = (DRIVER_CONTEXT *)pDevice->u.pContext;
     pContext->BitsPerPixel = LCD__GetBPP(pDevice->pColorConvAPI->pfGetIndexMask());
   }
   return pDevice->u.pContext ? 0 : 1;
@@ -599,9 +611,9 @@ static int _InitOnce(GUI_DEVICE * pDevice) {
 *       _GetDevProp
 */
 static I32 _GetDevProp(GUI_DEVICE * pDevice, int Index) {
-  DRIVER_CONTEXT_TEMPLATE * pContext;
+  DRIVER_CONTEXT * pContext;
 
-  pContext = (DRIVER_CONTEXT_TEMPLATE *)pDevice->u.pContext;
+  pContext = (DRIVER_CONTEXT *)pDevice->u.pContext;
   switch (Index) {
   case LCD_DEVCAP_XSIZE:
     return pContext->xSize;
@@ -651,9 +663,9 @@ static void * _GetDevData(GUI_DEVICE * pDevice, int Index) {
 *       _GetRect
 */
 static void _GetRect(GUI_DEVICE * pDevice, LCD_RECT * pRect) {
-  DRIVER_CONTEXT_TEMPLATE * pContext;
+  DRIVER_CONTEXT * pContext;
 
-  pContext = (DRIVER_CONTEXT_TEMPLATE *)pDevice->u.pContext;
+  pContext = (DRIVER_CONTEXT *)pDevice->u.pContext;
   pRect->x0 = 0;
   pRect->y0 = 0;
   pRect->x1 = pContext->vxSize - 1;
@@ -683,12 +695,12 @@ static void _SetOrg(GUI_DEVICE * pDevice, int x, int y) {
 *       _SetVRAMAddr
 */
 static void _SetVRAMAddr(GUI_DEVICE * pDevice, void * pVRAM) {
-  DRIVER_CONTEXT_TEMPLATE * pContext;
+  DRIVER_CONTEXT * pContext;
   LCD_X_SETVRAMADDR_INFO Data = {0};
 
   _InitOnce(pDevice);
   if (pDevice->u.pContext) {
-    pContext = (DRIVER_CONTEXT_TEMPLATE *)pDevice->u.pContext;
+    pContext = (DRIVER_CONTEXT *)pDevice->u.pContext;
     pContext->VRAMAddr = (U32)pVRAM;
     Data.pVRAM = pVRAM;
     LCD_X_DisplayDriver(pDevice->LayerIndex, LCD_X_SETVRAMADDR, (void *)&Data);
@@ -700,11 +712,11 @@ static void _SetVRAMAddr(GUI_DEVICE * pDevice, void * pVRAM) {
 *       _SetVSize
 */
 static void _SetVSize(GUI_DEVICE * pDevice, int xSize, int ySize) {
-  DRIVER_CONTEXT_TEMPLATE * pContext;
+  DRIVER_CONTEXT * pContext;
 
   _InitOnce(pDevice);
   if (pDevice->u.pContext) {
-    pContext = (DRIVER_CONTEXT_TEMPLATE *)pDevice->u.pContext;
+    pContext = (DRIVER_CONTEXT *)pDevice->u.pContext;
     pContext->vxSize = xSize;
     pContext->vySize = ySize;
     pContext->vxSizePhys = xSize;
@@ -716,12 +728,12 @@ static void _SetVSize(GUI_DEVICE * pDevice, int xSize, int ySize) {
 *       _SetSize
 */
 static void _SetSize(GUI_DEVICE * pDevice, int xSize, int ySize) {
-  DRIVER_CONTEXT_TEMPLATE * pContext;
+  DRIVER_CONTEXT * pContext;
   LCD_X_SETSIZE_INFO Data = {0};
 
   _InitOnce(pDevice);
   if (pDevice->u.pContext) {
-    pContext = (DRIVER_CONTEXT_TEMPLATE *)pDevice->u.pContext;
+    pContext = (DRIVER_CONTEXT *)pDevice->u.pContext;
     pContext->vxSizePhys = (pContext->vxSizePhys == 0) ? xSize : pContext->vxSizePhys;
     pContext->xSize = xSize;
     pContext->ySize = ySize;

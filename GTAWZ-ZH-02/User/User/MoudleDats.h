@@ -3,7 +3,7 @@
 
 #define MOUDLE_NUM  		22	  //模块总数
 
-#define MOUDLE_ID			22   //选择编译模块
+#define MOUDLE_ID			13   //选择编译模块
 
 #define MOUDLE_DEBUG		1
 

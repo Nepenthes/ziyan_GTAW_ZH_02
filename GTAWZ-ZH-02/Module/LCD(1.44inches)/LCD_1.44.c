@@ -75,7 +75,7 @@ extern double 	valDianLiang;
   
 //管理LCD重要参数
 //默认为竖屏
-_lcd_dev lcddev;
+_lcd144_dev lcd144dev;
 
 osThreadId tid_LCD144Test_Thread;
 
@@ -83,7 +83,7 @@ osThreadDef(LCD144Test_Thread,osPriorityNormal,1,512);
 osThreadDef(LCD144_Thread,osPriorityNormal,1,2048);
 
 //画笔颜色,背景颜色
-uint16_t POINT_COLOR = 0x0000,BACK_COLOR = 0xFFFF;  
+uint16_t LCD144POINT_COLOR = 0x0000,LCD144BACK_COLOR = 0xFFFF;  
 uint16_t DeviceCode;	 
 
 /****************************************************************************
@@ -99,11 +99,11 @@ void  SPIv_WriteData(uint8_t Data)
 	for(i=8;i>0;i--)
 	{
 		if(Data&0x80)	
-	  LCD_SDA_SET; //输出数据
-      else LCD_SDA_CLR;
+	  LCD_1_44_SDA_SET; //输出数据
+      else LCD_1_44_SDA_CLR;
 	   
-      LCD_SCL_CLR;       
-      LCD_SCL_SET;
+      LCD_1_44_SCL_CLR;       
+      LCD_1_44_SCL_SET;
       Data<<=1; 
 	}
 }
@@ -193,7 +193,7 @@ void SPI2_Init(void)
 }
 
 //******************************************************************
-//函数名：  LCD_WR_REG
+//函数名：  LCD_1_44_WR_REG
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    向液晶屏总线写入写16位指令
@@ -201,20 +201,20 @@ void SPI2_Init(void)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_WR_REG(uint16_t data)
+void LCD_1_44_WR_REG(uint16_t data)
 { 
-   LCD_CS_CLR;
-   LCD_RS_CLR;
+   LCD_1_44_CS_CLR;
+   LCD_1_44_RS_CLR;
 #if USE_HARDWARE_SPI   
    SPI_WriteByte(SPI2,data);
 #else
    SPIv_WriteData(data);
 #endif 
-   LCD_CS_SET;
+   LCD_1_44_CS_SET;
 }
 
 //******************************************************************
-//函数名：  LCD_WR_DATA
+//函数名：  LCD_1_44_WR_DATA
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    向液晶屏总线写入写8位数据
@@ -222,21 +222,21 @@ void LCD_WR_REG(uint16_t data)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_WR_DATA(uint8_t data)
+void LCD_1_44_WR_DATA(uint8_t data)
 {
 	
-   LCD_CS_CLR;
-   LCD_RS_SET;
+   LCD_1_44_CS_CLR;
+   LCD_1_44_RS_SET;
 #if USE_HARDWARE_SPI   
    SPI_WriteByte(SPI2,data);
 #else
    SPIv_WriteData(data);
 #endif 
-   LCD_CS_SET;
+   LCD_1_44_CS_SET;
 
 }
 //******************************************************************
-//函数名：  LCD_DrawPoint_16Bit
+//函数名：  LCD_1_44_DrawPoint_16Bit
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    8位总线下如何写入一个16位数据
@@ -244,10 +244,10 @@ void LCD_WR_DATA(uint8_t data)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_WR_DATA_16Bit(uint16_t data)
+void LCD_1_44_WR_DATA_16Bit(uint16_t data)
 {	
-   LCD_CS_CLR;
-   LCD_RS_SET;
+   LCD_1_44_CS_CLR;
+   LCD_1_44_RS_SET;
 #if USE_HARDWARE_SPI   
    SPI_WriteByte(SPI2,data>>8);
    SPI_WriteByte(SPI2,data);
@@ -255,27 +255,27 @@ void LCD_WR_DATA_16Bit(uint16_t data)
    SPIv_WriteData(data>>8);
    SPIv_WriteData(data);
 #endif 
-   LCD_CS_SET;
+   LCD_1_44_CS_SET;
 }
 
 //******************************************************************
-//函数名：  LCD_WriteReg
+//函数名：  LCD_1_44_WriteReg
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    写寄存器数据
-//输入参数：LCD_Reg:寄存器地址
-//			LCD_RegValue:要写入的数据
+//输入参数：LCD_1_44_Reg:寄存器地址
+//			LCD_1_44_RegValue:要写入的数据
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_WriteReg(uint16_t LCD_Reg, uint16_t LCD_RegValue)
+void LCD_1_44_WriteReg(uint16_t LCD_1_44_Reg, uint16_t LCD_1_44_RegValue)
 {	
-	LCD_WR_REG(LCD_Reg);  
-	LCD_WR_DATA(LCD_RegValue);	    		 
+	LCD_1_44_WR_REG(LCD_1_44_Reg);  
+	LCD_1_44_WR_DATA(LCD_1_44_RegValue);	    		 
 }	   
 	 
 //******************************************************************
-//函数名：  LCD_WriteRAM_Prepare
+//函数名：  LCD_1_44_WriteRAM_Prepare
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    开始写GRAM
@@ -284,13 +284,13 @@ void LCD_WriteReg(uint16_t LCD_Reg, uint16_t LCD_RegValue)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_WriteRAM_Prepare(void)
+void LCD_1_44_WriteRAM_Prepare(void)
 {
-	LCD_WR_REG(lcddev.wramcmd);
+	LCD_1_44_WR_REG(lcd144dev.wramcmd);
 }	 
 
 //******************************************************************
-//函数名：  LCD_DrawPoint
+//函数名：  LCD_1_44_DrawPoint
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    在指定位置写入一个像素点数据
@@ -298,14 +298,14 @@ void LCD_WriteRAM_Prepare(void)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_DrawPoint(uint16_t x,uint16_t y)
+void LCD_1_44_DrawPoint(uint16_t x,uint16_t y)
 {
-	LCD_SetCursor(x,y);//设置光标位置 
-	LCD_WR_DATA_16Bit(POINT_COLOR);
+	LCD_1_44_SetCursor(x,y);//设置光标位置 
+	LCD_1_44_WR_DATA_16Bit(LCD144POINT_COLOR);
 }
 
 //******************************************************************
-//函数名：  LCD_GPIOInit
+//函数名：  LCD_1_44_GPIOInit
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    液晶屏IO初始化，液晶初始化前要调用此函数
@@ -313,7 +313,7 @@ void LCD_DrawPoint(uint16_t x,uint16_t y)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_GPIOInit(void)
+void LCD_1_44_GPIOInit(void)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	      
@@ -332,7 +332,7 @@ void LCD_GPIOInit(void)
 }
 
 //******************************************************************
-//函数名：  LCD_Reset
+//函数名：  LCD_1_44_Reset
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    LCD复位函数，液晶初始化前要调用此函数
@@ -340,16 +340,16 @@ void LCD_GPIOInit(void)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_RESET(void)
+void LCD_1_44_RESET(void)
 {
-	LCD_RST_CLR;
+	LCD_1_44_RST_CLR;
 	osDelay(100);	
-	LCD_RST_SET;
+	LCD_1_44_RST_SET;
 	osDelay(50);
 }
  	 
 //******************************************************************
-//函数名：  LCD_Init
+//函数名：  LCD_1_44_Init
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    LCD初始化
@@ -362,91 +362,91 @@ void LCD144_Init(void)
 #if USE_HARDWARE_SPI //使用硬件SPI
 	SPI2_Init();
 #else	
-	LCD_GPIOInit();//使用模拟SPI
+	LCD_1_44_GPIOInit();//使用模拟SPI
 #endif  										 
 
- 	LCD_RESET(); //液晶屏复位
+ 	LCD_1_44_RESET(); //液晶屏复位
 
 	//************* Start Initial Sequence **********//		
-  LCD_WR_REG(0x11); //Exit Sleep
+  LCD_1_44_WR_REG(0x11); //Exit Sleep
 	osDelay(20);
-	LCD_WR_REG(0x26); //Set Default Gamma
-	LCD_WR_DATA(0x04);
-	LCD_WR_REG(0xB1);//Set Frame Rate
-	LCD_WR_DATA(0x0e);
-	LCD_WR_DATA(0x10);
-	LCD_WR_REG(0xC0); //Set VRH1[4:0] & VC[2:0] for VCI1 & GVDD
-	LCD_WR_DATA(0x08);
-	LCD_WR_DATA(0x00);
-	LCD_WR_REG(0xC1); //Set BT[2:0] for AVDD & VCL & VGH & VGL
-	LCD_WR_DATA(0x05);
-	LCD_WR_REG(0xC5); //Set VMH[6:0] & VML[6:0] for VOMH & VCOML
-	LCD_WR_DATA(0x38);
-	LCD_WR_DATA(0x40);
+	LCD_1_44_WR_REG(0x26); //Set Default Gamma
+	LCD_1_44_WR_DATA(0x04);
+	LCD_1_44_WR_REG(0xB1);//Set Frame Rate
+	LCD_1_44_WR_DATA(0x0e);
+	LCD_1_44_WR_DATA(0x10);
+	LCD_1_44_WR_REG(0xC0); //Set VRH1[4:0] & VC[2:0] for VCI1 & GVDD
+	LCD_1_44_WR_DATA(0x08);
+	LCD_1_44_WR_DATA(0x00);
+	LCD_1_44_WR_REG(0xC1); //Set BT[2:0] for AVDD & VCL & VGH & VGL
+	LCD_1_44_WR_DATA(0x05);
+	LCD_1_44_WR_REG(0xC5); //Set VMH[6:0] & VML[6:0] for VOMH & VCOML
+	LCD_1_44_WR_DATA(0x38);
+	LCD_1_44_WR_DATA(0x40);
 	
-	LCD_WR_REG(0x3a); //Set Color Format
-	LCD_WR_DATA(0x05);
-	LCD_WR_REG(0x36); //RGB
-	LCD_WR_DATA(0x1C);   //1C//C8
+	LCD_1_44_WR_REG(0x3a); //Set Color Format
+	LCD_1_44_WR_DATA(0x05);
+	LCD_1_44_WR_REG(0x36); //RGB
+	LCD_1_44_WR_DATA(0x1C);   //1C//C8
 	
-	LCD_WR_REG(0x2A); //Set Column Address
-	LCD_WR_DATA(0x00);
-	LCD_WR_DATA(0x00);
-	LCD_WR_DATA(0x00);
-	LCD_WR_DATA(0x7F);
-	LCD_WR_REG(0x2B); //Set Page Address
-	LCD_WR_DATA(0x00);
-	LCD_WR_DATA(32);
-	LCD_WR_DATA(0x00);
-	LCD_WR_DATA(127+32);
+	LCD_1_44_WR_REG(0x2A); //Set Column Address
+	LCD_1_44_WR_DATA(0x00);
+	LCD_1_44_WR_DATA(0x00);
+	LCD_1_44_WR_DATA(0x00);
+	LCD_1_44_WR_DATA(0x7F);
+	LCD_1_44_WR_REG(0x2B); //Set Page Address
+	LCD_1_44_WR_DATA(0x00);
+	LCD_1_44_WR_DATA(32);
+	LCD_1_44_WR_DATA(0x00);
+	LCD_1_44_WR_DATA(127+32);
 	
-	LCD_WR_REG(0xB4); 
-	LCD_WR_DATA(0x00);
+	LCD_1_44_WR_REG(0xB4); 
+	LCD_1_44_WR_DATA(0x00);
 	
-	LCD_WR_REG(0xf2); //Enable Gamma bit
-	LCD_WR_DATA(0x01);
-	LCD_WR_REG(0xE0); 
-	LCD_WR_DATA(0x3f);//p1
-	LCD_WR_DATA(0x22);//p2
-	LCD_WR_DATA(0x20);//p3
-	LCD_WR_DATA(0x30);//p4
-	LCD_WR_DATA(0x29);//p5
-	LCD_WR_DATA(0x0c);//p6
-	LCD_WR_DATA(0x4e);//p7
-	LCD_WR_DATA(0xb7);//p8
-	LCD_WR_DATA(0x3c);//p9
-	LCD_WR_DATA(0x19);//p10
-	LCD_WR_DATA(0x22);//p11
-	LCD_WR_DATA(0x1e);//p12
-	LCD_WR_DATA(0x02);//p13
-	LCD_WR_DATA(0x01);//p14
-	LCD_WR_DATA(0x00);//p15
-	LCD_WR_REG(0xE1); 
-	LCD_WR_DATA(0x00);//p1
-	LCD_WR_DATA(0x1b);//p2
-	LCD_WR_DATA(0x1f);//p3
-	LCD_WR_DATA(0x0f);//p4
-	LCD_WR_DATA(0x16);//p5
-	LCD_WR_DATA(0x13);//p6
-	LCD_WR_DATA(0x31);//p7
-	LCD_WR_DATA(0x84);//p8
-	LCD_WR_DATA(0x43);//p9
-	LCD_WR_DATA(0x06);//p10
-	LCD_WR_DATA(0x1d);//p11
-	LCD_WR_DATA(0x21);//p12
-	LCD_WR_DATA(0x3d);//p13
-	LCD_WR_DATA(0x3e);//p14
-	LCD_WR_DATA(0x3f);//p15
+	LCD_1_44_WR_REG(0xf2); //Enable Gamma bit
+	LCD_1_44_WR_DATA(0x01);
+	LCD_1_44_WR_REG(0xE0); 
+	LCD_1_44_WR_DATA(0x3f);//p1
+	LCD_1_44_WR_DATA(0x22);//p2
+	LCD_1_44_WR_DATA(0x20);//p3
+	LCD_1_44_WR_DATA(0x30);//p4
+	LCD_1_44_WR_DATA(0x29);//p5
+	LCD_1_44_WR_DATA(0x0c);//p6
+	LCD_1_44_WR_DATA(0x4e);//p7
+	LCD_1_44_WR_DATA(0xb7);//p8
+	LCD_1_44_WR_DATA(0x3c);//p9
+	LCD_1_44_WR_DATA(0x19);//p10
+	LCD_1_44_WR_DATA(0x22);//p11
+	LCD_1_44_WR_DATA(0x1e);//p12
+	LCD_1_44_WR_DATA(0x02);//p13
+	LCD_1_44_WR_DATA(0x01);//p14
+	LCD_1_44_WR_DATA(0x00);//p15
+	LCD_1_44_WR_REG(0xE1); 
+	LCD_1_44_WR_DATA(0x00);//p1
+	LCD_1_44_WR_DATA(0x1b);//p2
+	LCD_1_44_WR_DATA(0x1f);//p3
+	LCD_1_44_WR_DATA(0x0f);//p4
+	LCD_1_44_WR_DATA(0x16);//p5
+	LCD_1_44_WR_DATA(0x13);//p6
+	LCD_1_44_WR_DATA(0x31);//p7
+	LCD_1_44_WR_DATA(0x84);//p8
+	LCD_1_44_WR_DATA(0x43);//p9
+	LCD_1_44_WR_DATA(0x06);//p10
+	LCD_1_44_WR_DATA(0x1d);//p11
+	LCD_1_44_WR_DATA(0x21);//p12
+	LCD_1_44_WR_DATA(0x3d);//p13
+	LCD_1_44_WR_DATA(0x3e);//p14
+	LCD_1_44_WR_DATA(0x3f);//p15
 	
-	LCD_WR_REG(0x29); // Display On
-	LCD_WR_REG(0x2C);
+	LCD_1_44_WR_REG(0x29); // Display On
+	LCD_1_44_WR_REG(0x2C);
 
-	LCD_SetParam();//设置LCD参数	 
-	///LCD_LED_SET;//点亮背光	 
-	//LCD_Clear(WHITE);
+	LCD_1_44_SetParam();//设置LCD参数	 
+	///LCD_1_44_LED_SET;//点亮背光	 
+	//LCD_1_44_Clear(WHITE);
 }
 //******************************************************************
-//函数名：  LCD_Clear
+//函数名：  LCD_1_44_Clear
 //作者：    xiao冯@全动电子
 //日期：    2013-02-22
 //功能：    LCD全屏填充清屏函数
@@ -454,98 +454,98 @@ void LCD144_Init(void)
 //返回值：  无
 //修改记录：无
 //******************************************************************
-void LCD_Clear(uint16_t Color)
+void LCD_1_44_Clear(uint16_t Color)
 {
 	uint16_t i,j;      
-	LCD_SetWindows(0,0,lcddev.width-1,lcddev.height-1);	  
-	for(i=0;i<lcddev.width;i++)
+	LCD_1_44_SetWindows(0,0,lcd144dev.width-1,lcd144dev.height-1);	  
+	for(i=0;i<lcd144dev.width;i++)
 	{
-		for(j=0;j<lcddev.height;j++)
-		LCD_WR_DATA_16Bit(Color);	//写入数据 	 
+		for(j=0;j<lcd144dev.height;j++)
+		LCD_1_44_WR_DATA_16Bit(Color);	//写入数据 	 
 	}
 } 
 
-void LCD_ClearS(uint16_t Color,uint16_t x,uint16_t y,uint16_t xx,uint16_t yy)
+void LCD_1_44_ClearS(uint16_t Color,uint16_t x,uint16_t y,uint16_t xx,uint16_t yy)
 {
 	uint16_t i,j;      
-	LCD_SetWindows(x,y,xx-1,yy-1);	  
+	LCD_1_44_SetWindows(x,y,xx-1,yy-1);	  
 	for(i=x;i<xx;i++)
 	{
 		for(j=y;j<yy;j++)
-		LCD_WR_DATA_16Bit(Color);	//写入数据 	 
+		LCD_1_44_WR_DATA_16Bit(Color);	//写入数据 	 
 	}
 }   	
 /*************************************************
-函数名：LCD_SetWindows
+函数名：LCD_1_44_SetWindows
 功能：设置lcd显示窗口，在此区域写点数据自动换行
 入口参数：xy起点和终点
 返回值：无
 *************************************************/
-void LCD_SetWindows(uint16_t xStar, uint16_t yStar,uint16_t xEnd,uint16_t yEnd)
+void LCD_1_44_SetWindows(uint16_t xStar, uint16_t yStar,uint16_t xEnd,uint16_t yEnd)
 {
 #if USE_HORIZONTAL==1	//使用横屏
 
-	LCD_WR_REG(lcddev.setxcmd);	
-	LCD_WR_DATA(xStar>>8);
-	LCD_WR_DATA(0x00FF&xStar);		
-	LCD_WR_DATA(xEnd>>8);
-	LCD_WR_DATA(0x00FF&xEnd);
+	LCD_1_44_WR_REG(lcd144dev.setxcmd);	
+	LCD_1_44_WR_DATA(xStar>>8);
+	LCD_1_44_WR_DATA(0x00FF&xStar);		
+	LCD_1_44_WR_DATA(xEnd>>8);
+	LCD_1_44_WR_DATA(0x00FF&xEnd);
 
-	LCD_WR_REG(lcddev.setycmd);	
-	LCD_WR_DATA(yStar>>8);
-	LCD_WR_DATA(0x00FF&yStar);		
-	LCD_WR_DATA(yEnd>>8);
-	LCD_WR_DATA(0x00FF&yEnd);		
+	LCD_1_44_WR_REG(lcd144dev.setycmd);	
+	LCD_1_44_WR_DATA(yStar>>8);
+	LCD_1_44_WR_DATA(0x00FF&yStar);		
+	LCD_1_44_WR_DATA(yEnd>>8);
+	LCD_1_44_WR_DATA(0x00FF&yEnd);		
 #else
 	
-	LCD_WR_REG(lcddev.setxcmd);	
-	LCD_WR_DATA(xStar>>8);
-	LCD_WR_DATA(0x00FF&xStar);		
-	LCD_WR_DATA(xEnd>>8);
-	LCD_WR_DATA(0x00FF&xEnd);
+	LCD_1_44_WR_REG(lcd144dev.setxcmd);	
+	LCD_1_44_WR_DATA(xStar>>8);
+	LCD_1_44_WR_DATA(0x00FF&xStar);		
+	LCD_1_44_WR_DATA(xEnd>>8);
+	LCD_1_44_WR_DATA(0x00FF&xEnd);
 
-	LCD_WR_REG(lcddev.setycmd);	
-	LCD_WR_DATA(yStar>>8);
-	LCD_WR_DATA(0x00FF&yStar+0);		
-	LCD_WR_DATA(yEnd>>8);
-	LCD_WR_DATA(0x00FF&yEnd+0);	
+	LCD_1_44_WR_REG(lcd144dev.setycmd);	
+	LCD_1_44_WR_DATA(yStar>>8);
+	LCD_1_44_WR_DATA(0x00FF&yStar+0);		
+	LCD_1_44_WR_DATA(yEnd>>8);
+	LCD_1_44_WR_DATA(0x00FF&yEnd+0);	
 #endif
 
-	LCD_WriteRAM_Prepare();	//开始写入GRAM				
+	LCD_1_44_WriteRAM_Prepare();	//开始写入GRAM				
 }   
 
 /*************************************************
-函数名：LCD_SetCursor
+函数名：LCD_1_44_SetCursor
 功能：设置光标位置
 入口参数：xy坐标
 返回值：无
 *************************************************/
-void LCD_SetCursor(uint16_t Xpos, uint16_t Ypos)
+void LCD_1_44_SetCursor(uint16_t Xpos, uint16_t Ypos)
 {	  	    			
-	LCD_SetWindows(Xpos,Ypos,Xpos,Ypos);
+	LCD_1_44_SetWindows(Xpos,Ypos,Xpos,Ypos);
 } 
 
 //设置LCD参数
 //方便进行横竖屏模式切换
-void LCD_SetParam(void)
+void LCD_1_44_SetParam(void)
 { 	
-	lcddev.wramcmd=0x2C;
+	lcd144dev.wramcmd=0x2C;
 #if USE_HORIZONTAL==1	//使用横屏	  
-	lcddev.dir=1;//横屏
-	lcddev.width=128+3;
-	lcddev.height=128+2;
-	lcddev.setxcmd=0x2A;
-	lcddev.setycmd=0x2B;			
-	LCD_WriteReg(0x36,0xA8);
+	lcd144dev.dir=1;//横屏
+	lcd144dev.width=128+3;
+	lcd144dev.height=128+2;
+	lcd144dev.setxcmd=0x2A;
+	lcd144dev.setycmd=0x2B;			
+	LCD_1_44_WriteReg(0x36,0xA8);
 
 #else//竖屏
-	lcddev.dir=0;//竖屏				 	 		
-	lcddev.width=128+2;
-	lcddev.height=128+3;
-	lcddev.setxcmd=0x2A;
-	lcddev.setycmd=0x2B;	
-	LCD_WriteReg(0x36,0xC8);
-	//LCD_WriteReg(0x36,0x1C);//如其值使用0x1C则LCD_SetWindows函数中‘+32’偏移量应取0
+	lcd144dev.dir=0;//竖屏				 	 		
+	lcd144dev.width=128+2;
+	lcd144dev.height=128+3;
+	lcd144dev.setxcmd=0x2A;
+	lcd144dev.setycmd=0x2B;	
+	LCD_1_44_WriteReg(0x36,0xC8);
+	//LCD_1_44_WriteReg(0x36,0x1C);//如其值使用0x1C则LCD_1_44_SetWindows函数中‘+32’偏移量应取0
 #endif
 }	
 
@@ -553,23 +553,23 @@ void LCD144Test_Thread(const void *argument){
 
 	while(1)
 	{
-		LCD_Clear(BLACK); //清屏
+		LCD_1_44_Clear(BLACK); //清屏
 
-		POINT_COLOR=GRAY; 
+		LCD144POINT_COLOR=GRAY; 
 
 		Show_Str(32,5,BLUE,WHITE,"系统监控",16,0);
 
 		Show_Str(5,25,RED,YELLOW,"温度     ℃",24,1);
-		LCD_ShowNum2412(5+48,25,RED,YELLOW,":24",24,1);
+		LCD_1_44_ShowNum2412(5+48,25,RED,YELLOW,":24",24,1);
 
 		Show_Str(5,50,YELLOW,YELLOW,"湿度     ％",24,1);
-		LCD_ShowNum2412(5+48,50,YELLOW,YELLOW,":32",24,1);
+		LCD_1_44_ShowNum2412(5+48,50,YELLOW,YELLOW,":32",24,1);
 
 		Show_Str(5,75,WHITE,YELLOW,"电压      Ｖ",24,1);
-		LCD_ShowNum2412(5+48,75,WHITE,YELLOW,":3.2",24,1);
+		LCD_1_44_ShowNum2412(5+48,75,WHITE,YELLOW,":3.2",24,1);
 			
 		Show_Str(5,100,GREEN,YELLOW,"电流      Ａ",24,1);
-		LCD_ShowNum2412(5+48,100,GREEN,YELLOW,":0.2",24,1);
+		LCD_1_44_ShowNum2412(5+48,100,GREEN,YELLOW,":0.2",24,1);
 		
 		delay_ms(1500);
 	}
@@ -590,7 +590,7 @@ void LCD144_Thread(const void *argument){
 	if(M_ADDR[2] > 9)M_ADDR[2] += 'A' - 10;else M_ADDR[2] += '0';
 	if(M_ADDR[3] > 9)M_ADDR[3] += 'A' - 10;else M_ADDR[3] += '0';
 	
-	LCD_Clear(BLACK); //清屏 
+	LCD_1_44_Clear(BLACK); //清屏 
 	Show_Str(5,3,WHITE,BLACK,"Moudle_ID:",12,1);
 	Show_Str(65,3,RED,BLACK,(uint8_t*)&M_ID,12,1);
 	Show_Str(82,3,WHITE,BLACK,"ATTR:",12,1);	
@@ -664,9 +664,9 @@ void LCD144_Thread(const void *argument){
 		if(Key_value != valKeyBoard){
 		
 			Key_value = valKeyBoard;
-			LCD_ClearS(BLACK,25,80,120,105);	
+			LCD_1_44_ClearS(BLACK,25,80,120,105);	
 			sprintf(&keyvalDisp[1],"%d",Key_value);
-			LCD_ShowNum2412(60,80,GREEN,YELLOW,(uint8_t*)&keyvalDisp[1],24,1);
+			LCD_1_44_ShowNum2412(60,80,GREEN,YELLOW,(uint8_t*)&keyvalDisp[1],24,1);
 		}
 #elif(MOUDLE_ID == 2)
 		static uint8_t RC522ID_BUF[4] = {6};
@@ -675,7 +675,7 @@ void LCD144_Thread(const void *argument){
 		if(memcmp(RC522ID_BUF,RC522IDBUF,4)){
 		
 			memcpy(RC522ID_BUF,RC522IDBUF,4);
-			LCD_ClearS(BLACK,0,90,130,120);
+			LCD_1_44_ClearS(BLACK,0,90,130,120);
 			sprintf (&idDisp[1], "%02X%02X%02X%02X", RC522IDBUF [ 0 ], RC522IDBUF [ 1 ], RC522IDBUF [ 2 ], RC522IDBUF [ 3 ] );
 			Show_Str(30,90,GREEN,YELLOW,(uint8_t*)&idDisp[1],24,1);
 		}
@@ -689,11 +689,11 @@ void LCD144_Thread(const void *argument){
 			
 			if(phoneticsNUM){
 			
-				LCD_ClearS(BLACK,0,80,128,128);
+				LCD_1_44_ClearS(BLACK,0,80,128,128);
 				Show_Str(10,90,GREEN,YELLOW,(uint8_t *)cmd_tips[phoneticsNUM - 1],24,1);	
 			}else{
 			
-				LCD_ClearS(BLACK,0,80,128,128);
+				LCD_1_44_ClearS(BLACK,0,80,128,128);
 				Show_Str(40,90,GREEN,YELLOW,"NO CMD",24,1);	
 			}	
 		}
@@ -706,18 +706,18 @@ void LCD144_Thread(const void *argument){
 		
 			val_Digital = valDigital;
 			
-			LCD_ClearS(BLACK,0,50,100,75);
+			LCD_1_44_ClearS(BLACK,0,50,100,75);
 			sprintf(&valD[1],"%d", valDigital);
-			LCD_ShowNum2412(55,50,GREEN,YELLOW,(uint8_t*)&valD[1],24,1);	
+			LCD_1_44_ShowNum2412(55,50,GREEN,YELLOW,(uint8_t*)&valD[1],24,1);	
 		}
 		
 		if(val_Analog != valAnalog){
 		
 			val_Analog = valAnalog;
 			
-			LCD_ClearS(BLACK,0,100,100,128);
+			LCD_1_44_ClearS(BLACK,0,100,100,128);
 			sprintf(&valA[1],"%d", valAnalog);
-			LCD_ShowNum2412(40,100,GREEN,YELLOW,(uint8_t*)&valA[1],24,1);
+			LCD_1_44_ShowNum2412(40,100,GREEN,YELLOW,(uint8_t*)&valA[1],24,1);
 			Show_Str(strlen(&valA[1])*16 + 40,105,GREEN,YELLOW,"%",24,1);
 		}
 #elif(MOUDLE_ID == 5)
@@ -727,9 +727,9 @@ void LCD144_Thread(const void *argument){
 		if(LUX_value != LUXValue){
 		
 			LUX_value = LUXValue;
-			LCD_ClearS(BLACK,25,80,120,105);
+			LCD_1_44_ClearS(BLACK,25,80,120,105);
 			sprintf(&luxDisp[1],"%d",LUXValue);
-			LCD_ShowNum2412(40,80,GREEN,YELLOW,(uint8_t*)&luxDisp[1],24,1);
+			LCD_1_44_ShowNum2412(40,80,GREEN,YELLOW,(uint8_t*)&luxDisp[1],24,1);
 			Show_Str(strlen(&luxDisp[1])*16 + 40,90,GREEN,YELLOW,"Lux",24,1);
 		}
 #elif(MOUDLE_ID == 6)
@@ -739,9 +739,9 @@ void LCD144_Thread(const void *argument){
 		if(valcontentCO2 != CO2_val){
 		
 			CO2_val = valcontentCO2;
-			LCD_ClearS(BLACK,0,75,120,125);
+			LCD_1_44_ClearS(BLACK,0,75,120,125);
 			sprintf(&co2Disp[1],"%.1f",valcontentCO2);
-			LCD_ShowNum2412(15,80,GREEN,YELLOW,(uint8_t*)&co2Disp[1],24,1);
+			LCD_1_44_ShowNum2412(15,80,GREEN,YELLOW,(uint8_t*)&co2Disp[1],24,1);
 			Show_Str(strlen(&co2Disp[1])*16+10,90,GREEN,YELLOW,"ppm",24,1);
 		}
 #elif(MOUDLE_ID == 7)
@@ -750,7 +750,7 @@ void LCD144_Thread(const void *argument){
 		if(is_Someone != isSomeone){
 		
 			is_Someone = isSomeone;
-			LCD_ClearS(BLACK,0,75,125,125);
+			LCD_1_44_ClearS(BLACK,0,75,125,125);
 			if(isSomeone)Show_Str(40,80,GREEN,YELLOW,"有人",24,1);
 			else Show_Str(40,80,GREEN,YELLOW,"没人",24,1);
 		}
@@ -760,7 +760,7 @@ void LCD144_Thread(const void *argument){
 		if(is_Rain != isRain){
 		
 			is_Rain = isRain;
-			LCD_ClearS(BLACK,0,75,120,105);
+			LCD_1_44_ClearS(BLACK,0,75,120,105);
 			if(isRain)Show_Str(40,80,GREEN,YELLOW,"有雨",24,1);
 			else Show_Str(40,80,GREEN,YELLOW,"没雨",24,1);
 		}
@@ -772,17 +772,17 @@ void LCD144_Thread(const void *argument){
 		if(SHT11temp != SHT11_temp){
 		
 			SHT11temp = SHT11_temp;
-			LCD_ClearS(BLACK,0,50,100,75);
+			LCD_1_44_ClearS(BLACK,0,50,100,75);
 			sprintf(temp,"%.2f", SHT11temp);
-			LCD_ShowNum2412(25,50,GREEN,YELLOW,(uint8_t*)temp,24,1);	
+			LCD_1_44_ShowNum2412(25,50,GREEN,YELLOW,(uint8_t*)temp,24,1);	
 		}			
 
 		if(SHT11hum != SHT11_hum){
 			
 			SHT11hum = SHT11_hum;
-			LCD_ClearS(BLACK,0,100,100,128);
+			LCD_1_44_ClearS(BLACK,0,100,100,128);
 			sprintf(&hum[1],"%.2f", SHT11hum);
-			LCD_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&hum[1],24,1);
+			LCD_1_44_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&hum[1],24,1);
 		}		
 #elif(MOUDLE_ID == 10)
 		static float resultUP = 6.0;
@@ -792,17 +792,17 @@ void LCD144_Thread(const void *argument){
 		if(resultUP != result_UP){
 		
 			resultUP = result_UP;
-			LCD_ClearS(BLACK,0,50,100,75);
+			LCD_1_44_ClearS(BLACK,0,50,100,75);
 			sprintf(&UP[1],"%.2f", result_UP / 1000);
-			LCD_ShowNum2412(15,50,GREEN,YELLOW,(uint8_t*)&UP[1],24,1);
+			LCD_1_44_ShowNum2412(15,50,GREEN,YELLOW,(uint8_t*)&UP[1],24,1);
 		}
 		
 		if(resultUA != result_UA){
 		
 			resultUA = result_UA;
-			LCD_ClearS(BLACK,10,100,128,128);
+			LCD_1_44_ClearS(BLACK,10,100,128,128);
 			sprintf(&UA[1],"%.2f", result_UA);
-			LCD_ShowNum2412(15,100,GREEN,YELLOW,(uint8_t*)&UA[1],24,1);
+			LCD_1_44_ShowNum2412(15,100,GREEN,YELLOW,(uint8_t*)&UA[1],24,1);
 			Show_Str(strlen(&UA[1])*15 + 10,107,GREEN,YELLOW,"m",24,1);
 		}
 #elif(MOUDLE_ID == 11)
@@ -812,9 +812,9 @@ void LCD144_Thread(const void *argument){
 		if(wind_val != valwindSpeed){
 		
 			wind_val = valwindSpeed;
-			LCD_ClearS(BLACK,20,75,120,105);
+			LCD_1_44_ClearS(BLACK,20,75,120,105);
 			sprintf(&windDisp[1],"%.3f",valwindSpeed);
-			LCD_ShowNum2412(20,80,GREEN,YELLOW,(uint8_t*)&windDisp[1],24,1);
+			LCD_1_44_ShowNum2412(20,80,GREEN,YELLOW,(uint8_t*)&windDisp[1],24,1);
 			Show_Str(strlen(&windDisp[1])*15 + 20,90,GREEN,YELLOW,"M/s",24,1);
 		}
 #elif(MOUDLE_ID == 12)
@@ -834,7 +834,7 @@ void LCD144_Thread(const void *argument){
 			slip  = (DispLAattr & 0x10) >> 4;
 			speed = (DispLAattr & 0x0f);
 			
-			LCD_ClearS(BLACK,100,65,130,130);
+			LCD_1_44_ClearS(BLACK,100,65,130,130);
 			
 			if(HA){
 				
@@ -866,9 +866,9 @@ void LCD144_Thread(const void *argument){
 		if(soil_val != valsoilHum){
 		
 			soil_val = valsoilHum;
-			LCD_ClearS(BLACK,0,80,120,105);
+			LCD_1_44_ClearS(BLACK,0,80,120,105);
 			sprintf(&soilDisp[1],"%.2f",valsoilHum);
-			LCD_ShowNum2412(20,80,GREEN,YELLOW,(uint8_t*)&soilDisp[1],24,1);
+			LCD_1_44_ShowNum2412(20,80,GREEN,YELLOW,(uint8_t*)&soilDisp[1],24,1);
 			Show_Str(strlen(&soilDisp[1])*16 + 20,90,GREEN,YELLOW,"%",24,1);
 		}
 #elif(MOUDLE_ID == 15)
@@ -877,7 +877,7 @@ void LCD144_Thread(const void *argument){
 		if(cur_Action != curAction){
 		
 			cur_Action = curAction;
-			LCD_ClearS(BLACK,0,80,125,128);
+			LCD_1_44_ClearS(BLACK,0,80,125,128);
 			switch(curAction){
 			
 				case 1:	Show_Str(20,90,GREEN,YELLOW,"正在开启",24,1);
@@ -900,7 +900,7 @@ void LCD144_Thread(const void *argument){
 		if(swSPY != SW_STATUS[0]){
 		
 			swSPY = SW_STATUS[0];
-			LCD_ClearS(BLACK,0,50,100,75);
+			LCD_1_44_ClearS(BLACK,0,50,100,75);
 			if(SW_STATUS[0] == 1)Show_Str(40,50,GREEN,YELLOW,"开启",24,1);
 			else Show_Str(40,50,GREEN,YELLOW,"关闭",24,1);
 		}
@@ -908,7 +908,7 @@ void LCD144_Thread(const void *argument){
 		if(swPST != SW_STATUS[1]){
 		
 			swPST = SW_STATUS[1];
-			LCD_ClearS(BLACK,0,100,100,128);
+			LCD_1_44_ClearS(BLACK,0,100,100,128);
 			if(SW_STATUS[1] == 1)Show_Str(40,100,GREEN,YELLOW,"开启",24,1);
 			else Show_Str(40,100,GREEN,YELLOW,"关闭",24,1);
 		}
@@ -924,9 +924,9 @@ void LCD144_Thread(const void *argument){
 		
 			val_PWMexAir = PWM_exAir;
 
-			LCD_ClearS(BLACK,25,75,120,105);
+			LCD_1_44_ClearS(BLACK,25,75,120,105);
 			sprintf(&valEXAR[1],"%d",PWM_exAir / 60);
-			LCD_ShowNum2412(55,80,dispcolor,YELLOW,(uint8_t*)&valEXAR[1],24,1);
+			LCD_1_44_ShowNum2412(55,80,dispcolor,YELLOW,(uint8_t*)&valEXAR[1],24,1);
 			Show_Str(strlen(&valEXAR[1])*16 + 55,90,dispcolor,YELLOW,"%",24,1);	
 		}
 #elif(MOUDLE_ID == 18)
@@ -941,7 +941,7 @@ void LCD144_Thread(const void *argument){
 		if(statusAWM != AWM_STATUS){
 		
 			statusAWM = AWM_STATUS;
-			LCD_ClearS(BLACK,0,50,128,75);
+			LCD_1_44_ClearS(BLACK,0,50,128,75);
 			if(AWM_STATUS == 1)Show_Str(40,50,dispcolor,YELLOW,"开启",24,1);
 			else Show_Str(40,50,dispcolor,YELLOW,"关闭",24,1);
 		}
@@ -950,9 +950,9 @@ void LCD144_Thread(const void *argument){
 		
 			val_DS18B20 = valDS18B20;
 
-			LCD_ClearS(BLACK,0,100,128,128);
+			LCD_1_44_ClearS(BLACK,0,100,128,128);
 			sprintf(&ds18b20_Disp[1],"%.1f",valDS18B20);
-			LCD_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&ds18b20_Disp[1],24,1);
+			LCD_1_44_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&ds18b20_Disp[1],24,1);
 			Show_Str(strlen(&ds18b20_Disp[1])*13 + 25,102,GREEN,YELLOW,"℃",24,1);	
 		}
 #elif(MOUDLE_ID == 19)			
@@ -967,9 +967,9 @@ void LCD144_Thread(const void *argument){
 		
 			val_PWMledGRW = PWM_ledGRW;
 
-			LCD_ClearS(BLACK,25,80,120,105);
+			LCD_1_44_ClearS(BLACK,25,80,120,105);
 			sprintf(&valGRW[1],"%d",PWM_ledGRW / 60);
-			LCD_ShowNum2412(55,80,dispcolor,YELLOW,(uint8_t*)&valGRW[1],24,1);
+			LCD_1_44_ShowNum2412(55,80,dispcolor,YELLOW,(uint8_t*)&valGRW[1],24,1);
 			Show_Str(strlen(&valGRW[1])*16 + 55,90,dispcolor,YELLOW,"%",24,1);	
 		}
 #elif(MOUDLE_ID == 20)		
@@ -984,7 +984,7 @@ void LCD144_Thread(const void *argument){
 		if(SOURCE_TYPE != sourceType){
 		
 			sourceType = SOURCE_TYPE;
-			LCD_ClearS(BLACK,0,50,128,75);
+			LCD_1_44_ClearS(BLACK,0,50,128,75);
 			if(SOURCE_TYPE == 1)Show_Str(30,50,dispcolor,YELLOW,"主电源",24,1);
 			else Show_Str(10,50,dispcolor,YELLOW,"备用电源",24,1);
 		}
@@ -993,9 +993,9 @@ void LCD144_Thread(const void *argument){
 		
 			val_Voltage = valVoltage;
 
-			LCD_ClearS(BLACK,0,100,128,128);
+			LCD_1_44_ClearS(BLACK,0,100,128,128);
 			sprintf(&valVol_Disp[1],"%.2f",valVoltage);
-			LCD_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&valVol_Disp[1],24,1);
+			LCD_1_44_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&valVol_Disp[1],24,1);
 			Show_Str(strlen(&valVol_Disp[1])*14 + 25,107,GREEN,YELLOW,"V",24,1);	
 		}
 #elif(MOUDLE_ID == 22)	
@@ -1008,33 +1008,33 @@ void LCD144_Thread(const void *argument){
 		
 		if(Disp_loop >= 3)Disp_loop = 0;
 		
-		LCD_ClearS(BLACK,0,50,128,75);
+		LCD_1_44_ClearS(BLACK,0,50,128,75);
 		memset(Meter_disp,20,20*sizeof(char));
 		sprintf(&Meter_disp[1],"%.2f",valGongLv);
-		LCD_ShowNum2412(20,50,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		LCD_1_44_ShowNum2412(20,50,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
 		Show_Str(strlen(&Meter_disp[1])*14+20,59,GREEN,YELLOW,"W",24,1);
 	
-		LCD_ClearS(BLACK,0,75,128,128);
+		LCD_1_44_ClearS(BLACK,0,75,128,128);
 		memset(Meter_disp,20,20*sizeof(char));
 		sprintf(&Meter_disp[1],"%.2f",valDianYa);
 		Show_Str(5,75,LGRAYBLUE,YELLOW,"当前电压鑞",24,1);
-		LCD_ShowNum2412(20,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		LCD_1_44_ShowNum2412(20,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
 		Show_Str(strlen(&Meter_disp[1])*14+21,107,GREEN,YELLOW,"V",24,1);
 		osDelay(2000);Disp_loop ++;
 		
-		LCD_ClearS(BLACK,0,75,128,128);
+		LCD_1_44_ClearS(BLACK,0,75,128,128);
 		memset(Meter_disp,20,20*sizeof(char));
 		sprintf(&Meter_disp[1],"%.2f",valDianLiu);
 		Show_Str(5,75,LGRAYBLUE,YELLOW,"当前电流鑞",24,1);
-		LCD_ShowNum2412(20,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		LCD_1_44_ShowNum2412(20,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
 		Show_Str(strlen(&Meter_disp[1])*14+20,107,GREEN,YELLOW,"A",24,1);
 		osDelay(2000);Disp_loop ++;
 		
-		LCD_ClearS(BLACK,0,75,128,128);
+		LCD_1_44_ClearS(BLACK,0,75,128,128);
 		memset(Meter_disp,20,20*sizeof(char));
 		sprintf(&Meter_disp[1],"%.2f",valDianLiang / 1000.0);
 		Show_Str(5,75,LGRAYBLUE,YELLOW,"总用电量鑞",24,1);
-		LCD_ShowNum2412(dldisp_position,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
+		LCD_1_44_ShowNum2412(dldisp_position,100,GREEN,YELLOW,(uint8_t*)&Meter_disp[1],24,1);
 		Show_Str(strlen(&Meter_disp[1])*14+dldisp_position+1,107,GREEN,YELLOW,"kWh",24,1);
 		osDelay(2000);Disp_loop ++;	
 #endif
@@ -1042,7 +1042,7 @@ void LCD144_Thread(const void *argument){
 	}
 }
 
-void LCD_144_test(void){
+void LCD144_test(void){
 
 	tid_LCD144Test_Thread = osThreadCreate(osThread(LCD144_Thread),NULL);
 }

@@ -310,7 +310,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\LED_Spray;..\Module\LED_Grow;..\Module\SHT11;..\Module\TSL2561;..\Module\BMP180;..\Module\keyBoard;..\Module\SensorSIM;..\Module\Sensor_RT;..\Module\Sensor_Rain;..\Module\Sensor_contentCO2;..\Module\Sensor_windSpeed;..\Module\Sensor_soilHum;..\Module\RFID;..\Module\EXHUASH;..\Module\Curtain;..\Module\airWarming;..\Module\Phonetics;..\Module\sourceToggle;..\Module\RELAY;..\Module\ElectricMeter;..\Module\LCD4.3Touch\EMWIN;..\Module\LCD4.3Touch\EMWIN\Config;..\Module\LCD4.3Touch\EMWIN\inc;..\Module\LCD4.3Touch\EMWIN\Lib;..\Module\LCD4.3Touch\EMWIN\OS</IncludePath>
+              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\LED_Spray;..\Module\LED_Grow;..\Module\SHT11;..\Module\TSL2561;..\Module\BMP180;..\Module\keyBoard;..\Module\SensorSIM;..\Module\Sensor_RT;..\Module\Sensor_Rain;..\Module\Sensor_contentCO2;..\Module\Sensor_windSpeed;..\Module\Sensor_soilHum;..\Module\RFID;..\Module\EXHUASH;..\Module\Curtain;..\Module\airWarming;..\Module\Phonetics;..\Module\sourceToggle;..\Module\RELAY;..\Module\ElectricMeter;..\Module\LCD4.3Touch\EMWIN;..\Module\LCD4.3Touch\EMWIN\Config;..\Module\LCD4.3Touch\EMWIN\inc;..\Module\LCD4.3Touch\EMWIN\Lib;..\Module\LCD4.3Touch\EMWIN\OS;..\Module\LCD4.3Touch\EMWINDEMO;..\Module\LCD4.3Touch\HARDWARE</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -601,9 +601,19 @@
           <GroupName>4.3寸LCD专用</GroupName>
           <Files>
             <File>
-              <FileName>GUI_X.c</FileName>
+              <FileName>LCD4.3Main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Module\LCD4.3Touch\EMWIN\OS\GUI_X.c</FilePath>
+              <FilePath>..\Module\LCD4.3Touch\HARDWARE\LCD4.3Main.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd5510.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\HARDWARE\lcd5510.c</FilePath>
+            </File>
+            <File>
+              <FileName>touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\HARDWARE\touch.c</FilePath>
             </File>
             <File>
               <FileName>GUIConf.c</FileName>
@@ -611,19 +621,29 @@
               <FilePath>..\Module\LCD4.3Touch\EMWIN\Config\GUIConf.c</FilePath>
             </File>
             <File>
-              <FileName>LCDConf_FlexColor_Template.c</FileName>
+              <FileName>LCDConf.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Module\LCD4.3Touch\EMWIN\Config\LCDConf_FlexColor_Template.c</FilePath>
+              <FilePath>..\Module\LCD4.3Touch\EMWIN\Config\LCDConf.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDRV_Template.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWIN\Config\GUIDRV_Template.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUI_X_Ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWIN\OS\GUI_X_Ex.c</FilePath>
             </File>
             <File>
               <FileName>GUI_X_Touch_Analog.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Module\LCD4.3Touch\EMWIN\GUI_X_Touch_Analog.c</FilePath>
+              <FilePath>..\Module\LCD4.3Touch\EMWIN\OS\GUI_X_Touch_Analog.c</FilePath>
             </File>
             <File>
-              <FileName>STemWin522_CM3_Keil.lib</FileName>
+              <FileName>GUI_CM3.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\Module\LCD4.3Touch\EMWIN\Lib\STemWin522_CM3_Keil.lib</FilePath>
+              <FilePath>..\Module\LCD4.3Touch\EMWIN\Lib\GUI_CM3.lib</FilePath>
             </File>
           </Files>
         </Group>
@@ -634,6 +654,141 @@
               <FileName>GTAWZ-ZH-02_总结.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\GTAWZ-ZH-02_总结.txt</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>EMWINDEMO</GroupName>
+          <Files>
+            <File>
+              <FileName>GUIDEMO.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_AntialiasedText.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_AntialiasedText.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Automotive.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Automotive.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_BarGraph.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_BarGraph.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Bitmap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Bitmap.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_ColorBar.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_ColorBar.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Conf.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Conf.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Cursor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Cursor.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Fading.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Fading.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Graph.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Graph.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_IconView.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_IconView.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_ImageFlow.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_ImageFlow.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Intro.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Intro.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Listview.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Listview.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_RadialMenu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_RadialMenu.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Resource.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Resource.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Skinning.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Skinning.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Speed.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Speed.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Speedometer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Speedometer.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Start.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Start.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Touch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Touch.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_TransparentDialog.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_TransparentDialog.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_Treeview.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_Treeview.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_VScreen.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_VScreen.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_WashingMachine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_WashingMachine.c</FilePath>
+            </File>
+            <File>
+              <FileName>GUIDEMO_ZoomAndRotate.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\LCD4.3Touch\EMWINDEMO\GUIDEMO_ZoomAndRotate.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -714,6 +869,12 @@
           <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>
         </targetInfos>
       </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="CRC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
+        <targetInfos>
+          <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>
+        </targetInfos>
+      </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="DMA" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
         <targetInfos>
@@ -721,6 +882,12 @@
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="EXTI" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
+        <targetInfos>
+          <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="FSMC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
         <targetInfos>
           <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>
