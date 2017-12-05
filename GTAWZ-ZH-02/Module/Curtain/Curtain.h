@@ -1,8 +1,10 @@
 #ifndef __CURTAIN_H
 #define __CURTAIN_H	 
+
 #include "delay.h"
 #include "IO_Map.h"	 
 #include "beep.h"
+#include "stmflash.h"
 
 #include "stdio.h"
 #include "string.h"

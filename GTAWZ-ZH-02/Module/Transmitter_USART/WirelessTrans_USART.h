@@ -15,7 +15,7 @@
 
 #include <MoudleDats.h>
 
-#define FRAME_DATS_SIZE	10		//除了协议帧数据外，传感器数据缓冲队列长度
+#define FRAME_DATS_SIZE	20	//除了协议帧数据外，传感器数据缓冲队列长度
 
 #define FRAME_TX_SIZE	100	//发送队列整帧长度
 #define FRAME_RX_SIZE	100	//接收队列整帧长度

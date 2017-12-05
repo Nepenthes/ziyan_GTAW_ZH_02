@@ -96,6 +96,8 @@ void led_Grow(void){
 	
 	while(1)
 	{
+		USRKgrwTX_FLG = 1;		 //主动保持在线，如果不用，注释即可，注释后则被动在线，状态改变时才上发状态信息
+		
 		key_in=KEY_Scan1_ledGRW(0);
 		
 		if(key_in == 5){

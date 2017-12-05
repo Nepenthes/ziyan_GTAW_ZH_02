@@ -760,8 +760,8 @@ u8 GT9147_Scan(u8 mode)
                     GT9147_RD_Reg(GT9147_TPX_TBL[i],buf,4);	//¶ÁÈ¡XY×ø±êÖµ
                     if(tp_dev.touchtype&0X01)//ºáÆÁ
                     {
-                        tp_dev.y[i]=((u16)buf[1]<<8)+buf[0];
-                        tp_dev.x[i]=800-(((u16)buf[3]<<8)+buf[2]);
+                        tp_dev.y[i]=480 - (((u16)buf[1]<<8)+buf[0]);
+                        tp_dev.x[i]=(((u16)buf[3]<<8)+buf[2]);
                     } else
                     {
                         tp_dev.x[i]=((u16)buf[1]<<8)+buf[0];

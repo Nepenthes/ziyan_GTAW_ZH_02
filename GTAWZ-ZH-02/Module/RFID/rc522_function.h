@@ -8,6 +8,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "Driver_USART.h"
+#include "beep.h"
 
 #define          macDummy_Data              0x00
 

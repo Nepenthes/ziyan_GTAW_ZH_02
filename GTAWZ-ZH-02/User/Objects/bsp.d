@@ -17,6 +17,7 @@
 .\objects\bsp.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_crc.h
 .\objects\bsp.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_dma.h
 .\objects\bsp.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_exti.h
+.\objects\bsp.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_flash.h
 .\objects\bsp.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_fsmc.h
 .\objects\bsp.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 .\objects\bsp.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
@@ -85,6 +86,8 @@
 .\objects\bsp.o: ..\Module\EXHUASH\exAir.h
 .\objects\bsp.o: ..\Module\airWarming\airWarming.h
 .\objects\bsp.o: ..\Module\Curtain\Curtain.h
+.\objects\bsp.o: ..\Module\FlashOP\stmflash.h
+.\objects\bsp.o: ..\Module\RELAY\Relay.h
 .\objects\bsp.o: ..\Module\sourceToggle\SourceTog.h
 .\objects\bsp.o: ..\Module\SHT11\SHT11.h
 .\objects\bsp.o: .\User\SysSupport.h

@@ -36,9 +36,10 @@ extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 #elif(MOUDLE_ID == 14)
 extern float valsoilHum;
 #elif(MOUDLE_ID == 15)
-extern uint8_t curAction;
+extern uint8_t curAction[2];
 extern uint8_t USRKcurTX_FLG;
 extern uint8_t USRKcurRX_FLG;
+extern uint16_t cycMotorCnt;  //激励脉冲计数
 #elif(MOUDLE_ID == 16)
 extern uint8_t SW_SPY;
 extern uint8_t SW_PST;
@@ -65,6 +66,8 @@ extern uint8_t SOURCE_TYPE;
 extern uint8_t USRKpowTX_FLG;
 extern uint8_t USRKpowexaRX_FLG;	//保留暂时不用
 #elif(MOUDLE_ID == 21)
+extern uint8_t swRelay_lock;
+extern uint8_t swRelay_light;
 #elif(MOUDLE_ID == 22)
 extern uint8_t Elec_Param[10];
 extern float 	valDianYa;
@@ -636,7 +639,8 @@ void LCD144_Thread(const void *argument){
 #elif(MOUDLE_ID == 14)
 	Show_Str(5,50,LGRAYBLUE,YELLOW,"土壤水分值鑞",24,1);
 #elif(MOUDLE_ID == 15)
-	Show_Str(5,50,LGRAYBLUE,YELLOW,"窗帘控制鑞",24,1);
+	Show_Str(5,25,LGRAYBLUE,GREEN,"窗帘状态鑞",24,1);
+	Show_Str(5,75,LGRAYBLUE,YELLOW,"透光程度鑞",24,1);
 #elif(MOUDLE_ID == 16)
 	Show_Str(5,25,LGRAYBLUE,GREEN,"喷雾控制鑞",24,1);
 	Show_Str(5,75,LGRAYBLUE,YELLOW,"杀虫控制鑞",24,1);
@@ -650,6 +654,9 @@ void LCD144_Thread(const void *argument){
 #elif(MOUDLE_ID == 20)
 	Show_Str(5,25,LGRAYBLUE,GREEN,"电源控制鑞",24,1);
 	Show_Str(5,75,LGRAYBLUE,YELLOW,"主电电压鑞",24,1);
+#elif(MOUDLE_ID == 21)
+	Show_Str(5,25,LGRAYBLUE,GREEN,"门锁控制鑞",24,1);
+	Show_Str(5,75,LGRAYBLUE,YELLOW,"太阳光源鑞",24,1);
 #elif(MOUDLE_ID == 22)
 	Show_Str(5,25,LGRAYBLUE,GREEN,"当前功率鑞",24,1);
 	Show_Str(5,75,LGRAYBLUE,YELLOW,"当前电压鑞",24,1);
@@ -680,8 +687,8 @@ void LCD144_Thread(const void *argument){
 			Show_Str(30,90,GREEN,YELLOW,(uint8_t*)&idDisp[1],24,1);
 		}
 #elif(MOUDLE_ID == 3)
-		const uint8_t *cmd_tips[7] = {"芝麻开门","芝麻关门","苹果开门","苹果关门","一二三四","二二三四","三二三四"};
-		static uint32_t Phonetics_num = 6;
+		const uint8_t *cmd_tips[10] = {"打开风扇","关闭风扇","开窗","关窗","打开喷雾","关闭喷雾","打开加热","关闭加热","打开生长灯","关闭生长灯"};
+		static uint8_t Phonetics_num = 1;
 		
 		if(Phonetics_num != phoneticsNUM){
 		
@@ -872,25 +879,37 @@ void LCD144_Thread(const void *argument){
 			Show_Str(strlen(&soilDisp[1])*16 + 20,90,GREEN,YELLOW,"%",24,1);
 		}
 #elif(MOUDLE_ID == 15)
-		static uint8_t cur_Action;
+		static uint8_t cur_Action[2];
+		static uint16_t cycMotor_Cnt;
+		char curDisp[10];
 		
-		if(cur_Action != curAction){
+		if(cur_Action[0] != curAction[0]){
 		
-			cur_Action = curAction;
-			LCD_1_44_ClearS(BLACK,0,80,125,128);
-			switch(curAction){
+			cur_Action[0] = curAction[0];
+			LCD_1_44_ClearS(BLACK,0,50,128,75);
+			switch(curAction[0]){
 			
-				case 1:	Show_Str(20,90,GREEN,YELLOW,"正在开启",24,1);
+				case 1:	Show_Str(20,50,GREEN,YELLOW,"正在开启",24,1);
 							break;
 				
-				case 2:	Show_Str(20,90,GREEN,YELLOW,"正在关闭",24,1);
+				case 2:	Show_Str(20,50,GREEN,YELLOW,"正在关闭",24,1);
 							break;
 				
-				case 3:	if(PEin(1))Show_Str(30,90,GREEN,YELLOW,"已开启",24,1);
-							else Show_Str(30,90,GRAY,YELLOW,"已关闭",24,1);
+				case 3:	if(PEin(1))Show_Str(30,50,GREEN,YELLOW,"已开启",24,1);
+							else Show_Str(30,50,GRAY,YELLOW,"已关闭",24,1);
 							break;
 				
 				default: break;
+			}
+			
+			if(cycMotor_Cnt != cycMotorCnt){
+			
+				cycMotor_Cnt = cycMotorCnt;
+				
+				LCD_1_44_ClearS(BLACK,0,100,128,128);
+				sprintf(&curDisp[1],"%d", cycMotorCnt / 33);
+				LCD_1_44_ShowNum2412(40,100,GREEN,YELLOW,(uint8_t*)&curDisp[1],24,1);
+				Show_Str(strlen(&curDisp[1])*15 + 40,107,GREEN,YELLOW,"%",24,1);
 			}
 		}
 #elif(MOUDLE_ID == 16)		
@@ -998,6 +1017,25 @@ void LCD144_Thread(const void *argument){
 			LCD_1_44_ShowNum2412(25,100,GREEN,YELLOW,(uint8_t*)&valVol_Disp[1],24,1);
 			Show_Str(strlen(&valVol_Disp[1])*14 + 25,107,GREEN,YELLOW,"V",24,1);	
 		}
+#elif(MOUDLE_ID == 21)		
+		static uint8_t sw_Relay_lock;
+		static uint8_t sw_Relay_light;
+		
+		if(sw_Relay_lock != swRelay_lock && swRelay_lock){
+		
+			sw_Relay_lock = swRelay_lock;
+			LCD_1_44_ClearS(BLACK,0,50,100,75);
+			if(swRelay_lock == 1)Show_Str(40,50,GREEN,YELLOW,"开启",24,1);
+			else if(swRelay_lock == 2)Show_Str(40,50,GRAY,YELLOW,"关闭",24,1);
+		}
+		
+		if(sw_Relay_light != swRelay_light && swRelay_lock){
+		
+			sw_Relay_light = swRelay_light;
+			LCD_1_44_ClearS(BLACK,0,100,100,128);
+			if(swRelay_light == 1)Show_Str(40,100,GREEN,YELLOW,"开启",24,1);
+			else if(swRelay_light == 2)Show_Str(40,100,GRAY,YELLOW,"关闭",24,1);
+		}
 #elif(MOUDLE_ID == 22)	
 		static uint8_t Disp_loop = 0;
 		char Meter_disp[20];
@@ -1038,7 +1076,7 @@ void LCD144_Thread(const void *argument){
 		Show_Str(strlen(&Meter_disp[1])*14+dldisp_position+1,107,GREEN,YELLOW,"kWh",24,1);
 		osDelay(2000);Disp_loop ++;	
 #endif
-		delay_ms(100);
+		delay_ms(50);
 	}
 }
 

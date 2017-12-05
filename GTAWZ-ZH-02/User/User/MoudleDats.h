@@ -3,9 +3,9 @@
 
 #define MOUDLE_NUM  		22	  //模块总数
 
-#define MOUDLE_ID			13   //选择编译模块
+#define MOUDLE_ID			2   //选择编译模块
 
-#define MOUDLE_DEBUG		1
+#define MOUDLE_DEBUG		1	  //串口一debug是否开启
 
 /**********************************************************************
 1.	4x4矩阵键盘

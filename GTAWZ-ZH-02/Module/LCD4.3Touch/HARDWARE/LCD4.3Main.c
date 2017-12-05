@@ -201,8 +201,9 @@ void LCD4_3_Test(void) {
 void LCD4_3_Init(void) {
 
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
+//	 WM_SetCreateFlags(WM_CF_MEMDEV);
     GUI_Init();
-//	LCD5510_Init();
+//	 LCD5510_Init();
 }
 
 void LCD4_3_Thread(const void *argument) {
@@ -219,7 +220,7 @@ void LCD4_3_Thread(const void *argument) {
 	GUI_FillRect(20, 20, 69, 69);
 	GUI_SetColor((0xC0uL << 24) | GUI_BLUE);
 	GUI_FillRect(40, 40, 89, 89);
-	while(1);
+	for(;;);
 
 //	GUIDEMO_Main();
 
@@ -229,6 +230,7 @@ void LCD4_3_Thread(const void *argument) {
 void LCD4_3_GUICLK_Thread(const void *argument) {
 
     OS_TimeMS ++;
+//	 tp_dev.scan(0);
 }
 
 void LCD4_3_Main(void) {

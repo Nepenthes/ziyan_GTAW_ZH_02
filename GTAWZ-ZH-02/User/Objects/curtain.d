@@ -16,6 +16,7 @@
 .\objects\curtain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_crc.h
 .\objects\curtain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_dma.h
 .\objects\curtain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_exti.h
+.\objects\curtain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_flash.h
 .\objects\curtain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_fsmc.h
 .\objects\curtain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 .\objects\curtain.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
@@ -30,6 +31,7 @@
 .\objects\curtain.o: .\User\MoudleDats.h
 .\objects\curtain.o: .\User\IO_Map.h
 .\objects\curtain.o: ..\Module\BEEP\beep.h
+.\objects\curtain.o: ..\Module\FlashOP\stmflash.h
 .\objects\curtain.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdio.h
 .\objects\curtain.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
 .\objects\curtain.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_USART.h

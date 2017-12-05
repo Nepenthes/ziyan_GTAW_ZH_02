@@ -62,13 +62,16 @@ void Phonetics(void);
 extern uint8  nLD_Mode;
 
 //识别码（客户修改处）
-#define CODE_ZMKM		1	 /*芝麻开门*/
-#define CODE_ZMGM		2	 /*芝麻关门*/
-#define CODE_PGKM		3	 /*苹果开门*/
-#define CODE_PGGM		4	 /*苹果关门*/
-#define CODE_1234		5	 /*1234*/
-#define CODE_2234		6	 /*2234*/
-#define CODE_3234		7	 /*3234*/
+#define CODE_FSON			1	 /*打开风扇*/
+#define CODE_FSOFF		2	 /*关闭风扇*/
+#define CODE_CHON			3	 /*开窗*/
+#define CODE_CHOFF		4	 /*关窗*/
+#define CODE_PWON			5	 /*打开喷雾*/
+#define CODE_PWOFF		6	 /*关闭喷雾*/
+#define CODE_JRON			7	 /*打开加热*/
+#define CODE_JROFF		8	 /*关闭加热*/
+#define CODE_SZDON		9	 /*打开生长灯*/
+#define CODE_SZDOFF		10	 /*关闭生长灯*/
 
 void  LD3320_delay(unsigned long uldata);
 

@@ -12,6 +12,9 @@
 #define KEY4_exAir  GPIO_ReadInputDataBit(GPIOD,GPIO_Pin_1)//读取按键2 
 #define KEY5_exAir  GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_7)//读取按键3 
 
+#define EXAIR_ON	  PEout(0) = 0
+#define EXAIR_OFF	  PEout(0) = 1
+
 void TIM4_PWM_Init_exAir(u16 arr,u16 psc);
 
 void KEY_Init_exAir(void);//IO初始化	

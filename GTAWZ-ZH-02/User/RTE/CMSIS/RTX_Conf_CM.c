@@ -67,7 +67,7 @@
 //   <i> Defines the combined stack size for threads with user-provided stack size.
 //   <i> Default: 0
 #ifndef OS_PRIVSTKSIZE
- #define OS_PRIVSTKSIZE 5120       // this stack size value is in words
+ #define OS_PRIVSTKSIZE 3840       // this stack size value is in words
 #endif
  
 //   <q>Stack overflow checking
@@ -136,7 +136,7 @@
 //   <i> Defines how long a thread will execute before a thread switch.
 //   <i> Default: 5
 #ifndef OS_ROBINTOUT
- #define OS_ROBINTOUT   10
+ #define OS_ROBINTOUT   5
 #endif
  
 // </e>

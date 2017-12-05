@@ -332,7 +332,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\User;.\User;.\User\reWrite;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\LED_Spray;..\Module\LED_Grow;..\Module\SHT11;..\Module\TSL2561;..\Module\BMP180;..\Module\keyBoard;..\Module\SensorSIM;..\Module\Sensor_RT;..\Module\Sensor_Rain;..\Module\Sensor_contentCO2;..\Module\Sensor_windSpeed;..\Module\Sensor_soilHum;..\Module\RFID;..\Module\EXHUASH;..\Module\Curtain;..\Module\airWarming;..\Module\Phonetics;..\Module\sourceToggle;..\Module\RELAY;..\Module\ElectricMeter;..\Module\LCD4.3Touch\EMWIN;..\Module\LCD4.3Touch\EMWIN\Config;..\Module\LCD4.3Touch\EMWIN\inc;..\Module\LCD4.3Touch\EMWIN\Lib;..\Module\LCD4.3Touch\EMWIN\OS;..\Module\LCD4.3Touch\EMWINDEMO;..\Module\LCD4.3Touch\HARDWARE</IncludePath>
+              <IncludePath>..\User;.\User;.\User\reWrite;..\Module\FlashOP;..\Module;..\Module\KEY&amp;TIPS;..\Module\Transmitter_USART;..\Module\BEEP;..\Module\LCD(1.44inches);..\Module\LED_ARRAY;..\Module\LED_Spray;..\Module\LED_Grow;..\Module\SHT11;..\Module\TSL2561;..\Module\BMP180;..\Module\keyBoard;..\Module\SensorSIM;..\Module\Sensor_RT;..\Module\Sensor_Rain;..\Module\Sensor_contentCO2;..\Module\Sensor_windSpeed;..\Module\Sensor_soilHum;..\Module\RFID;..\Module\EXHUASH;..\Module\Curtain;..\Module\airWarming;..\Module\Phonetics;..\Module\sourceToggle;..\Module\RELAY;..\Module\ElectricMeter;..\Module\LCD4.3Touch\EMWIN;..\Module\LCD4.3Touch\EMWIN\Config;..\Module\LCD4.3Touch\EMWIN\inc;..\Module\LCD4.3Touch\EMWIN\Lib;..\Module\LCD4.3Touch\EMWIN\OS;..\Module\LCD4.3Touch\EMWINDEMO;..\Module\LCD4.3Touch\HARDWARE</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -404,6 +404,11 @@
               <FileName>Test.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Module\Test.c</FilePath>
+            </File>
+            <File>
+              <FileName>stmflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Module\FlashOP\stmflash.c</FilePath>
             </File>
             <File>
               <FileName>SVC_Table.s</FileName>
@@ -888,6 +893,12 @@
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="FSMC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
+        <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
+        <targetInfos>
+          <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="Flash" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.4.0" url="http://www.keil.com/pack/" vendor="Keil" version="2.2.0"/>
         <targetInfos>
           <targetInfo name="物联网多功能组合实训系统GTAWZ-ZH-02"/>

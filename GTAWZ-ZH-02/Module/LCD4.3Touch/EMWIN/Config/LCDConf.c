@@ -43,7 +43,9 @@ Purpose     : Display controller configuration (single layer)
 */
 
 #include "GUI.h"
+#include "GUIDRV_FlexColor.h"
 #include "lcd5510.h"
+#include "touch.h"
 
 /*********************************************************************
 *
@@ -65,7 +67,7 @@ Purpose     : Display controller configuration (single layer)
 //   the color mode of the target display. Detaileds can be found in
 //   the chapter "Colors" in the emWin user manual.
 //
-#define COLOR_CONVERSION GUICC_M565
+#define COLOR_CONVERSION GUICC_565
 
 //
 // Display driver
@@ -112,22 +114,14 @@ Purpose     : Display controller configuration (single layer)
 *   display driver configuration.
 */
 void LCD_X_Config(void) {
-  //
-  // Set display driver and color conversion for 1st layer
-  //
-  GUI_DEVICE_CreateAndLink(DISPLAY_DRIVER, COLOR_CONVERSION, 0, 0);
-  //
-  // Display driver configuration
-  //
-  if (LCD_GetSwapXY()) {
-	  
-    LCD_SetSizeEx (0, YSIZE_PHYS, XSIZE_PHYS);
-    LCD_SetVSizeEx(0, YSIZE_PHYS, XSIZE_PHYS);
-  } else {
-	  
-    LCD_SetSizeEx (0, XSIZE_PHYS, YSIZE_PHYS);
-    LCD_SetVSizeEx(0, XSIZE_PHYS, YSIZE_PHYS);
-  }
+	
+	GUI_DEVICE_CreateAndLink(&GUIDRV_Template_API,GUICC_M565,0,0); //创建显示驱动器件
+	
+	LCD_SetSizeEx(0,lcddev.width,lcddev.height);
+	LCD_SetVSizeEx(0,lcddev.width,lcddev.height);
+	
+	GUI_TOUCH_Calibrate(GUI_COORD_X,0,lcddev.width,0,lcddev.width-1);   
+	GUI_TOUCH_Calibrate(GUI_COORD_Y,0,lcddev.height,0,lcddev.height-1);
 }
 
 /*********************************************************************
@@ -140,93 +134,23 @@ void LCD_X_Config(void) {
 *   required to react to any command.
 */
 int LCD_X_DisplayDriver(unsigned LayerIndex, unsigned Cmd, void * pData) {
-	int r;
-	switch (Cmd) 
-	{
-		case LCD_X_INITCONTROLLER: 
-		{
-			//
-			// Called during the initialization process in order to set up the
-			// display controller and put it into operation. If the display
-			// controller is not initialized by any external routine this needs
-			// to be adapted by the customer...
-			//
-			// ...
-			//  已经在前面初始化了，这里不再初始化
-			//  LCD_InitHard();
-			LCD5510_Init();
-			
-			return 0;
-		}
-		case LCD_X_SETVRAMADDR: 
-		{
-//			//
-//			// Required for setting the address of the video RAM for drivers
-//			// with memory mapped video RAM which is passed in the 'pVRAM' element of p
-//			//
-//			LCD_X_SETVRAMADDR_INFO * p;
-//			(void)p;
-//			p = (LCD_X_SETVRAMADDR_INFO *)pData;
-//			//...
-			return 0;
-		}
-		case LCD_X_SETORG: 
-		{
-//			//
-//			// Required for setting the display origin which is passed in the 'xPos' and 'yPos' element of p
-//			//
-//			LCD_X_SETORG_INFO * p;
-//			(void)p;
-//			p = (LCD_X_SETORG_INFO *)pData;
-
-//			//...
-			return 0;
-		}
-		case LCD_X_SHOWBUFFER: 
-		{
-//			//
-//			// Required if multiple buffers are used. The 'Index' element of p contains the buffer index.
-//			//
-//			LCD_X_SHOWBUFFER_INFO * p;
-//			(void)p;
-//			p = (LCD_X_SHOWBUFFER_INFO *)pData;
-//			//...
-			return 0;
-		}
-		case LCD_X_SETLUTENTRY: 
-		{
-//			//
-//			// Required for setting a lookup table entry which is passed in the 'Pos' and 'Color' element of p
-//			//
-//			LCD_X_SETLUTENTRY_INFO * p;
-//			(void)p;
-//			p = (LCD_X_SETLUTENTRY_INFO *)pData;
-//			//...
-			return 0;
-		}
-		case LCD_X_ON: 
-		{
-			//
-			// Required if the display controller should support switching on and off
-			//
-			LCD5510_DisplayOn();
-			
-			return 0;
-		}
-		case LCD_X_OFF: 
-		{
-			//
-			// Required if the display controller should support switching on and off
-			//
-			// ...
-			LCD5510_DisplayOff();
-			
-			return 0;
-		}
+  int r;
+  (void) LayerIndex;
+  (void) pData;
+  
+  switch (Cmd) {
+  case LCD_X_INITCONTROLLER: {
+	//当初始化的时候被调用,主要是设置显示控制器,如果显示控制器在外部初始化则需要用户初始化
+		
+	 LCD5510_Init(); //初始化LCD 已经在开始初始化了,所以此处不需要初始化。
+	 tp_dev.init();
+	 
+    return 0;
+  }
 		default:
-		r = -1;
+    r = -1;
 	}
-	return r;
+  return r;
 }
 
 /*************************** End of file ****************************/

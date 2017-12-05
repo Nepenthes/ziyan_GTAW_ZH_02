@@ -90,9 +90,9 @@ void windSpeedMS_Thread(const void *argument){
 	
 	for(;;){
 	
-		temp_windSpeed = windSpeed_Get_Adc_Average(12,8);
+		temp_windSpeed = windSpeed_Get_Adc_Average(12,50);
 		
-		if(temp_windSpeed > 820){
+		if(temp_windSpeed > 900){
 		
 			temp_windSpeed -= 820;
 			valwindSpeed =  0.0091575 * (double)temp_windSpeed;

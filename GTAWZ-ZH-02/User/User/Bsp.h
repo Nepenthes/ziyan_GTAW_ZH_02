@@ -18,6 +18,7 @@
 #include <exAir.h>
 #include <airWarming.h>
 #include <Curtain.h>
+#include <Relay.h>
 #include <SourceTog.h>
 
 #include <SHT11.h>

@@ -1,5 +1,5 @@
-#ifndef SENSOR_RAIN_H
-#define SENSOR_RAIN_H
+#ifndef _SWRELAY_H
+#define _SWRELAY_H
 
 #include "stm32f10x.h"
 #include "delay.h"

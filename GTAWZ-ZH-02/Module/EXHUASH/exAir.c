@@ -56,15 +56,20 @@ void KEY_Init_exAir(void) //IO初始化
 
 
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; 		//设置成上拉输入
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
-  GPIO_Init(GPIOD, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; 		
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		
+  GPIO_Init(GPIOD, &GPIO_InitStructure);					
 
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; 		//设置成上拉输入
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
-  GPIO_Init(GPIOE, &GPIO_InitStructure);					 //根据设定参数初始化GPIOB.
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; 		
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		
+  GPIO_Init(GPIOE, &GPIO_InitStructure);					
 	
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP; 		
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;		
+  GPIO_Init(GPIOE, &GPIO_InitStructure);		
+  PEout(0) = 1;
 }
 
 u8 KEY_Scan1_exAir(u8 mode)
@@ -99,6 +104,8 @@ void ex_Air(void){
 	
 	while(1)
 	{
+		USRKexaTX_FLG = 1;	 //主动保持在线，如果不用，注释即可，注释后则被动在线，状态改变时才上发状态信息
+		
 		key_in=KEY_Scan1_exAir(0);
 		
 		if(key_in == 3){
@@ -131,6 +138,8 @@ void ex_Air(void){
 			
 			USRKexaTX_FLG = 1;
 		}
+		
+		if(PWM_exAir)EXAIR_ON;else EXAIR_OFF;
 		
 		if(USRKexaRX_FLG == 1){
 			

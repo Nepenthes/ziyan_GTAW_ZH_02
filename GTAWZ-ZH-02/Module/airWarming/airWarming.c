@@ -223,6 +223,8 @@ void airWarmingCM_Thread(const void *argument){
 	
 	for(;;){
 		
+//		USRKawmTX_FLG = 1;		 //主动保持在线，如果不用，注释即可，注释后则被动在线，状态改变时才上发状态信息
+		
 		key_in = KEY_Scan1_AWM(0);
 		
 		valDS18B20 	= DS18B20_Get_Temp();

@@ -2603,7 +2603,8 @@ void LCD5510_Init(void)
         LCD5510_WriteReg(0X07,0X0033);
         LCD5510_WriteReg(0X07,0X0133);
     }
-    LCD5510_Display_Dir(0);		 	//默认为竖屏
+    LCD5510_Display_Dir(1);		 	//默认为竖屏
+	 LCD5510_Scan_Dir(3);
     LCD5510_LED=1;					//点亮背光
     LCD5510_Clear(WHITE);
 }

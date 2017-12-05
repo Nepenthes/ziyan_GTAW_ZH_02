@@ -240,28 +240,33 @@ uint8 LD_AsrAddFixed(void)
 {
 	uint8 k, flag;
 	uint8 nAsrAddLength;
-	#define DATE_A 7     /*数组二维数值*/
-	#define DATE_B 20		/*数组一维数值*/
+	#define DATE_A 10     /*数组二维数值*/
+	#define DATE_B 30		/*数组一维数值*/
 	 uint8  sRecog[DATE_A][DATE_B] = {
 		 
-		"zhi ma kai men",\
-		"zhi ma guan men",\
-		"ping guo kai men",\
-		"ping guo guan men",\
-		"yi er san si",\
-		"er er san si",\
-		"san er san si"
+		"da kai feng shan",\
+		"guan bi feng shan",\
+		"kai chuang",\
+		"guan chuang",\
+		"da kai pen wu",\
+		"da kai jia re",\
+		"guan bi jia re",\
+		"da kai sheng zhang deng",\
+		"guan bi sheng zhang deng"
 	};	/*添加关键词，用户修改*/
 	 
 	 uint8  pCode[DATE_A] = {
 		 
-		CODE_ZMKM,\
-		CODE_ZMGM,\
-		CODE_PGKM,\
-		CODE_PGGM,\
-		CODE_1234,\
-		CODE_2234,\
-		CODE_3234
+		CODE_FSON,\
+		CODE_FSOFF,\
+		CODE_CHON,\
+		CODE_CHOFF,\
+		CODE_PWON,\
+		CODE_PWOFF,\
+		CODE_JRON,\
+		CODE_JROFF,\
+		CODE_SZDON,\
+		CODE_SZDOFF
 	};	/*添加识别码，用户修改*/
 	flag = 1;
 	for (k=0; k<DATE_A; k++)
@@ -304,7 +309,7 @@ uint8 LD_AsrAddFixed(void)
 **********************************************************/ 
 uint8 LD_GetResult(void)
 {
-	return LD_ReadReg(0xc5 );
+	return LD_ReadReg(0x65 );
 }
 
 

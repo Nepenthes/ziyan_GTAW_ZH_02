@@ -34,7 +34,7 @@ extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 #elif(MOUDLE_ID == 14)
 extern float valsoilHum;
 #elif(MOUDLE_ID == 15)
-extern uint8_t curAction;
+extern uint8_t curAction[2];
 extern uint8_t USRKcurTX_FLG;
 extern uint8_t USRKcurRX_FLG;
 #elif(MOUDLE_ID == 16)
@@ -63,6 +63,10 @@ extern uint8_t SOURCE_TYPE;
 extern uint8_t USRKpowTX_FLG;
 extern uint8_t USRKpowexaRX_FLG;	//保留暂时不用
 #elif(MOUDLE_ID == 21)
+extern uint8_t swRelay_lock;
+extern uint8_t swRelay_light;
+extern uint8_t USRKjdqTX_FLG;
+extern uint8_t USRKjdqRX_FLG;
 #elif(MOUDLE_ID == 22)
 extern uint8_t Elec_Param[13];
 #endif
@@ -95,8 +99,8 @@ extern ARM_DRIVER_USART Driver_USART2;
 osThreadId tid_USART1Debug_Thread;
 osThreadId tid_USART2Trans_Thread;
 
-osThreadDef(USART1Debug_Thread,osPriorityNormal,1,512);
-osThreadDef(USART2Trans_Thread,osPriorityNormal,1,512);
+osThreadDef(USART1Debug_Thread,osPriorityNormal,1,256);
+osThreadDef(USART2Trans_Thread,osPriorityNormal,1,2048);
 
 uint8_t FRAME_TX[FRAME_TX_SIZE] = {0};
 uint8_t FRAME_RX[FRAME_RX_SIZE] = {0};
@@ -315,12 +319,12 @@ void USART2Trans_Thread(const void *argument){
 	char valwind_zhengshu_ID11 = (char)valwindSpeed;
 	char valwind_xiaoshu_ID11 = (char)((valwindSpeed - (double)valwind_zhengshu_ID11) * 100);
 #elif(MOUDLE_ID == 12)
-	uint8_t num_ID12 = (sizeof(DispLABuffer) / sizeof(uint8_t));
+	uint16_t num_ID12;
 #elif(MOUDLE_ID == 14)
 	char valsoil_zhengshu_ID14 = (char)valsoilHum;
 	char valsoil_xiaoshu_ID14 = (char)((valsoilHum - (float)valsoil_zhengshu_ID14) * 100);
 #elif(MOUDLE_ID == 15)
-	char SW_curtain_ID15 = 0;
+	char SW_curtain_ID15[2] = {0};
 #elif(MOUDLE_ID == 16)
 	char SW_ledSPY_ID16[2] = {0};
 #elif(MOUDLE_ID == 17)
@@ -335,6 +339,9 @@ void USART2Trans_Thread(const void *argument){
 	char valVol_zhengshu_ID20 = (char)valVoltage;
 	char valVol_xiaoshu_ID20 = (char)((valVoltage - (float)valVol_zhengshu_ID20) * 100);
 	char SWSource_ID20;
+#elif(MOUDLE_ID == 21)
+	char swRelay_lock_ID20;
+	char swRelay_light_ID20;
 #elif(MOUDLE_ID == 22)
    uint8_t Elec_Param_ID22[13] = {0};
 #endif
@@ -367,7 +374,7 @@ void USART2Trans_Thread(const void *argument){
 		osDelay(20);	
 #endif
 //-----------------------------------------------------------------------传感器，主要为发送数据		
-#if(MOUDLE_ID == 1)	
+#if(MOUDLE_ID == 1)	 //键盘
 		if((keyVal_ID1 != (char)valKeyBoard) && valKeyBoard){
 		
 			keyVal_ID1 = (char)valKeyBoard;
@@ -375,7 +382,7 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,1);
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 2)	
+#elif(MOUDLE_ID == 2)	//RFID
 		if(memcmp(RC522IDBUF_ID4,RC522IDBUF,4) && memcmp(dats_null,RC522IDBUF,4)){
 		
 			memcpy(RC522IDBUF_ID4,RC522IDBUF,4);
@@ -383,7 +390,7 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,4);
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 3)	
+#elif(MOUDLE_ID == 3)	//语音
 		if((valPhonenum_ID3 != phoneticsNUM) && phoneticsNUM){
 		
 			valPhonenum_ID3 = phoneticsNUM;
@@ -391,7 +398,7 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,1);
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 4)			
+#elif(MOUDLE_ID == 4)	//信号模拟
 		valDigital_ID4 = (char)valDigital;
 		valAnalog_ID4 = (char)valAnalog;
 		
@@ -399,7 +406,7 @@ void USART2Trans_Thread(const void *argument){
 	   dats[1] = valAnalog_ID4;
 		FRAME_TX_DATSLOAD(dats,2);
 		TX_RSQ = 1;
-#elif(MOUDLE_ID == 5)		
+#elif(MOUDLE_ID == 5)  //光照强度
 		temp_wan_ID5 = (char)(LUXValue % 1000000 / 10000);
 		temp_bai_ID5 = (char)(LUXValue % 10000 / 100);
 		temp_ge_ID5  = (char)(LUXValue % 100);
@@ -409,7 +416,7 @@ void USART2Trans_Thread(const void *argument){
 		dats[2] = temp_ge_ID5;
 		FRAME_TX_DATSLOAD(dats,3);	
 		TX_RSQ = 1;
-#elif(MOUDLE_ID == 6)
+#elif(MOUDLE_ID == 6)	//二氧化碳
 		valCO2_CO2_bai_ID6 = (char)((long)valcontentCO2 % 10000 / 100);
 		valCO2_CO2_ge_ID6 = (char)((long)valcontentCO2 % 100);
 		
@@ -417,19 +424,19 @@ void USART2Trans_Thread(const void *argument){
 		dats[1] = valCO2_CO2_ge_ID6;
 		FRAME_TX_DATSLOAD(dats,2);	
 		TX_RSQ = 1;
-#elif(MOUDLE_ID == 7)
+#elif(MOUDLE_ID == 7)	//红外热释电
 		isSomeone_ID7 = (char)isSomeone;
 		
 		dats[0] = isSomeone_ID7;
 		FRAME_TX_DATSLOAD(dats,1);
-		TX_RSQ = 1;
-#elif(MOUDLE_ID == 8)
+		TX_RSQ = 1;	
+#elif(MOUDLE_ID == 8)  //雨水
 		isRain_ID8 = (char)isRain;
 		
 		dats[0] = isRain_ID8;
 		FRAME_TX_DATSLOAD(dats,1);
 		TX_RSQ = 1;
-#elif(MOUDLE_ID == 9)		
+#elif(MOUDLE_ID == 9)	
 	   temp_zhengshu_ID9 = (char)SHT11_temp;
 		temp_xiaoshu_ID9  = (char)((SHT11_temp-(float)temp_zhengshu_ID9)*100);
 		hum_zhengshu_ID9  = (char)SHT11_hum;
@@ -464,10 +471,10 @@ void USART2Trans_Thread(const void *argument){
 		TX_RSQ = 1;
 //-----------------------------------------------------------------------执行器，主要为接收命令处理		
 #elif(MOUDLE_ID == 12)
-		num_ID12 = (sizeof(DispLABuffer) / sizeof(uint8_t));	
-		DispLAattr 	 = dats_rx[0];
-		memset(DispLABuffer,0,num_ID12*sizeof(char));
-		memcpy(DispLABuffer,&dats_rx[1],strlen((const char*)&dats_rx[1]));
+		num_ID12 = (sizeof(dats_rx) / sizeof(uint8_t));	
+		DispLAattr 	= dats_rx[0];
+		memset(DispLABuffer,0,DISPLA_BUFFER_SIZE*sizeof(char));
+		memcpy(DispLABuffer,&dats_rx[1],num_ID12);
 #elif(MOUDLE_ID == 14)
 		valsoil_zhengshu_ID14 = (char)valsoilHum;
 		valsoil_xiaoshu_ID14 = (char)((valsoilHum - (float)valsoil_zhengshu_ID14) * 100);
@@ -477,21 +484,26 @@ void USART2Trans_Thread(const void *argument){
 		FRAME_TX_DATSLOAD(dats,2);	
 		TX_RSQ = 1;	
 #elif(MOUDLE_ID == 15)
-		if(SW_curtain_ID15 != dats_rx[0]){
+		if(SW_curtain_ID15[0] != dats_rx[0]){
 		
-			USRKcurRX_FLG = 1;
+			SW_curtain_ID15[0] = dats_rx[0];
+			curAction[0]		 = dats_rx[0];	
+			if(curAction[1] > 100)curAction[1] = 100;
 			
-			SW_curtain_ID15 = dats_rx[0];
-			curAction = dats_rx[0];
+			USRKcurRX_FLG = 1;
 		}
+		
 		if(USRKcurTX_FLG){
 		
 			USRKcurTX_FLG = 0;
 			
-			SW_curtain_ID15 = dats_rx[0] = curAction;		//更新下行数据缓存，防错乱
+			SW_curtain_ID15[0] = dats_rx[0] = curAction[0];		//更新下行数据缓存，防错乱		
+						
+			memcpy(dats,curAction,2);
 			
-			dats[0] = curAction;
-			FRAME_TX_DATSLOAD(dats,1);
+			if(dats[0] == 0x03 && !curAction[1])dats[0] = 4;  //开停 、闭停判断
+			
+			FRAME_TX_DATSLOAD(dats,2);
 			TX_RSQ = 1;
 		}
 #elif(MOUDLE_ID == 16)
@@ -504,6 +516,7 @@ void USART2Trans_Thread(const void *argument){
 			SW_SPY = SW_ledSPY_ID16[0];
 			SW_PST = SW_ledSPY_ID16[1];
 		}
+		
 		if(USRKspyTX_FLG){
 			
 			USRKspyTX_FLG = 0;
@@ -598,6 +611,24 @@ void USART2Trans_Thread(const void *argument){
 		}
 #elif(MOUDLE_ID == 21)
 		
+		if(swRelay_lock_ID20 != dats_rx[0] || swRelay_light_ID20 != dats_rx[1]){
+		
+			if(dats_rx[0])swRelay_lock = swRelay_lock_ID20 = dats_rx[0];
+			if(dats_rx[1])swRelay_light = swRelay_light_ID20 = dats_rx[1];
+			
+			USRKjdqRX_FLG = 1;
+		}
+		
+		if(USRKjdqTX_FLG == 1){
+		
+			USRKjdqTX_FLG = 0;
+			
+			dats_rx[0] = dats[0] = swRelay_lock;     //更新下行数据缓存，防错乱
+			dats_rx[1] = dats[1] = swRelay_light;
+			
+			FRAME_TX_DATSLOAD(dats,2);
+			TX_RSQ = 1;
+		}
 #elif(MOUDLE_ID == 22)
 		memcpy(Elec_Param_ID22,Elec_Param,13);
 		memcpy(dats,Elec_Param_ID22,13);
@@ -605,7 +636,7 @@ void USART2Trans_Thread(const void *argument){
 		TX_RSQ = 1;
 #endif
 
-#if(MOUDLE_ID <= 11 || MOUDLE_ID == 14 || MOUDLE_ID == 15 || MOUDLE_ID == 16 || MOUDLE_ID == 17 || MOUDLE_ID == 18 || MOUDLE_ID == 19 || MOUDLE_ID == 20 ||  MOUDLE_ID == 22)
+#if(MOUDLE_ID <= 11 || MOUDLE_ID == 14 || MOUDLE_ID == 15 || MOUDLE_ID == 16 || MOUDLE_ID == 17 || MOUDLE_ID == 18 || MOUDLE_ID == 19 || MOUDLE_ID == 20 || MOUDLE_ID == 21 || MOUDLE_ID == 22)
 		if(TX_RSQ){
 		
 			Driver_USART2.Send((void *)FRAME_TX,8 + FRAME_TX[6]);

@@ -7,7 +7,7 @@
 uint8_t RC522IDBUF [ 4 ];                                                                                             //先后存放IC卡的类型和UID(IC卡序列号)
 
 osThreadId tid_RC522MS_Thread;
-osThreadDef(RC522MS_Thread,osPriorityNormal,1,512);
+osThreadDef(RC522MS_Thread,osPriorityNormal,1,1024);
 
 extern ARM_DRIVER_USART Driver_USART1;								//设备驱动库串口一设备声明
 
@@ -792,6 +792,11 @@ void RC522MS_Thread(const void *argument){
 				sprintf (disp, "The Card ID is: %02X%02X%02X%02X\r\n", RC522IDBUF [ 0 ], RC522IDBUF [ 1 ], RC522IDBUF [ 2 ], RC522IDBUF [ 3 ] );				
 				Driver_USART1.Send(disp,strlen(disp));
 #endif					
+				Beep_time(100);
+				osDelay(100);
+				Beep_time(20);
+				osDelay(10);
+				Beep_time(20);
 			}			
 		}	
 		osDelay(200);

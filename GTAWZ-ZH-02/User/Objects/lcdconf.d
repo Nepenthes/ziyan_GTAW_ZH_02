@@ -6,6 +6,7 @@
 .\objects\lcdconf.o: ..\Module\LCD4.3Touch\EMWIN\inc\LCD.h
 .\objects\lcdconf.o: ..\Module\LCD4.3Touch\EMWIN\inc\Global.h
 .\objects\lcdconf.o: ..\Module\LCD4.3Touch\EMWIN\inc\GUI_Version.h
+.\objects\lcdconf.o: ..\Module\LCD4.3Touch\EMWIN\inc\GUIDRV_FlexColor.h
 .\objects\lcdconf.o: ..\Module\LCD4.3Touch\HARDWARE\lcd5510.h
 .\objects\lcdconf.o: .\User\IO_Map.h
 .\objects\lcdconf.o: .\User\delay.h
@@ -24,6 +25,7 @@
 .\objects\lcdconf.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_crc.h
 .\objects\lcdconf.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_dma.h
 .\objects\lcdconf.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_exti.h
+.\objects\lcdconf.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_flash.h
 .\objects\lcdconf.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_fsmc.h
 .\objects\lcdconf.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 .\objects\lcdconf.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
@@ -37,3 +39,6 @@
 .\objects\lcdconf.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\lcdconf.o: .\User\MoudleDats.h
 .\objects\lcdconf.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdlib.h
+.\objects\lcdconf.o: ..\Module\LCD4.3Touch\HARDWARE\touch.h
+.\objects\lcdconf.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\string.h
+.\objects\lcdconf.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\math.h

@@ -17,6 +17,7 @@
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_crc.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_dma.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_exti.h
+.\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_flash.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_fsmc.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_gpio.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\Keil\STM32F1xx_DFP\2.2.0\Device\StdPeriph_Driver\inc\stm32f10x_i2c.h
@@ -31,7 +32,8 @@
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\Driver\Include\Driver_Common.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stddef.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\ARMCC\Bin\..\include\stdbool.h
-.\objects\rc522_function.o: .\User\delay.h
+.\objects\rc522_function.o: ..\Module\BEEP\beep.h
 .\objects\rc522_function.o: .\User\osObjects.h
 .\objects\rc522_function.o: D:\Keil\Software\ARM\PACK\ARM\CMSIS\5.1.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
+.\objects\rc522_function.o: .\User\delay.h
 .\objects\rc522_function.o: .\User\MoudleDats.h

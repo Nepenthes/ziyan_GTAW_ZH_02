@@ -89,65 +89,92 @@ void LD3320_main(void)
 
             switch(nAsrRes)		   /*对结果执行相关操作,客户修改*/
             {
-            case CODE_ZMKM:			
+            case CODE_FSON:			
 //                PrintCom(USART1,"“流水灯”命令识别成功\r\n"); /*text.....*/
 #if(MOUDLE_DEBUG == 1)	
-						Driver_USART1.Send("cmd1 芝麻开门 identify\r\n",13);
+						Driver_USART1.Send("cmd1 风扇开启 identify\r\n",13);
 #endif
 						phoneticsNUM = 1;
 						cntdn_FLG = 1;val_cnt = 0;
                 break;
-            case CODE_ZMGM:	
+            case CODE_FSOFF:	
 //                PrintCom(USART1,"“闪烁”命令识别成功\r\n"); /*text.....*/
 #if(MOUDLE_DEBUG == 1)	
-						Driver_USART1.Send("cmd2 芝麻关门 identify\r\n",13);
+						Driver_USART1.Send("cmd2 风扇关闭 identify\r\n",13);
 #endif
 						phoneticsNUM = 2;
 						cntdn_FLG = 1;val_cnt = 0;
                 break;
-            case CODE_PGKM:		
+            case CODE_CHON:		
 
 //                PrintCom(USART1,"“按键触发”命令识别成功\r\n"); /*text.....*/
 #if(MOUDLE_DEBUG == 1)	
-						Driver_USART1.Send("cmd3 苹果开门 identify\r\n",13);
+						Driver_USART1.Send("cmd3 开窗 identify\r\n",9);
 #endif
 						phoneticsNUM = 3;
 						cntdn_FLG = 1;val_cnt = 0;
                 break;
-            case CODE_PGGM:		
+            case CODE_CHOFF:		
 
 //                PrintCom(USART1,"“全灭”命令识别成功\r\n"); /*text.....*/
 #if(MOUDLE_DEBUG == 1)	
-						Driver_USART1.Send("cmd4 苹果关门 identify\r\n",13);
+						Driver_USART1.Send("cmd4 关窗 identify\r\n",9);
 #endif
 						phoneticsNUM = 4;
 						cntdn_FLG = 1;val_cnt = 0;
                 break;
-            case CODE_1234:		
+            case CODE_PWON:		
 
 //                PrintCom(USART1,"“全灭”命令识别成功\r\n"); /*text.....*/
 #if(MOUDLE_DEBUG == 1)	
-						Driver_USART1.Send("cmd5 一二三四 identify\r\n",13);
+						Driver_USART1.Send("cmd5 喷雾开启 identify\r\n",13);
 #endif
 						phoneticsNUM = 5;
 						cntdn_FLG = 1;val_cnt = 0;
                 break;
-            case CODE_2234:		
+            case CODE_PWOFF:		
 
 //                PrintCom(USART1,"“全灭”命令识别成功\r\n"); /*text.....*/
 #if(MOUDLE_DEBUG == 1)	
-						Driver_USART1.Send("cmd6 二二三四 identify\r\n",13);
+						Driver_USART1.Send("cmd6 喷雾关闭 identify\r\n",13);
 #endif
 						phoneticsNUM = 6;
 						cntdn_FLG = 1;val_cnt = 0;
                 break;
-            case CODE_3234:		
+            case CODE_JRON:		
 
 //                PrintCom(USART1,"“全灭”命令识别成功\r\n"); /*text.....*/
 #if(MOUDLE_DEBUG == 1)	
-						Driver_USART1.Send("cmd7 三二三四 identify\r\n",13);
+						Driver_USART1.Send("cmd7 加热开启 identify\r\n",13);
 #endif
 						phoneticsNUM = 7;
+						cntdn_FLG = 1;val_cnt = 0;
+                break;
+            case CODE_JROFF:		
+
+//                PrintCom(USART1,"“全灭”命令识别成功\r\n"); /*text.....*/
+#if(MOUDLE_DEBUG == 1)	
+						Driver_USART1.Send("cmd8 加热关闭 identify\r\n",13);
+#endif
+						phoneticsNUM = 8;
+						cntdn_FLG = 1;val_cnt = 0;
+                break;
+            case CODE_SZDON:		
+
+//                PrintCom(USART1,"“全灭”命令识别成功\r\n"); /*text.....*/
+#if(MOUDLE_DEBUG == 1)	
+						Driver_USART1.Send("cmd9 生长灯开启 identify\r\n",15);
+#endif
+						phoneticsNUM = 9;
+						cntdn_FLG = 1;val_cnt = 0;
+                break;
+            case CODE_SZDOFF:		
+
+//                PrintCom(USART1,"“全灭”命令识别成功\r\n"); /*text.....*/
+#if(MOUDLE_DEBUG == 1)	
+						Driver_USART1.Send("cmd10 生长灯关闭 identify\r\n",15);
+#endif
+						phoneticsNUM = 10;
 						cntdn_FLG = 1;val_cnt = 0;
                 break;
             default:

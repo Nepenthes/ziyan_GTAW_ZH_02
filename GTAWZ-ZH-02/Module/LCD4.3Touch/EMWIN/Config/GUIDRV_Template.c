@@ -127,21 +127,9 @@ typedef struct {
 **********************************************************************
 */
 /*********************************************************************
-*
-*       _SetPixelIndex
-*
-* Purpose:
-*   Sets the index of the given pixel. The upper layers
-*   calling this routine make sure that the coordinates are in range, so
-*   that no check on the parameters needs to be performed.
+ 打点函数
 */
 static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, int PixelIndex) {
-  #ifdef WIN32
-    LCDSIM_SetPixelIndex(x, y, PixelIndex, pDevice->LayerIndex);
-  #else
-    //
-    // Convert logical into physical coordinates (Dep. on LCDConf.h)
-    //
     #if (LCD_MIRROR_X == 1) || (LCD_MIRROR_Y == 1) || (LCD_SWAP_XY == 1)
       int xPhys, yPhys;
 
@@ -156,38 +144,21 @@ static void _SetPixelIndex(GUI_DEVICE * pDevice, int x, int y, int PixelIndex) {
     GUI_USE_PARA(y);
     GUI_USE_PARA(PixelIndex);
     {
-      //
-      // Write into hardware ... Adapt to your system
-      //
-      // TBD by customer...
-      //
-		 
-		 LCD5510_Fast_DrawPoint(x,y,PixelIndex);
+		LCD5510_Fast_DrawPoint(x,y,PixelIndex); //调用lcd.c文件中的快速打点函数
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)
       #undef xPhys
       #undef yPhys
     #endif
-  #endif
 }
+
 
 /*********************************************************************
 *
-*       _GetPixelIndex
-*
-* Purpose:
-*   Returns the index of the given pixel. The upper layers
-*   calling this routine make sure that the coordinates are in range, so
-*   that no check on the parameters needs to be performed.
+	读点函数
 */
 static unsigned int _GetPixelIndex(GUI_DEVICE * pDevice, int x, int y) {
-  unsigned int PixelIndex;
-  #ifdef WIN32
-    PixelIndex = LCDSIM_GetPixelIndex(x, y, pDevice->LayerIndex);
-  #else
-    //
-    // Convert logical into physical coordinates (Dep. on LCDConf.h)
-    //
+	unsigned int PixelIndex;
     #if (LCD_MIRROR_X == 1) || (LCD_MIRROR_Y == 1) || (LCD_SWAP_XY == 1)
       int xPhys, yPhys;
 
@@ -201,19 +172,14 @@ static unsigned int _GetPixelIndex(GUI_DEVICE * pDevice, int x, int y) {
     GUI_USE_PARA(x);
     GUI_USE_PARA(y);
     {
-      //
-      // Write into hardware ... Adapt to your system
-      //
-      // TBD by customer...
-      //
-      PixelIndex = LCD5510_ReadPoint(x,y);
+			PixelIndex = LCD5510_ReadPoint(x,y);
     }
     #if (LCD_MIRROR_X == 0) && (LCD_MIRROR_Y == 0) && (LCD_SWAP_XY == 0)
       #undef xPhys
       #undef yPhys
     #endif
-  #endif
   return PixelIndex;
+	
 }
 
 /*********************************************************************
@@ -235,25 +201,20 @@ static void _XorPixel(GUI_DEVICE * pDevice, int x, int y) {
 */
 static void _FillRect(GUI_DEVICE * pDevice, int x0, int y0, int x1, int y1) {
   LCD_PIXELINDEX PixelIndex;
-//  int x;
+  int x;
 
   PixelIndex = LCD__GetColorIndex();
 	
-  LCD5510_Fill(x0,y0,x1,y1,PixelIndex);
-	
-//  if (GUI_pContext->DrawMode & LCD_DRAWMODE_XOR) {
-//    for (; y0 <= y1; y0++) {
-//      for (x = x0; x <= x1; x++) {
-//        _XorPixel(pDevice, x, y0);
-//      }
-//    }
-//  } else {
-//    for (; y0 <= y1; y0++) {
-//      for (x = x0; x <= x1; x++) {
-//        _SetPixelIndex(pDevice, x, y0, PixelIndex);
-//      }
-//    }
-//  }
+  if (GUI_pContext->DrawMode & LCD_DRAWMODE_XOR) {
+    for (; y0 <= y1; y0++) {
+      for (x = x0; x <= x1; x++) {
+        _XorPixel(pDevice, x, y0);
+      }
+    }
+  } else {
+		
+	  LCD5510_Fill(x0,y0,x1,y1,PixelIndex);
+  }
 }
 
 /*********************************************************************

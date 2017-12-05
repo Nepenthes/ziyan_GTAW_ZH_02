@@ -1,6 +1,6 @@
 #include "SourceTog.h"
 
-float valVoltage= 11.01;  //初始化大于11.0  方便跳过自检  初始化为主电源
+float valVoltage= 11.01;  //初始化大于11.0  方便跳过首次自检  初始化为主电源
 uint8_t SOURCE_TYPE = 1;  //初始化为主电源
 
 uint8_t USRKpowTX_FLG = 0;
@@ -108,7 +108,7 @@ void PowDetect_Thread(const void *argument){
 	
 	for(;;){
 		
-		if(valVoltage < 11.00){
+		if(valVoltage < 8.0){     //低电识别
 	
 			BTlow_flg = 1;
 			if(SOURCE_TYPE != 2){
@@ -117,7 +117,7 @@ void PowDetect_Thread(const void *argument){
 				USRKpowTX_FLG = 1;
 			}
 		}else
-		if(valVoltage > 11.40 && BTlow_flg){
+		if(valVoltage > 8.5 && BTlow_flg){	//低电后再次切回高电识别条件
 		
 			BTlow_flg = 0;
 			if(SOURCE_TYPE != 1){
