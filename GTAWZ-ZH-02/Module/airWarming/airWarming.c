@@ -229,7 +229,7 @@ void airWarmingCM_Thread(const void *argument){
 		
 		valDS18B20 	= DS18B20_Get_Temp();
 		
-		if(valDS18B20 > 40.0){		//温度限制，三十度以下才开放控制权
+		if(valDS18B20 > 35.0){		//温度限制，三十五度以下才开放控制权
 		
 			AWM_STATUS = 0x02;
 			

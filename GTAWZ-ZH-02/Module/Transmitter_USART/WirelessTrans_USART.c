@@ -1,7 +1,7 @@
 #include <WirelessTrans_USART.h>
 
-uint8_t TX_RSQ;
-uint16_t RX_NUM = 0;
+uint8_t TX_RSQ;	//数据发送请求
+uint16_t RX_NUM = 0; //剥壳后数据长（去掉帧头尾等地址后的数据长度）
 
 extern osMutexId (uart1_mutex_id);
 #if(MOUDLE_ID == 1)
@@ -83,7 +83,7 @@ const uint8_t MOUDLE_TYPE[MOUDLE_NUM] = {
 	GTA_PBP02,GTA_PBP03
 };
 
-const uint8_t FRAME_PRT1[5] = {FRAME_HEAD,GATEWAY_ADDR,NODE_ADDR,MODULE_ADDR};
+const uint8_t FRAME_PRT1[5] = {FRAME_HEAD,GATEWAY_ADDR,NODE_ADDR,MODULE_ADDR};  //本地模块帧头对号入座
 
 const char *TestCMD[] = {
 
@@ -561,17 +561,6 @@ void USART2Trans_Thread(const void *argument){
 		temp_zhengshu_ID18 = (char)valDS18B20;
 		temp_xiaoshu_ID18 = (char)((valDS18B20 - (float)temp_zhengshu_ID18)*100);
 		
-		dats[0] = temp_zhengshu_ID18;
-		dats[1] = temp_xiaoshu_ID18;
-		dats[2] = AWM_STATUS;
-		if(USRKawmTX_FLG == 1){
-			
-			USRKawmTX_FLG = 0;	
-			sw_awm_ID18 = dats_rx[0] = AWM_STATUS;	//更新下行数据缓存，防错乱
-		}
-		FRAME_TX_DATSLOAD(dats,3);
-		TX_RSQ = 1;
-		
 		if(sw_awm_ID18 != dats_rx[0]){
 		
 			sw_awm_ID18 = dats_rx[0];
@@ -579,6 +568,17 @@ void USART2Trans_Thread(const void *argument){
 			
 			USRKawmRX_FLG = 1;
 		}	
+		
+		dats[0] = AWM_STATUS;
+		dats[1] = temp_zhengshu_ID18;
+		dats[2] = temp_xiaoshu_ID18;
+		if(USRKawmTX_FLG == 1){
+			
+			USRKawmTX_FLG = 0;	
+			sw_awm_ID18 = dats_rx[0] = AWM_STATUS;	//更新下行数据缓存，防错乱
+		}
+		FRAME_TX_DATSLOAD(dats,3);
+		TX_RSQ = 1;
 #elif(MOUDLE_ID == 19)	//生长灯
 		if(PWM_ledGRW_ID19 != dats_rx[0]){
 		
@@ -643,7 +643,8 @@ void USART2Trans_Thread(const void *argument){
 		FRAME_TX_DATSLOAD(dats,13);	
 		TX_RSQ = 1;
 #endif
-
+		
+//为了兼并执行构件的数据上传，允许数据发送
 #if(MOUDLE_ID <= 11 || MOUDLE_ID == 14 || MOUDLE_ID == 15 || MOUDLE_ID == 16 || MOUDLE_ID == 17 || MOUDLE_ID == 18 || MOUDLE_ID == 19 || MOUDLE_ID == 20 || MOUDLE_ID == 21 || MOUDLE_ID == 22)
 		if(TX_RSQ){
 		
