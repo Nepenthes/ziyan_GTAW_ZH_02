@@ -1,6 +1,7 @@
 #include <WirelessTrans_USART.h>
 
 uint8_t TX_RSQ;
+uint16_t RX_NUM = 0;
 
 extern osMutexId (uart1_mutex_id);
 #if(MOUDLE_ID == 1)
@@ -30,7 +31,8 @@ extern float result_UA;
 extern double valwindSpeed;
 #elif(MOUDLE_ID == 12)
 extern uint8_t	DispLAattr; // HA:1   color:2  slip :1  speed:4
-extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
+extern uint8_t Disp_num;
+//extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 #elif(MOUDLE_ID == 14)
 extern float valsoilHum;
 #elif(MOUDLE_ID == 15)
@@ -100,7 +102,7 @@ osThreadId tid_USART1Debug_Thread;
 osThreadId tid_USART2Trans_Thread;
 
 osThreadDef(USART1Debug_Thread,osPriorityNormal,1,256);
-osThreadDef(USART2Trans_Thread,osPriorityNormal,1,2048);
+osThreadDef(USART2Trans_Thread,osPriorityNormal,1,4096);
 
 uint8_t FRAME_TX[FRAME_TX_SIZE] = {0};
 uint8_t FRAME_RX[FRAME_RX_SIZE] = {0};
@@ -352,16 +354,17 @@ void USART2Trans_Thread(const void *argument){
 		char *pt;	
 		uint8_t dats_rx[FRAME_DATS_SIZE];
 	
-		Driver_USART2.Receive(FRAME_RX,FRAME_RX_SIZE);
+		Driver_USART2.Receive(FRAME_RX,72);
 		
 		pt = strstr((const char*)FRAME_RX,(const char*)FRAME_PRT1);
 	
 		if(pt){
 			
-			Driver_USART1.Send(FRAME_RX,FRAME_RX_SIZE);
+			Driver_USART1.Send(FRAME_RX,pt[6]);
 			
 			memset(dats,0,FRAME_RX_SIZE*sizeof(uint8_t));
 			memcpy(dats,pt,8 + pt[6]);
+			RX_NUM = dats[6];
 			
 			if(dats[4] == MOUDLE_TYPE[MOUDLE_ID - 1] && dats[7 + dats[6]] == 0x0d)
 				if(dats[5] == 0x10){
@@ -436,7 +439,7 @@ void USART2Trans_Thread(const void *argument){
 		dats[0] = isRain_ID8;
 		FRAME_TX_DATSLOAD(dats,1);
 		TX_RSQ = 1;
-#elif(MOUDLE_ID == 9)	
+#elif(MOUDLE_ID == 9)	//温湿度
 	   temp_zhengshu_ID9 = (char)SHT11_temp;
 		temp_xiaoshu_ID9  = (char)((SHT11_temp-(float)temp_zhengshu_ID9)*100);
 		hum_zhengshu_ID9  = (char)SHT11_hum;
@@ -448,7 +451,7 @@ void USART2Trans_Thread(const void *argument){
 		dats[3] = hum_xiaoshu_ID9;
 		FRAME_TX_DATSLOAD(dats,4);
 		TX_RSQ = 1;
-#elif(MOUDLE_ID == 10)
+#elif(MOUDLE_ID == 10)		//大气压海拔
 		result_UP_TMP = result_UP / 1000;
 		UP_zhengshu_ID10 = (char)result_UP_TMP;
 		UP_xiaoshu_ID10  = (char)((result_UP_TMP - (float)UP_zhengshu_ID10)*100);
@@ -461,7 +464,7 @@ void USART2Trans_Thread(const void *argument){
 		dats[3] = UA_xiaoshu_ID10;
 		FRAME_TX_DATSLOAD(dats,4);
 		TX_RSQ = 1;
-#elif(MOUDLE_ID == 11)
+#elif(MOUDLE_ID == 11)	//风速
 		valwind_zhengshu_ID11 = (char)valwindSpeed;
 		valwind_xiaoshu_ID11 = (char)((valwindSpeed - (double)valwind_zhengshu_ID11) * 100);
 		
@@ -470,11 +473,17 @@ void USART2Trans_Thread(const void *argument){
 		FRAME_TX_DATSLOAD(dats,2);	
 		TX_RSQ = 1;
 //-----------------------------------------------------------------------执行器，主要为接收命令处理		
-#elif(MOUDLE_ID == 12)
-		num_ID12 = (sizeof(dats_rx) / sizeof(uint8_t));	
-		DispLAattr 	= dats_rx[0];
-		memset(DispLABuffer,0,DISPLA_BUFFER_SIZE*sizeof(char));
-		memcpy(DispLABuffer,&dats_rx[1],num_ID12);
+#elif(MOUDLE_ID == 12) //显示屏
+
+		if(num_ID12 != dats_rx[1]){
+		
+			num_ID12 	= dats_rx[0];
+			DispLAattr 	= dats_rx[0];
+			Disp_num		= dats_rx[1];
+		}
+//		memset(DispLABuffer,0,DISPLA_BUFFER_SIZE*sizeof(char));
+//		memcpy(DispLABuffer,(const uint8_t *)&dats_rx[1],num_ID12);
+
 #elif(MOUDLE_ID == 14)
 		valsoil_zhengshu_ID14 = (char)valsoilHum;
 		valsoil_xiaoshu_ID14 = (char)((valsoilHum - (float)valsoil_zhengshu_ID14) * 100);
@@ -483,7 +492,7 @@ void USART2Trans_Thread(const void *argument){
 		dats[1] = valsoil_xiaoshu_ID14;
 		FRAME_TX_DATSLOAD(dats,2);	
 		TX_RSQ = 1;	
-#elif(MOUDLE_ID == 15)
+#elif(MOUDLE_ID == 15) //窗帘
 		if(SW_curtain_ID15[0] != dats_rx[0]){
 		
 			SW_curtain_ID15[0] = dats_rx[0];
@@ -506,15 +515,15 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,2);
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 16)
+#elif(MOUDLE_ID == 16)  //喷雾
 		if(memcmp(SW_ledSPY_ID16,dats_rx,2)){
-			
-			USRKspyRX_FLG = 1;
 		
 			memcpy(SW_ledSPY_ID16,dats_rx,2);
 			
-			SW_SPY = SW_ledSPY_ID16[0];
-			SW_PST = SW_ledSPY_ID16[1];
+			SW_SPY = dats_rx[0];
+			SW_PST = dats_rx[1];
+			
+			USRKspyRX_FLG = 1;
 		}
 		
 		if(USRKspyTX_FLG){
@@ -529,7 +538,7 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,2);
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 17)
+#elif(MOUDLE_ID == 17)	//排风扇
 		if(PWM_exAir_ID17 != dats_rx[0]){
 		
 			PWM_exAir_ID17 = dats_rx[0];
@@ -548,7 +557,7 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,1);	
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 18)
+#elif(MOUDLE_ID == 18)	//加热管
 		temp_zhengshu_ID18 = (char)valDS18B20;
 		temp_xiaoshu_ID18 = (char)((valDS18B20 - (float)temp_zhengshu_ID18)*100);
 		
@@ -570,7 +579,7 @@ void USART2Trans_Thread(const void *argument){
 			
 			USRKawmRX_FLG = 1;
 		}	
-#elif(MOUDLE_ID == 19)
+#elif(MOUDLE_ID == 19)	//生长灯
 		if(PWM_ledGRW_ID19 != dats_rx[0]){
 		
 			PWM_ledGRW_ID19 = dats_rx[0];
@@ -589,7 +598,7 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,1);	
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 20)
+#elif(MOUDLE_ID == 20)		//直流电源切换
 		valVol_zhengshu_ID20 = (char)valVoltage;
 		valVol_xiaoshu_ID20 = (char)((valVoltage - (float)valVol_zhengshu_ID20) * 100);
 		
@@ -609,8 +618,7 @@ void USART2Trans_Thread(const void *argument){
 			SWSource_ID20 = dats_rx[0];
 			SOURCE_TYPE = dats_rx[0];
 		}
-#elif(MOUDLE_ID == 21)
-		
+#elif(MOUDLE_ID == 21)		//继电器控制
 		if(swRelay_lock_ID20 != dats_rx[0] || swRelay_light_ID20 != dats_rx[1]){
 		
 			if(dats_rx[0])swRelay_lock = swRelay_lock_ID20 = dats_rx[0];
@@ -629,7 +637,7 @@ void USART2Trans_Thread(const void *argument){
 			FRAME_TX_DATSLOAD(dats,2);
 			TX_RSQ = 1;
 		}
-#elif(MOUDLE_ID == 22)
+#elif(MOUDLE_ID == 22)	//交流总电源检测
 		memcpy(Elec_Param_ID22,Elec_Param,13);
 		memcpy(dats,Elec_Param_ID22,13);
 		FRAME_TX_DATSLOAD(dats,13);	

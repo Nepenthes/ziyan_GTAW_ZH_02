@@ -1,7 +1,7 @@
 #include "ledSpray.h"
 
-uint8_t SW_SPY = 0;
-uint8_t SW_PST = 0;
+uint8_t SW_SPY = 2;
+uint8_t SW_PST = 2;
 uint8_t USRKspyTX_FLG = 0;
 uint8_t USRKspyRX_FLG = 0;
 uint8_t SW_STATUS[2] = {2,2};
@@ -122,9 +122,9 @@ void LED_Spray(void){
 	{
 		USRKspyTX_FLG = 1;     //主动保持在线，如果不用，注释即可，注释后则被动在线，状态改变时才上发状态信息
 		
-		key_in=KEY_Scan1_ledSPY(0);
+		key_in=KEY_Scan1_ledSPY(0); //按键扫描
 /*--------------------------------------------------------------------------*/			
-		if(key_in == 3 && !key4_flg){
+		if(key_in == 3 && !key4_flg){  //喷雾按键
 		
 			key3_flg = !key3_flg; 
 			
@@ -137,7 +137,7 @@ void LED_Spray(void){
 				if(SW_STATUS[0] == 1)SW_STATUS[0] = 2;	
 			}	
 			USRKspyTX_FLG = 1;
-		}else if(key_in == 4 && !key3_flg){
+		}else if(key_in == 4 && !key3_flg){		//杀虫按键
 		
 			key4_flg = !key4_flg; 
 			
@@ -155,7 +155,6 @@ void LED_Spray(void){
 		if(USRKspyRX_FLG){
 			
 			dats595_clr(50);
-			USRKspyRX_FLG =0;
 			
 			if(SW_STATUS[0] != SW_SPY){
 				
@@ -167,8 +166,10 @@ void LED_Spray(void){
 				SW_STATUS[1] = SW_PST;
 				key4_flg = !key4_flg; 
 			}
+			
+			USRKspyRX_FLG =0;
 		}	
-/*--------------------------------------------------------------------------*/		
+/*--------------------------------------------------------------------------*///模拟动画流水灯执行		
 		if(status_spy != SW_STATUS[0]){
 		
 			status_spy = SW_STATUS[0];

@@ -14,7 +14,7 @@
 #include "USART_STM32F10x.h"
 
 #define D_NUM 						10
-#define DISPLA_BUFFER_SIZE		480 * 2
+#define DISPLA_BUFFER_SIZE		480*2
 
 #define GPIO1 PEout(6)//
 #define GPIO2 PEout(5)//

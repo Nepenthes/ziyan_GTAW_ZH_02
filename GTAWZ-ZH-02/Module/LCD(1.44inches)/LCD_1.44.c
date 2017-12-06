@@ -32,7 +32,6 @@ extern float result_UA;
 extern double valwindSpeed;
 #elif(MOUDLE_ID == 12)
 extern uint8_t	DispLAattr; // HA:1   color:2  slip :1  speed:4
-extern uint8_t DispLABuffer[DISPLA_BUFFER_SIZE];
 #elif(MOUDLE_ID == 14)
 extern float valsoilHum;
 #elif(MOUDLE_ID == 15)
