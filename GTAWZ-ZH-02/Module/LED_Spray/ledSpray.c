@@ -159,12 +159,14 @@ void LED_Spray(void){
 			if(SW_STATUS[0] != SW_SPY){
 				
 				SW_STATUS[0] = SW_SPY;
-				key3_flg = !key3_flg; 
+				if(SW_STATUS[0] == 1)key3_flg = 1;
+				else if(SW_STATUS[0] == 2)key3_flg = 0;
 			}
 			if(SW_STATUS[1] != SW_PST){
 			
 				SW_STATUS[1] = SW_PST;
-				key4_flg = !key4_flg; 
+				if(SW_STATUS[1] == 1)key4_flg = 1;
+				else if(SW_STATUS[1] == 2)key4_flg = 0;
 			}
 			
 			USRKspyRX_FLG =0;

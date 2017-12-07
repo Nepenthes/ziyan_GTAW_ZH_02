@@ -531,10 +531,9 @@ void USART2Trans_Thread(const void *argument){
 			USRKspyTX_FLG = 0;
 			
 			memcpy(dats_rx,SW_STATUS,2);		//更新下行数据缓存，防错乱
-			memcpy(SW_ledSPY_ID16,dats_rx,2);
+			memcpy(SW_ledSPY_ID16,SW_STATUS,2);
 			
-			dats[0] = SW_STATUS[0];
-			dats[1] = SW_STATUS[1];
+			memcpy(dats,SW_STATUS,2);
 			FRAME_TX_DATSLOAD(dats,2);
 			TX_RSQ = 1;
 		}

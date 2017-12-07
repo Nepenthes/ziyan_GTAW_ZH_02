@@ -76,9 +76,9 @@ void curOpen(void){
 		cycMotorCnt  = 33 * 100;
 		
 		USRKcurRX_FLG = 0;
-		//Beep_time(20);
+		Beep_time(20);
 		osDelay(10);
-		//Beep_time(20);
+		Beep_time(20);
 	}
 }
 
@@ -99,9 +99,9 @@ void curClose(void){
 		curAction[1] = cycMotorCnt = 0;
 
 		USRKcurRX_FLG = 0;
-		//Beep_time(20);
+		Beep_time(20);
 		osDelay(10);
-		//Beep_time(20);
+		Beep_time(20);
 	}
 }
 
@@ -114,7 +114,7 @@ void Curtain_Init(void){
 
 	BEEP_Init();
 	KEY_Init_Curtain();
-	////Beep_time(200);	
+	//Beep_time(200);	
 }
 
 void CurtainCM_CLK_Thread(const void *argument){
@@ -125,7 +125,6 @@ void CurtainCM_CLK_Thread(const void *argument){
 	osDelay(1);
 	
 	if(MotorCntEN)(IorD)?cycMotorCnt ++:cycMotorCnt --;
-	
 }
 
 void CurtainCM_Thread(const void *argument){
@@ -134,7 +133,7 @@ void CurtainCM_Thread(const void *argument){
 	
 	char Disp[30] = {0};
 	
-	cycMotorCnt = STMFLASH_ReadHalfWord(CURTAIN_POSITION_ID15);
+	cycMotorCnt = STMFLASH_ReadHalfWord(CURTAIN_POSITION_ID15);		//历史位置信息读取
 	
 	for(;;){
 		
@@ -149,7 +148,7 @@ void CurtainCM_Thread(const void *argument){
 			//USRKcurRX_FLG = 0;
 		
 			USRKcurTX_FLG = 1;
-			//Beep_time(80);
+			Beep_time(80);
 		}else if(key_in == 4){
 		
 			curAction[0] = 0x02;
@@ -157,7 +156,7 @@ void CurtainCM_Thread(const void *argument){
 			//USRKcurRX_FLG = 0;
 
 			USRKcurTX_FLG = 1;
-			//Beep_time(80);
+			Beep_time(80);
 		}else if(key_in == 5){
 		
 			curAction[0] = 0x03;
@@ -173,7 +172,7 @@ void CurtainCM_Thread(const void *argument){
 			Driver_USART1.Send(Disp,strlen(Disp));
 			
 			USRKcurTX_FLG = 1;
-			//Beep_time(80);
+			Beep_time(80);
 		}
 		
 		if(USRKcurRX_FLG == 1){
@@ -205,7 +204,7 @@ void CurtainCM_Thread(const void *argument){
 			curAction[1] = (uint8_t)(cycMotorCnt / 33);
 			USRKcurRX_FLG = 0;
 
-			//Beep_time(80);
+			Beep_time(80);
 		}
 		
 		switch(curAction[0]){

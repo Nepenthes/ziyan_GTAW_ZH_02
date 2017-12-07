@@ -132,10 +132,10 @@ void led_Grow(void){
 		}
 		
 		if(USRKgrwRX_FLG == 1){
-			
-			USRKgrwRX_FLG = 0;
 		
+			if(PWM_ledGRW)key3_flg = 1;		//亮度不为零，同步按键使能
 			TIM_SetCompare3(TIM4,PWM_ledGRW/2);//50%
+			USRKgrwRX_FLG = 0;
 			Beep_time(80);
 		}
 	}

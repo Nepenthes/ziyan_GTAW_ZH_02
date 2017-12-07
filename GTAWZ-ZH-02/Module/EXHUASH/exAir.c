@@ -143,9 +143,9 @@ void ex_Air(void){
 		
 		if(USRKexaRX_FLG == 1){
 			
-			USRKexaRX_FLG = 0;
-		
+			if(PWM_exAir)key3_flg = 1;		//风速不为零，同步按键使能
 			TIM_SetCompare4(TIM4,PWM_exAir/2);//50%
+			USRKexaRX_FLG = 0;
 			Beep_time(80);
 		}
 	}
